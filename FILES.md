@@ -39,6 +39,7 @@
 | `src/ClassroomChecker/I18n/Localizer.cs` | ລະບົບສອງພາສາ `Localizer.T(...)` ພ້ອມ Event ແຈ້ງ UI refresh ທັນທີ |
 | `src/ClassroomChecker/Assets/bg.png` | ຮູບພື້ນຫຼັງເລີ່ມຕົ້ນ default (ຝັງເປັນ EmbeddedResource 1920x1080) |
 | `src/ClassroomChecker/Assets/Fonts/PhetsarathOT.ttf` | ໄຟລ໌ Font Phetsarath OT ທີ່ຝັງເປັນ EmbeddedResource ສຳລັບຕິດຕັ້ງ offline |
+| `src/ClassroomChecker/UI/UiFontManager.cs` | ລະບົບຈັດການ Font UI ທົ່ວທັງແອັບ (Phetsarath OT ມາດຕະຖານ ພ້ອມ Memory font fallback) |
 | `src/ClassroomChecker/UI/InputDialog.cs` | Modal Dialog ສຳລັບປ້ອນຊື່ຫ້ອງຮຽນໃໝ່ ພ້ອມກວດສອບຊື່ຊ້ຳ |
 | `src/ClassroomChecker/UI/DetailsDialog.cs` | Modal Dialog ສະແດງລາຍລະອຽດຜົນການກວດສອບແຕ່ລະ Module ຢ່າງລະອຽດ |
 | `src/ClassroomChecker/UI/WallpaperPanel.cs` | UI ແຖບພື້ນຫຼັງ (ເລືອກຫ້ອງ, ເພີ່ມ/ລຶບຫ້ອງ, ເລກເຄື່ອງ, ເລືອກຮູບ, Live Preview, ປຸ່ມກຳນົດພື້ນຫຼັງ) |

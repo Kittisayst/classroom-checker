@@ -34,14 +34,14 @@ namespace ClassroomChecker.UI
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.ShowInTaskbar = false;
-            this.Font = new Font("Leelawadee UI", 9.5F, FontStyle.Regular);
+            this.Font = UiFontManager.GetFont(9.5F, FontStyle.Regular);
 
             lblPrompt = new Label
             {
                 Text = prompt,
                 Location = new Point(20, 18),
                 Size = new Size(365, 38),
-                Font = new Font("Leelawadee UI", 9.5F, FontStyle.Regular)
+                Font = UiFontManager.GetFont(9.5F, FontStyle.Regular)
             };
 
             txtInput = new TextBox
@@ -49,7 +49,7 @@ namespace ClassroomChecker.UI
                 Text = defaultValue,
                 Location = new Point(20, 60),
                 Size = new Size(365, 25),
-                Font = new Font("Leelawadee UI", 10F, FontStyle.Regular)
+                Font = UiFontManager.GetFont(10F, FontStyle.Regular)
             };
             txtInput.KeyDown += (s, e) =>
             {

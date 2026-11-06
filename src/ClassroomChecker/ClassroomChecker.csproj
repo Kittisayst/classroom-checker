@@ -67,6 +67,7 @@
     <Compile Include="Modules\SpecExportModule.cs" />
     <Compile Include="Modules\WallpaperModule.cs" />
     <Compile Include="Native\NativeMethods.cs" />
+    <Compile Include="UI\UiFontManager.cs" />
     <Compile Include="UI\InputDialog.cs">
       <SubType>Form</SubType>
     </Compile>

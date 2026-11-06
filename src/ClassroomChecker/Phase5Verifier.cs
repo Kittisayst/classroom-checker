@@ -113,6 +113,10 @@ namespace ClassroomChecker
                     !string.IsNullOrEmpty(enTitle) && enTitle.Contains("Classroom Checker"),
                     enTitle);
 
+                Assert("UI Font Manager: Phetsarath OT resolved",
+                    !string.IsNullOrEmpty(ClassroomChecker.UI.UiFontManager.PreferredFontFamily),
+                    ClassroomChecker.UI.UiFontManager.PreferredFontFamily);
+
                 // -------------------------------------------------------------
                 // 3. CONFIGURATION & PERSISTENCE
                 // -------------------------------------------------------------

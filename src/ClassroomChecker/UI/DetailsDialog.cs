@@ -26,14 +26,14 @@ namespace ClassroomChecker.UI
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.ShowInTaskbar = false;
-            this.Font = new Font("Leelawadee UI", 9F, FontStyle.Regular);
+            this.Font = UiFontManager.GetFont(9F, FontStyle.Regular);
 
             lblHeader = new Label
             {
                 Dock = DockStyle.Top,
                 Height = 45,
                 Padding = new Padding(12, 10, 12, 0),
-                Font = new Font("Leelawadee UI", 10F, FontStyle.Bold),
+                Font = UiFontManager.GetFont(10F, FontStyle.Bold),
                 Text = string.Format("{0} — Status: {1}", moduleName, result.Status)
             };
 

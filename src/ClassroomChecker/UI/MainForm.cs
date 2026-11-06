@@ -28,6 +28,9 @@ namespace ClassroomChecker.UI
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            // ນຳໃຊ້ Font Phetsarath OT ທົ່ວທຸກ Controls ໃນ UI
+            UiFontManager.ApplyUiFont(this);
+
             Localizer.LanguageChanged += OnLanguageChanged;
 
             // ຕັ້ງຄ່າ Dropdown ພາສາຕາມ config

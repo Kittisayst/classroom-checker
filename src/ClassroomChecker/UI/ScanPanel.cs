@@ -253,21 +253,22 @@ namespace ClassroomChecker.UI
                 case CheckStatus.Pass:
                     row.Cells[colStatus.Index].Value = "✓ " + Localizer.T("status_pass");
                     row.Cells[colStatus.Index].Style.ForeColor = Color.FromArgb(22, 163, 74); // Green
-                    row.Cells[colStatus.Index].Style.Font = new Font("Leelawadee UI", 9.5F, FontStyle.Bold);
+                    row.Cells[colStatus.Index].Style.Font = UiFontManager.GetFont(9.5F, FontStyle.Bold);
                     break;
                 case CheckStatus.Fail:
                     row.Cells[colStatus.Index].Value = "✗ " + Localizer.T("status_fail");
                     row.Cells[colStatus.Index].Style.ForeColor = Color.FromArgb(220, 38, 38); // Red
-                    row.Cells[colStatus.Index].Style.Font = new Font("Leelawadee UI", 9.5F, FontStyle.Bold);
+                    row.Cells[colStatus.Index].Style.Font = UiFontManager.GetFont(9.5F, FontStyle.Bold);
                     break;
                 case CheckStatus.Warning:
                     row.Cells[colStatus.Index].Value = "⚠ " + Localizer.T("status_warning");
                     row.Cells[colStatus.Index].Style.ForeColor = Color.FromArgb(217, 119, 6); // Amber
-                    row.Cells[colStatus.Index].Style.Font = new Font("Leelawadee UI", 9.5F, FontStyle.Bold);
+                    row.Cells[colStatus.Index].Style.Font = UiFontManager.GetFont(9.5F, FontStyle.Bold);
                     break;
                 default:
                     row.Cells[colStatus.Index].Value = "? " + Localizer.T("status_unknown");
                     row.Cells[colStatus.Index].Style.ForeColor = Color.FromArgb(100, 116, 139); // Gray
+                    row.Cells[colStatus.Index].Style.Font = UiFontManager.GetFont(9.5F, FontStyle.Regular);
                     break;
             }
         }

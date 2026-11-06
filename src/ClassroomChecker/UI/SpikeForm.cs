@@ -113,7 +113,7 @@ namespace ClassroomChecker.UI
                     int num = (int)numComputerNumber.Value;
                     string mainLabel = string.Format("{0} - ເຄື່ອງ {1:D2}", room, num);
                     string customTest = txtCustomText.Text.Trim();
-                    string fontName = cmbFontFamily.SelectedItem != null ? cmbFontFamily.SelectedItem.ToString() : "Leelawadee UI";
+                    string fontName = cmbFontFamily.SelectedItem != null ? cmbFontFamily.SelectedItem.ToString() : "Phetsarath OT";
 
                     int margin = 50;
 

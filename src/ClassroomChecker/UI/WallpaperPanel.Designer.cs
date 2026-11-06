@@ -67,7 +67,7 @@ namespace ClassroomChecker.UI
             this.grpWallpaperSettings.Controls.Add(this.cmbRooms);
             this.grpWallpaperSettings.Controls.Add(this.lblRoom);
             this.grpWallpaperSettings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpWallpaperSettings.Font = new System.Drawing.Font("Leelawadee UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpWallpaperSettings.Font = new System.Drawing.Font("Phetsarath OT", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpWallpaperSettings.Location = new System.Drawing.Point(12, 8);
             this.grpWallpaperSettings.Name = "grpWallpaperSettings";
             this.grpWallpaperSettings.Size = new System.Drawing.Size(896, 99);
@@ -115,7 +115,7 @@ namespace ClassroomChecker.UI
             // 
             // numComputerNumber
             // 
-            this.numComputerNumber.Font = new System.Drawing.Font("Leelawadee UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numComputerNumber.Font = new System.Drawing.Font("Phetsarath OT", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.numComputerNumber.Location = new System.Drawing.Point(450, 25);
             this.numComputerNumber.Maximum = new decimal(new int[] { 99, 0, 0, 0 });
             this.numComputerNumber.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
@@ -200,7 +200,7 @@ namespace ClassroomChecker.UI
             // lblPreviewTitle
             // 
             this.lblPreviewTitle.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblPreviewTitle.Font = new System.Drawing.Font("Leelawadee UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPreviewTitle.Font = new System.Drawing.Font("Phetsarath OT", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPreviewTitle.Location = new System.Drawing.Point(12, 12);
             this.lblPreviewTitle.Name = "lblPreviewTitle";
             this.lblPreviewTitle.Size = new System.Drawing.Size(896, 20);
@@ -223,7 +223,7 @@ namespace ClassroomChecker.UI
             // lblStatus
             // 
             this.lblStatus.AutoSize = true;
-            this.lblStatus.Font = new System.Drawing.Font("Leelawadee UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatus.Font = new System.Drawing.Font("Phetsarath OT", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(125)))), ((int)(((byte)(50)))));
             this.lblStatus.Location = new System.Drawing.Point(16, 32);
             this.lblStatus.Name = "lblStatus";
@@ -234,7 +234,7 @@ namespace ClassroomChecker.UI
             // lblUserNote
             // 
             this.lblUserNote.AutoSize = true;
-            this.lblUserNote.Font = new System.Drawing.Font("Leelawadee UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUserNote.Font = new System.Drawing.Font("Phetsarath OT", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUserNote.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(85)))), ((int)(((byte)(105)))));
             this.lblUserNote.Location = new System.Drawing.Point(15, 11);
             this.lblUserNote.Name = "lblUserNote";
@@ -248,7 +248,7 @@ namespace ClassroomChecker.UI
             this.btnApplyWallpaper.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(115)))), ((int)(((byte)(232)))));
             this.btnApplyWallpaper.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnApplyWallpaper.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnApplyWallpaper.Font = new System.Drawing.Font("Leelawadee UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnApplyWallpaper.Font = new System.Drawing.Font("Phetsarath OT", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnApplyWallpaper.ForeColor = System.Drawing.Color.White;
             this.btnApplyWallpaper.Location = new System.Drawing.Point(685, 10);
             this.btnApplyWallpaper.Name = "btnApplyWallpaper";
@@ -265,7 +265,7 @@ namespace ClassroomChecker.UI
             this.Controls.Add(this.pnlPreview);
             this.Controls.Add(this.pnlBottom);
             this.Controls.Add(this.pnlControls);
-            this.Font = new System.Drawing.Font("Leelawadee UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Phetsarath OT", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "WallpaperPanel";
             this.Size = new System.Drawing.Size(920, 550);
             this.Load += new System.EventHandler(this.WallpaperPanel_Load);

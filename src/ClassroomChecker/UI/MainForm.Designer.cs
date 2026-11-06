@@ -51,7 +51,7 @@ namespace ClassroomChecker.UI
             // 
             this.cmbLanguage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbLanguage.Font = new System.Drawing.Font("Leelawadee UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbLanguage.Font = new System.Drawing.Font("Phetsarath OT", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbLanguage.FormattingEnabled = true;
             this.cmbLanguage.Items.AddRange(new object[] {
             "ພາສາລາວ (Lao)",
@@ -66,7 +66,7 @@ namespace ClassroomChecker.UI
             // 
             this.lblLanguage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblLanguage.AutoSize = true;
-            this.lblLanguage.Font = new System.Drawing.Font("Leelawadee UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLanguage.Font = new System.Drawing.Font("Phetsarath OT", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLanguage.ForeColor = System.Drawing.Color.White;
             this.lblLanguage.Location = new System.Drawing.Point(785, 26);
             this.lblLanguage.Name = "lblLanguage";
@@ -77,7 +77,7 @@ namespace ClassroomChecker.UI
             // lblSubtitle
             // 
             this.lblSubtitle.AutoSize = true;
-            this.lblSubtitle.Font = new System.Drawing.Font("Leelawadee UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSubtitle.Font = new System.Drawing.Font("Phetsarath OT", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(240)))), ((int)(((byte)(255)))));
             this.lblSubtitle.Location = new System.Drawing.Point(17, 40);
             this.lblSubtitle.Name = "lblSubtitle";
@@ -88,7 +88,7 @@ namespace ClassroomChecker.UI
             // lblAppTitle
             // 
             this.lblAppTitle.AutoSize = true;
-            this.lblAppTitle.Font = new System.Drawing.Font("Leelawadee UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAppTitle.Font = new System.Drawing.Font("Phetsarath OT", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAppTitle.ForeColor = System.Drawing.Color.White;
             this.lblAppTitle.Location = new System.Drawing.Point(16, 12);
             this.lblAppTitle.Name = "lblAppTitle";
@@ -101,7 +101,7 @@ namespace ClassroomChecker.UI
             this.tabMain.Controls.Add(this.tabWallpaper);
             this.tabMain.Controls.Add(this.tabScan);
             this.tabMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabMain.Font = new System.Drawing.Font("Leelawadee UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabMain.Font = new System.Drawing.Font("Phetsarath OT", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabMain.ItemSize = new System.Drawing.Size(140, 32);
             this.tabMain.Location = new System.Drawing.Point(0, 72);
             this.tabMain.Name = "tabMain";
@@ -136,7 +136,7 @@ namespace ClassroomChecker.UI
             // scanPanel
             // 
             this.scanPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scanPanel.Font = new System.Drawing.Font("Leelawadee UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.scanPanel.Font = new System.Drawing.Font("Phetsarath OT", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.scanPanel.Location = new System.Drawing.Point(3, 3);
             this.scanPanel.Name = "scanPanel";
             this.scanPanel.Size = new System.Drawing.Size(970, 543);
@@ -145,7 +145,7 @@ namespace ClassroomChecker.UI
             // wallpaperPanel
             // 
             this.wallpaperPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.wallpaperPanel.Font = new System.Drawing.Font("Leelawadee UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.wallpaperPanel.Font = new System.Drawing.Font("Phetsarath OT", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.wallpaperPanel.Location = new System.Drawing.Point(3, 3);
             this.wallpaperPanel.Name = "wallpaperPanel";
             this.wallpaperPanel.Size = new System.Drawing.Size(970, 543);
@@ -158,7 +158,7 @@ namespace ClassroomChecker.UI
             this.ClientSize = new System.Drawing.Size(984, 661);
             this.Controls.Add(this.tabMain);
             this.Controls.Add(this.pnlHeader);
-            this.Font = new System.Drawing.Font("Leelawadee UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Phetsarath OT", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MinimumSize = new System.Drawing.Size(860, 580);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

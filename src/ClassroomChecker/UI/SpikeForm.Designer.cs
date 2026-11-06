@@ -62,7 +62,7 @@ namespace ClassroomChecker.UI
             // lblTitle
             // 
             this.lblTitle.AutoSize = true;
-            this.lblTitle.Font = new System.Drawing.Font("Leelawadee UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitle.Font = new System.Drawing.Font("Phetsarath OT", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitle.ForeColor = System.Drawing.Color.White;
             this.lblTitle.Location = new System.Drawing.Point(16, 10);
             this.lblTitle.Name = "lblTitle";
@@ -73,7 +73,7 @@ namespace ClassroomChecker.UI
             // lblSubtitle
             // 
             this.lblSubtitle.AutoSize = true;
-            this.lblSubtitle.Font = new System.Drawing.Font("Leelawadee UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSubtitle.Font = new System.Drawing.Font("Phetsarath OT", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(240)))), ((int)(((byte)(255)))));
             this.lblSubtitle.Location = new System.Drawing.Point(17, 38);
             this.lblSubtitle.Name = "lblSubtitle";
@@ -95,7 +95,7 @@ namespace ClassroomChecker.UI
             this.grpSettings.Controls.Add(this.txtRoomName);
             this.grpSettings.Controls.Add(this.lblRoom);
             this.grpSettings.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpSettings.Font = new System.Drawing.Font("Leelawadee UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpSettings.Font = new System.Drawing.Font("Phetsarath OT", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpSettings.Location = new System.Drawing.Point(0, 70);
             this.grpSettings.Name = "grpSettings";
             this.grpSettings.Padding = new System.Windows.Forms.Padding(12);
@@ -106,7 +106,7 @@ namespace ClassroomChecker.UI
             // 
             // txtCustomText
             // 
-            this.txtCustomText.Font = new System.Drawing.Font("Leelawadee UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCustomText.Font = new System.Drawing.Font("Phetsarath OT", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtCustomText.Location = new System.Drawing.Point(580, 80);
             this.txtCustomText.Name = "txtCustomText";
             this.txtCustomText.Size = new System.Drawing.Size(360, 23);
@@ -240,7 +240,7 @@ namespace ClassroomChecker.UI
             // lblScreenRes
             // 
             this.lblScreenRes.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblScreenRes.Font = new System.Drawing.Font("Leelawadee UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblScreenRes.Font = new System.Drawing.Font("Phetsarath OT", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblScreenRes.Location = new System.Drawing.Point(16, 16);
             this.lblScreenRes.Name = "lblScreenRes";
             this.lblScreenRes.Size = new System.Drawing.Size(928, 24);
@@ -263,7 +263,7 @@ namespace ClassroomChecker.UI
             // lblStatus
             // 
             this.lblStatus.AutoSize = true;
-            this.lblStatus.Font = new System.Drawing.Font("Leelawadee UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatus.Font = new System.Drawing.Font("Phetsarath OT", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(125)))), ((int)(((byte)(50)))));
             this.lblStatus.Location = new System.Drawing.Point(16, 21);
             this.lblStatus.Name = "lblStatus";
@@ -274,7 +274,7 @@ namespace ClassroomChecker.UI
             // btnSaveImage
             // 
             this.btnSaveImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSaveImage.Font = new System.Drawing.Font("Leelawadee UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSaveImage.Font = new System.Drawing.Font("Phetsarath OT", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSaveImage.Location = new System.Drawing.Point(620, 12);
             this.btnSaveImage.Name = "btnSaveImage";
             this.btnSaveImage.Size = new System.Drawing.Size(140, 36);
@@ -289,7 +289,7 @@ namespace ClassroomChecker.UI
             this.btnApplyWallpaper.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(115)))), ((int)(((byte)(232)))));
             this.btnApplyWallpaper.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnApplyWallpaper.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnApplyWallpaper.Font = new System.Drawing.Font("Leelawadee UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnApplyWallpaper.Font = new System.Drawing.Font("Phetsarath OT", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnApplyWallpaper.ForeColor = System.Drawing.Color.White;
             this.btnApplyWallpaper.Location = new System.Drawing.Point(770, 12);
             this.btnApplyWallpaper.Name = "btnApplyWallpaper";
@@ -308,7 +308,7 @@ namespace ClassroomChecker.UI
             this.Controls.Add(this.pnlBottom);
             this.Controls.Add(this.grpSettings);
             this.Controls.Add(this.pnlTop);
-            this.Font = new System.Drawing.Font("Leelawadee UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Phetsarath OT", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MinimumSize = new System.Drawing.Size(800, 500);
             this.Name = "SpikeForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

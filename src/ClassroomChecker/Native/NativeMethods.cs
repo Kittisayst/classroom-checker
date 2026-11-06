@@ -29,6 +29,9 @@ namespace ClassroomChecker.Native
         [DllImport("gdi32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern int AddFontResourceW(string lpFileName);
 
+        [DllImport("gdi32.dll", SetLastError = true)]
+        public static extern IntPtr AddFontMemResourceEx(IntPtr pbFont, uint cbFont, IntPtr pdv, [In] ref uint pcFonts);
+
         public const int HWND_BROADCAST = 0xffff;
         public const int WM_FONTCHANGE = 0x001D;
         public const int SMTO_ABORTIFHUNG = 0x0002;
