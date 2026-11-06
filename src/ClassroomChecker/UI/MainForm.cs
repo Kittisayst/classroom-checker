@@ -13,6 +13,17 @@ namespace ClassroomChecker.UI
         public MainForm()
         {
             InitializeComponent();
+            try
+            {
+                using (var stream = typeof(MainForm).Assembly.GetManifestResourceStream("ClassroomChecker.app.ico"))
+                {
+                    if (stream != null)
+                    {
+                        this.Icon = new Icon(stream);
+                    }
+                }
+            }
+            catch { }
         }
 
         private void MainForm_Load(object sender, EventArgs e)

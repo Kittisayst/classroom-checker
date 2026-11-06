@@ -69,6 +69,9 @@ namespace ClassroomChecker
                 Assert("EmbeddedResource: PhetsarathOT.ttf",
                     resSet.Contains("ClassroomChecker.Assets.Fonts.PhetsarathOT.ttf"));
 
+                Assert("EmbeddedResource: app.ico (Application Icon)",
+                    resSet.Contains("ClassroomChecker.app.ico"));
+
                 using (Stream stream = asm.GetManifestResourceStream("ClassroomChecker.Assets.Fonts.PhetsarathOT.ttf"))
                 {
                     Assert("Font PhetsarathOT.ttf non-empty (>50KB)",

@@ -12,6 +12,7 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <StartupObject>ClassroomChecker.Program</StartupObject>
+    <ApplicationIcon>app.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <!-- Use local .NET 4.0/4.8 framework path if Developer Pack is not installed -->
     <FrameworkPathOverride Condition="!Exists('$(MSBuildProgramFiles32)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8')">C:\Windows\Microsoft.NET\Framework64\v4.0.30319</FrameworkPathOverride>
@@ -98,6 +99,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="app.ico" />
     <EmbeddedResource Include="I18n\lo.json" />
     <EmbeddedResource Include="I18n\en.json" />
     <EmbeddedResource Include="Assets\bg.png" />

@@ -15,6 +15,7 @@
 | `ClassroomChecker.sln` | Visual Studio Solution ຫຼັກຂອງໂຄງການ |
 | `src/ClassroomChecker/ClassroomChecker.csproj` | C# Project file (.NET Framework 4.8, x64, WinForms, requireAdministrator) |
 | `src/ClassroomChecker/app.manifest` | Application Manifest ກຳນົດສິດ `requireAdministrator` ແລະ PerMonitorV2 DPI |
+| `src/ClassroomChecker/app.ico` | Application Icon ຫຼາຍຂະໜາດ (256, 64, 48, 32, 16) ຝັງເຂົ້າ Win32 PE Resource ແລະ MainForm |
 | `src/ClassroomChecker/Program.cs` | Main Entry Point ເລີ່ມຕົ້ນ MainForm (ແລະ ຮອງຮັບ CLI flags `--spike`, `--verify`, `--test-phase5`) |
 | `src/ClassroomChecker/Phase5Verifier.cs` | Suite ກວດສອບ ແລະ ທົດສອບລະບົບຄົບວົງຈອນສຳລັບ Phase 5 (22/22 Tests Passed) |
 | `test_phase5.ps1` | Script PowerShell ສຳລັບລັນ Phase5Verifier ຜ່ານ CLI ແບບ headless ໄດ້ທັນທີ |
