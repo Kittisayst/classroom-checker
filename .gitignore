@@ -8,4 +8,7 @@ obj/
 *.userosscache
 *.sln.docstates
 specs/*.xlsx
+dist/ScanReport_*.txt
+dist/config.json
+
 
