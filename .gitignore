@@ -1,0 +1,11 @@
+.claude
+.agents
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+specs/*.xlsx
+

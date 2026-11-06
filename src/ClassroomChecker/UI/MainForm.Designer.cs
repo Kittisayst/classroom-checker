@@ -1,0 +1,189 @@
+namespace ClassroomChecker.UI
+{
+    partial class MainForm
+    {
+        private System.ComponentModel.IContainer components = null;
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        private void InitializeComponent()
+        {
+            this.pnlHeader = new System.Windows.Forms.Panel();
+            this.cmbLanguage = new System.Windows.Forms.ComboBox();
+            this.lblLanguage = new System.Windows.Forms.Label();
+            this.lblSubtitle = new System.Windows.Forms.Label();
+            this.lblAppTitle = new System.Windows.Forms.Label();
+            this.tabMain = new System.Windows.Forms.TabControl();
+            this.tabWallpaper = new System.Windows.Forms.TabPage();
+            this.tabScan = new System.Windows.Forms.TabPage();
+            this.scanPanel = new ClassroomChecker.UI.ScanPanel();
+            this.wallpaperPanel = new ClassroomChecker.UI.WallpaperPanel();
+            this.pnlHeader.SuspendLayout();
+            this.tabMain.SuspendLayout();
+            this.tabWallpaper.SuspendLayout();
+            this.tabScan.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // pnlHeader
+            // 
+            this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(115)))), ((int)(((byte)(232)))));
+            this.pnlHeader.Controls.Add(this.cmbLanguage);
+            this.pnlHeader.Controls.Add(this.lblLanguage);
+            this.pnlHeader.Controls.Add(this.lblSubtitle);
+            this.pnlHeader.Controls.Add(this.lblAppTitle);
+            this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlHeader.Location = new System.Drawing.Point(0, 0);
+            this.pnlHeader.Name = "pnlHeader";
+            this.pnlHeader.Padding = new System.Windows.Forms.Padding(16, 12, 16, 12);
+            this.pnlHeader.Size = new System.Drawing.Size(984, 72);
+            this.pnlHeader.TabIndex = 0;
+            // 
+            // cmbLanguage
+            // 
+            this.cmbLanguage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbLanguage.Font = new System.Drawing.Font("Leelawadee UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbLanguage.FormattingEnabled = true;
+            this.cmbLanguage.Items.AddRange(new object[] {
+            "ພາສາລາວ (Lao)",
+            "English (EN)"});
+            this.cmbLanguage.Location = new System.Drawing.Point(830, 22);
+            this.cmbLanguage.Name = "cmbLanguage";
+            this.cmbLanguage.Size = new System.Drawing.Size(138, 25);
+            this.cmbLanguage.TabIndex = 3;
+            this.cmbLanguage.SelectedIndexChanged += new System.EventHandler(this.cmbLanguage_SelectedIndexChanged);
+            // 
+            // lblLanguage
+            // 
+            this.lblLanguage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblLanguage.AutoSize = true;
+            this.lblLanguage.Font = new System.Drawing.Font("Leelawadee UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLanguage.ForeColor = System.Drawing.Color.White;
+            this.lblLanguage.Location = new System.Drawing.Point(785, 26);
+            this.lblLanguage.Name = "lblLanguage";
+            this.lblLanguage.Size = new System.Drawing.Size(40, 15);
+            this.lblLanguage.TabIndex = 2;
+            this.lblLanguage.Text = "ພາສາ:";
+            // 
+            // lblSubtitle
+            // 
+            this.lblSubtitle.AutoSize = true;
+            this.lblSubtitle.Font = new System.Drawing.Font("Leelawadee UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(240)))), ((int)(((byte)(255)))));
+            this.lblSubtitle.Location = new System.Drawing.Point(17, 40);
+            this.lblSubtitle.Name = "lblSubtitle";
+            this.lblSubtitle.Size = new System.Drawing.Size(434, 17);
+            this.lblSubtitle.TabIndex = 1;
+            this.lblSubtitle.Text = "ເຄື່ອງມືກວດສອບ, ຕັ້ງ Wallpaper ແລະ ບຳລຸງຮັກສາຄອມພິວເຕີຫ້ອງຮຽນ (Portable)";
+            // 
+            // lblAppTitle
+            // 
+            this.lblAppTitle.AutoSize = true;
+            this.lblAppTitle.Font = new System.Drawing.Font("Leelawadee UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAppTitle.ForeColor = System.Drawing.Color.White;
+            this.lblAppTitle.Location = new System.Drawing.Point(16, 12);
+            this.lblAppTitle.Name = "lblAppTitle";
+            this.lblAppTitle.Size = new System.Drawing.Size(182, 25);
+            this.lblAppTitle.TabIndex = 0;
+            this.lblAppTitle.Text = "Classroom Checker";
+            // 
+            // tabMain
+            // 
+            this.tabMain.Controls.Add(this.tabWallpaper);
+            this.tabMain.Controls.Add(this.tabScan);
+            this.tabMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabMain.Font = new System.Drawing.Font("Leelawadee UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabMain.ItemSize = new System.Drawing.Size(140, 32);
+            this.tabMain.Location = new System.Drawing.Point(0, 72);
+            this.tabMain.Name = "tabMain";
+            this.tabMain.SelectedIndex = 0;
+            this.tabMain.Size = new System.Drawing.Size(984, 589);
+            this.tabMain.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
+            this.tabMain.TabIndex = 1;
+            // 
+            // tabWallpaper
+            // 
+            this.tabWallpaper.Controls.Add(this.wallpaperPanel);
+            this.tabWallpaper.Location = new System.Drawing.Point(4, 36);
+            this.tabWallpaper.Name = "tabWallpaper";
+            this.tabWallpaper.Padding = new System.Windows.Forms.Padding(3);
+            this.tabWallpaper.Size = new System.Drawing.Size(976, 549);
+            this.tabWallpaper.TabIndex = 0;
+            this.tabWallpaper.Text = "ພື້ນຫຼັງ";
+            this.tabWallpaper.UseVisualStyleBackColor = true;
+            // 
+            // 
+            // tabScan
+            // 
+            this.tabScan.Controls.Add(this.scanPanel);
+            this.tabScan.Location = new System.Drawing.Point(4, 36);
+            this.tabScan.Name = "tabScan";
+            this.tabScan.Padding = new System.Windows.Forms.Padding(3);
+            this.tabScan.Size = new System.Drawing.Size(976, 549);
+            this.tabScan.TabIndex = 1;
+            this.tabScan.Text = "ກວດສອບລະບົບ";
+            this.tabScan.UseVisualStyleBackColor = true;
+            // 
+            // scanPanel
+            // 
+            this.scanPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.scanPanel.Font = new System.Drawing.Font("Leelawadee UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.scanPanel.Location = new System.Drawing.Point(3, 3);
+            this.scanPanel.Name = "scanPanel";
+            this.scanPanel.Size = new System.Drawing.Size(970, 543);
+            this.scanPanel.TabIndex = 0;
+            // 
+            // wallpaperPanel
+            // 
+            this.wallpaperPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.wallpaperPanel.Font = new System.Drawing.Font("Leelawadee UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.wallpaperPanel.Location = new System.Drawing.Point(3, 3);
+            this.wallpaperPanel.Name = "wallpaperPanel";
+            this.wallpaperPanel.Size = new System.Drawing.Size(970, 543);
+            this.wallpaperPanel.TabIndex = 0;
+            // 
+            // MainForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(984, 661);
+            this.Controls.Add(this.tabMain);
+            this.Controls.Add(this.pnlHeader);
+            this.Font = new System.Drawing.Font("Leelawadee UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MinimumSize = new System.Drawing.Size(860, 580);
+            this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Classroom Checker";
+            this.Load += new System.EventHandler(this.MainForm_Load);
+            this.pnlHeader.ResumeLayout(false);
+            this.pnlHeader.PerformLayout();
+            this.tabMain.ResumeLayout(false);
+            this.tabWallpaper.ResumeLayout(false);
+            this.tabScan.ResumeLayout(false);
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.Panel pnlHeader;
+        private System.Windows.Forms.Label lblAppTitle;
+        private System.Windows.Forms.Label lblSubtitle;
+        private System.Windows.Forms.ComboBox cmbLanguage;
+        private System.Windows.Forms.Label lblLanguage;
+        private System.Windows.Forms.TabControl tabMain;
+        private System.Windows.Forms.TabPage tabWallpaper;
+        private System.Windows.Forms.TabPage tabScan;
+        private ClassroomChecker.UI.ScanPanel scanPanel;
+        private ClassroomChecker.UI.WallpaperPanel wallpaperPanel;
+    }
+}
