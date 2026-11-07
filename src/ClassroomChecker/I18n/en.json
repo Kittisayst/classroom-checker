@@ -27,6 +27,7 @@
   "scan_placeholder_desc": "This section will check: MS Office, Phetsarath font, Lao keyboard, Power scheme, Temp cleanup, Missing drivers, and Spec export.",
   "module_office": "MS Office (Word, Excel, PowerPoint)",
   "module_windows_license": "Windows License (Activation)",
+  "module_essential_software": "Essential Software (Chrome, 7-Zip, PDF)",
   "module_font": "Font Phetsarath OT (Lao Font)",
   "module_keyboard": "Lao Keyboard Layout (0454)",
   "module_driver": "Device Drivers (Missing Drivers)",

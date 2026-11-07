@@ -171,6 +171,7 @@ namespace ClassroomChecker.Modules
                 {
                     new OfficeCheckModule(),
                     new WindowsLicenseCheckModule(),
+                    new EssentialSoftwareCheckModule(),
                     new FontCheckModule(),
                     new KeyboardCheckModule(),
                     new PowerModule(),

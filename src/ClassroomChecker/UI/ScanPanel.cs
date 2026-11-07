@@ -29,6 +29,7 @@ namespace ClassroomChecker.UI
             _modules.Clear();
             _modules.Add(new OfficeCheckModule());
             _modules.Add(new WindowsLicenseCheckModule());
+            _modules.Add(new EssentialSoftwareCheckModule());
             _modules.Add(new FontCheckModule());
             _modules.Add(new KeyboardCheckModule());
             _modules.Add(new PowerModule());

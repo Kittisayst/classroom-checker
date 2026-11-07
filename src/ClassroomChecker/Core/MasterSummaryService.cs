@@ -280,13 +280,14 @@ namespace ClassroomChecker.Core
 
             // ຄິດໄລ່ KPIs
             int total = machines.Count;
-            int winOk = 0, officeOk = 0, fontOk = 0, kbdOk = 0, powerOk = 0, driverOk = 0;
+            int winOk = 0, officeOk = 0, fontOk = 0, kbdOk = 0, powerOk = 0, driverOk = 0, softwareOk = 0;
 
             foreach (var m in machines)
             {
                 string s;
                 if (m.CheckStatuses.TryGetValue("windows_license", out s) && s.Equals("Pass", StringComparison.OrdinalIgnoreCase)) winOk++;
                 if (m.CheckStatuses.TryGetValue("office", out s) && s.Equals("Pass", StringComparison.OrdinalIgnoreCase)) officeOk++;
+                if (m.CheckStatuses.TryGetValue("essential_software", out s) && s.Equals("Pass", StringComparison.OrdinalIgnoreCase)) softwareOk++;
                 if (m.CheckStatuses.TryGetValue("font", out s) && s.Equals("Pass", StringComparison.OrdinalIgnoreCase)) fontOk++;
                 if (m.CheckStatuses.TryGetValue("keyboard", out s) && s.Equals("Pass", StringComparison.OrdinalIgnoreCase)) kbdOk++;
                 if (m.CheckStatuses.TryGetValue("power", out s) && s.Equals("Pass", StringComparison.OrdinalIgnoreCase)) powerOk++;
@@ -303,10 +304,10 @@ namespace ClassroomChecker.Core
             overviewSheet.AddRow("Room (ຫ້ອງຮຽນ)", targetRoom, "Total Computers (ຈຳນວນເຄື່ອງ)", total.ToString(), "Export Date (ວັນທີອອກລາຍງານ)", DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
             overviewSheet.AddRow("Windows Activation", string.Format("{0} / {1} ({2:F0}%)", winOk, total, (winOk * 100.0 / total)),
                                  "MS Office Ready", string.Format("{0} / {1} ({2:F0}%)", officeOk, total, (officeOk * 100.0 / total)),
-                                 "Phetsarath Font Ready", string.Format("{0} / {1}", fontOk, total));
-            overviewSheet.AddRow("Lao Keyboard Ready", string.Format("{0} / {1}", kbdOk, total),
-                                 "Power Never Sleep", string.Format("{0} / {1}", powerOk, total),
-                                 "Drivers Healthy", string.Format("{0} / {1}", driverOk, total));
+                                 "Essential Software Ready", string.Format("{0} / {1} ({2:F0}%)", softwareOk, total, (softwareOk * 100.0 / total)));
+            overviewSheet.AddRow("Phetsarath Font Ready", string.Format("{0} / {1}", fontOk, total),
+                                 "Lao Keyboard Ready", string.Format("{0} / {1}", kbdOk, total),
+                                 "Power Never Sleep", string.Format("{0} / {1}", powerOk, total));
             overviewSheet.AddRow(""); // Blank separator
 
             // Main Table Header (18 columns)
@@ -397,7 +398,7 @@ namespace ClassroomChecker.Core
             // Sheet 3: Full Checks Matrix
             // -----------------------------------------------------------------
             XlsxSheet checkMatrix = new XlsxSheet("Check Summaries");
-            checkMatrix.AddHeader("PC #", "Hostname", "MS Office Summary", "Windows License Summary", "Font Summary", "Keyboard Summary", "Power Summary", "Cleanup Summary", "Driver Summary");
+            checkMatrix.AddHeader("PC #", "Hostname", "MS Office Summary", "Windows License Summary", "Essential Software Summary", "Font Summary", "Keyboard Summary", "Power Summary", "Cleanup Summary", "Driver Summary");
 
             foreach (var m in machines)
             {
@@ -407,6 +408,7 @@ namespace ClassroomChecker.Core
                     m.Hostname,
                     getSum("office"),
                     getSum("windows_license"),
+                    getSum("essential_software"),
                     getSum("font"),
                     getSum("keyboard"),
                     getSum("power"),

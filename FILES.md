@@ -26,6 +26,7 @@
 | `src/ClassroomChecker/Core/SimpleXlsxWriter.cs` | Lightweight, zero-dependency OpenXML (.xlsx) Multi-sheet Generator ຜ່ານ System.IO.Compression |
 | `src/ClassroomChecker/Modules/OfficeCheckModule.cs` | ໂມດູນກວດສອບ MS Office (Word, Excel, PowerPoint, FileVersion) ແລະ License (ospp.vbs) |
 | `src/ClassroomChecker/Modules/WindowsLicenseCheckModule.cs` | ໂມດູນກວດສອບສະຖານະລິຂະສິດ Windows Activation ຜ່ານ WMI SoftwareLicensingProduct |
+| `src/ClassroomChecker/Modules/EssentialSoftwareCheckModule.cs` | ໂມດູນກວດສອບຊອບແວພື້ນຖານການຮຽນ (Chrome, Edge, 7-Zip, WinRAR, PDF, VS Code, Python) ພ້ອມ Fix ຮອງຮັບ installers/ |
 | `src/ClassroomChecker/Modules/FontCheckModule.cs` | ໂມດູນກວດສອບ ແລະ ຕິດຕັ້ງ Font Phetsarath OT ພ້ອມ Broadcast WM_FONTCHANGE |
 | `src/ClassroomChecker/Modules/KeyboardCheckModule.cs` | ໂມດູນກວດສອບ ແລະ ຕິດຕັ້ງແປ້ນພິມລາວ (0454:00000454) ຜ່ານ InstallLayoutOrTip & PowerShell Append |
 | `src/ClassroomChecker/Modules/PowerModule.cs` | ໂມດູນກວດສອບ ແລະ ຕັ້ງຄ່າ Never Sleep ສຳລັບ AC & DC (Monitor, Standby, Hibernate, Disk = 0) |

@@ -27,6 +27,7 @@
   "scan_placeholder_desc": "ສ່ວນນີ້ຈະກວດສອບ: MS Office, Font Phetsarath, ແປ້ນພິມລາວ, Power (Never sleep), ລ້າງໄຟລ໌ temp, ກວດ Driver, ແລະ Export Spec.",
   "module_office": "MS Office (Word, Excel, PowerPoint)",
   "module_windows_license": "Windows License (Activation)",
+  "module_essential_software": "ຊອບແວພື້ນຖານ (Chrome, 7-Zip, PDF)",
   "module_font": "Font Phetsarath OT (ຟອນລາວ)",
   "module_keyboard": "ແປ້ນພິມພາສາລາວ (Lao Keyboard Layout)",
   "module_driver": "Device Drivers (ກວດ Driver ທີ່ຂາດ)",
