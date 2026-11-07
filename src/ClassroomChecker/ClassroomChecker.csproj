@@ -46,6 +46,7 @@
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -57,6 +58,8 @@
     <Compile Include="Core\ICheckModule.cs" />
     <Compile Include="Core\ScanRunner.cs" />
     <Compile Include="Core\SimpleXlsxWriter.cs" />
+    <Compile Include="Core\MasterSummaryService.cs" />
+    <Compile Include="Core\QuickSetupRunner.cs" />
     <Compile Include="Modules\OfficeCheckModule.cs" />
     <Compile Include="Modules\WindowsLicenseCheckModule.cs" />
     <Compile Include="Modules\FontCheckModule.cs" />
@@ -72,6 +75,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UI\DetailsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\QuickSetupDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UI\WallpaperPanel.cs">

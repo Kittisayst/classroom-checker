@@ -47,5 +47,17 @@
   "scan_summary_passed": "Passed {0} / {1} items",
   "scan_in_progress": "Scanning: {0} ({1}/{2})...",
   "scan_completed": "Scan completed",
-  "details_dialog_title": "Check Details: {0}"
+  "details_dialog_title": "Check Details: {0}",
+  "btn_quick_setup": "⚡ Quick Setup",
+  "btn_merge_specs": "📊 Master Excel Summary",
+  "quick_setup_title": "Classroom PC Quick Setup",
+  "quick_setup_step_wallpaper": "Set Wallpaper: {0} - {1}",
+  "quick_setup_step_power": "Set Power Scheme to Never Sleep (0s)",
+  "quick_setup_step_font": "Check & Install Font Phetsarath OT",
+  "quick_setup_step_keyboard": "Check & Install Lao Keyboard (0454)",
+  "quick_setup_step_cleanup": "Safe Clean Temp & Cache Files",
+  "quick_setup_step_export": "Export Machine Spec ({0}-{1}.xlsx)",
+  "merge_specs_no_files": "No machine spec files found in specs/ directory. (Please export specs first)",
+  "merge_specs_success": "Successfully merged {0} machine specs!\n\nFile: {1}\n\nDo you want to open this file now?",
+  "merge_specs_title": "Master Summary Excel"
 }

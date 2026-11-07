@@ -63,6 +63,7 @@ namespace ClassroomChecker.UI
             lblBgImage.Text = Localizer.T("bg_image");
             btnBrowseBg.Text = Localizer.T("btn_browse");
             btnDefaultBg.Text = Localizer.T("btn_default_bg");
+            btnQuickSetup.Text = Localizer.T("btn_quick_setup", "⚡ ຕັ້ງຄ່າດ່ວນ");
             btnApplyWallpaper.Text = Localizer.T("btn_apply_wallpaper");
             lblPreviewTitle.Text = Localizer.T("preview") + ":";
 
@@ -313,6 +314,26 @@ namespace ClassroomChecker.UI
                 lblStatus.Text = "Error: " + ex.Message;
                 lblStatus.ForeColor = Color.Red;
                 MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public void RefreshFromConfig()
+        {
+            InitializeFromConfig();
+            UpdatePreview();
+        }
+
+        private void btnQuickSetup_Click(object sender, EventArgs e)
+        {
+            string room = cmbRooms.SelectedItem != null ? cmbRooms.SelectedItem.ToString() : "ຫ້ອງ A";
+            int number = (int)numComputerNumber.Value;
+
+            using (var dlg = new QuickSetupDialog(room, number))
+            {
+                if (dlg.ShowDialog(this) == DialogResult.OK)
+                {
+                    RefreshFromConfig();
+                }
             }
         }
     }

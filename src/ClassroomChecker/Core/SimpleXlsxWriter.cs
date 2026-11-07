@@ -172,8 +172,8 @@ namespace ClassroomChecker.Core
             string content = @"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes""?>
 <styleSheet xmlns=""http://schemas.openxmlformats.org/spreadsheetml/2006/main"">
   <fonts count=""2"">
-    <font><sz val=""10.5""/><name val=""Leelawadee UI""/></font>
-    <font><b/><sz val=""10.5""/><color rgb=""FFFFFFFF""/><name val=""Leelawadee UI""/></font>
+    <font><sz val=""10.5""/><name val=""Phetsarath OT""/></font>
+    <font><b/><sz val=""10.5""/><color rgb=""FFFFFFFF""/><name val=""Phetsarath OT""/></font>
   </fonts>
   <fills count=""3"">
     <fill><patternFill patternType=""none""/></fill>
@@ -208,9 +208,9 @@ namespace ClassroomChecker.Core
 
             // Column widths
             sb.AppendLine("  <cols>");
-            sb.AppendLine("    <col min=\"1\" max=\"1\" width=\"28\" customWidth=\"1\"/>");
-            sb.AppendLine("    <col min=\"2\" max=\"2\" width=\"55\" customWidth=\"1\"/>");
-            sb.AppendLine("    <col min=\"3\" max=\"5\" width=\"25\" customWidth=\"1\"/>");
+            sb.AppendLine("    <col min=\"1\" max=\"1\" width=\"12\" customWidth=\"1\"/>");
+            sb.AppendLine("    <col min=\"2\" max=\"2\" width=\"28\" customWidth=\"1\"/>");
+            sb.AppendLine("    <col min=\"3\" max=\"50\" width=\"25\" customWidth=\"1\"/>");
             sb.AppendLine("  </cols>");
 
             sb.AppendLine("  <sheetData>");

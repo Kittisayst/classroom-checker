@@ -26,6 +26,7 @@ namespace ClassroomChecker.UI
             this.btnScan = new System.Windows.Forms.Button();
             this.chkSelectAll = new System.Windows.Forms.CheckBox();
             this.pnlBottom = new System.Windows.Forms.Panel();
+            this.btnMergeSpecs = new System.Windows.Forms.Button();
             this.btnSaveReport = new System.Windows.Forms.Button();
             this.lblSummary = new System.Windows.Forms.Label();
             this.dgvResults = new System.Windows.Forms.DataGridView();
@@ -122,6 +123,7 @@ namespace ClassroomChecker.UI
             // pnlBottom
             // 
             this.pnlBottom.BackColor = System.Drawing.Color.White;
+            this.pnlBottom.Controls.Add(this.btnMergeSpecs);
             this.pnlBottom.Controls.Add(this.btnSaveReport);
             this.pnlBottom.Controls.Add(this.lblSummary);
             this.pnlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -130,6 +132,18 @@ namespace ClassroomChecker.UI
             this.pnlBottom.Padding = new System.Windows.Forms.Padding(16, 10, 16, 10);
             this.pnlBottom.Size = new System.Drawing.Size(920, 52);
             this.pnlBottom.TabIndex = 1;
+            // 
+            // btnMergeSpecs
+            // 
+            this.btnMergeSpecs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnMergeSpecs.Font = new System.Drawing.Font("Phetsarath OT", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnMergeSpecs.Location = new System.Drawing.Point(565, 10);
+            this.btnMergeSpecs.Name = "btnMergeSpecs";
+            this.btnMergeSpecs.Size = new System.Drawing.Size(185, 32);
+            this.btnMergeSpecs.TabIndex = 2;
+            this.btnMergeSpecs.Text = "📊 ລວມສະເປັກ (Master Excel)";
+            this.btnMergeSpecs.UseVisualStyleBackColor = true;
+            this.btnMergeSpecs.Click += new System.EventHandler(this.btnMergeSpecs_Click);
             // 
             // btnSaveReport
             // 
@@ -261,6 +275,7 @@ namespace ClassroomChecker.UI
         private System.Windows.Forms.Label lblProgress;
         private System.Windows.Forms.Panel pnlBottom;
         private System.Windows.Forms.Label lblSummary;
+        private System.Windows.Forms.Button btnMergeSpecs;
         private System.Windows.Forms.Button btnSaveReport;
         private System.Windows.Forms.DataGridView dgvResults;
         private System.Windows.Forms.DataGridViewCheckBoxColumn colCheck;

@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using ClassroomChecker.Config;
 using ClassroomChecker.Core;
 using ClassroomChecker.I18n;
 using ClassroomChecker.Modules;
@@ -69,6 +71,7 @@ namespace ClassroomChecker.UI
             btnFixSelected.Text = Localizer.T("btn_fix_selected");
             chkSelectAll.Text = Localizer.T("col_check") + " " + (Localizer.CurrentLanguage == "lo" ? "ທັງໝົດ" : "All");
             btnSaveReport.Text = Localizer.T("btn_save_report", "ບັນທຶກລາຍງານ (.txt)");
+            btnMergeSpecs.Text = Localizer.T("btn_merge_specs", "📊 ລວມສະເປັກ (Master Excel)");
 
             colCheck.HeaderText = "✓";
             colStatus.HeaderText = Localizer.T("col_status");
@@ -406,6 +409,61 @@ namespace ClassroomChecker.UI
                         MessageBox.Show("ເກີດຂໍ້ຜິດພາດໃນການບັນທຶກ: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
+            }
+        }
+
+        private void btnMergeSpecs_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+                string specsDir = Path.Combine(baseDir, "specs");
+
+                if (!Directory.Exists(specsDir))
+                {
+                    MessageBox.Show(
+                        Localizer.T("merge_no_files", "ບໍ່ພົບໂຟນເດີ specs ຫຼື ບໍ່ມີໄຟລ໌ສະເປັກທີ່ຈະລວມ"),
+                        "Notice",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                    return;
+                }
+
+                var cfg = ConfigService.Instance.Current;
+                string room = (cfg != null && cfg.selected != null && !string.IsNullOrEmpty(cfg.selected.room))
+                    ? cfg.selected.room
+                    : "Lab";
+
+                string masterPath = MasterSummaryService.GenerateMasterSummary(specsDir, room);
+
+                if (string.IsNullOrEmpty(masterPath) || !File.Exists(masterPath))
+                {
+                    MessageBox.Show(
+                        Localizer.T("merge_no_files", "ບໍ່ພົບໄຟລ໌ສະເປັກທີ່ຈະລວມ"),
+                        "Notice",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                    return;
+                }
+
+                var res = MessageBox.Show(
+                    Localizer.T("merge_success", "ລວມສະເປັກສຳເລັດແລ້ວ! ບັນທຶກໄວ້ທີ່:\n{0}\n\nຕ້ອງການເປີດໄຟລ໌ດຽວນີ້ບໍ່?", masterPath),
+                    Localizer.T("app_title"),
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Information);
+
+                if (res == DialogResult.Yes)
+                {
+                    Process.Start(masterPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    Localizer.T("merge_error", "ເກີດຂໍ້ຜິດພາດໃນການລວມສະເປັກ:\n{0}", ex.Message),
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
     }

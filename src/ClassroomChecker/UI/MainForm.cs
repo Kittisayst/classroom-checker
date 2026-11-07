@@ -60,6 +60,7 @@ namespace ClassroomChecker.UI
             lblLanguage.Text = Localizer.T("language");
             tabWallpaper.Text = Localizer.T("tab_wallpaper");
             tabScan.Text = Localizer.T("tab_scan");
+            btnQuickSetup.Text = Localizer.T("btn_quick_setup", "⚡ ຕັ້ງຄ່າດ່ວນ");
 
             if (Localizer.CurrentLanguage == "en")
             {
@@ -68,6 +69,25 @@ namespace ClassroomChecker.UI
             else
             {
                 lblSubtitle.Text = "ເຄື່ອງມືກວດສອບ, ຕັ້ງ Wallpaper ແລະ ບຳລຸງຮັກສາຄອມພິວເຕີຫ້ອງຮຽນ (Portable)";
+            }
+        }
+
+        private void btnQuickSetup_Click(object sender, EventArgs e)
+        {
+            var cfg = ConfigService.Instance.Current;
+            string room = (cfg != null && cfg.selected != null && !string.IsNullOrEmpty(cfg.selected.room))
+                ? cfg.selected.room
+                : "Lab1";
+            int number = (cfg != null && cfg.selected != null)
+                ? cfg.selected.number
+                : 1;
+
+            using (var dlg = new QuickSetupDialog(room, number))
+            {
+                if (dlg.ShowDialog(this) == DialogResult.OK)
+                {
+                    wallpaperPanel.RefreshFromConfig();
+                }
             }
         }
 

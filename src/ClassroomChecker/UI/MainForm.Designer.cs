@@ -18,6 +18,7 @@ namespace ClassroomChecker.UI
         private void InitializeComponent()
         {
             this.pnlHeader = new System.Windows.Forms.Panel();
+            this.btnQuickSetup = new System.Windows.Forms.Button();
             this.cmbLanguage = new System.Windows.Forms.ComboBox();
             this.lblLanguage = new System.Windows.Forms.Label();
             this.lblSubtitle = new System.Windows.Forms.Label();
@@ -36,6 +37,7 @@ namespace ClassroomChecker.UI
             // pnlHeader
             // 
             this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(115)))), ((int)(((byte)(232)))));
+            this.pnlHeader.Controls.Add(this.btnQuickSetup);
             this.pnlHeader.Controls.Add(this.cmbLanguage);
             this.pnlHeader.Controls.Add(this.lblLanguage);
             this.pnlHeader.Controls.Add(this.lblSubtitle);
@@ -46,6 +48,23 @@ namespace ClassroomChecker.UI
             this.pnlHeader.Padding = new System.Windows.Forms.Padding(16, 12, 16, 12);
             this.pnlHeader.Size = new System.Drawing.Size(984, 72);
             this.pnlHeader.TabIndex = 0;
+            // 
+            // btnQuickSetup
+            // 
+            this.btnQuickSetup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnQuickSetup.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(185)))), ((int)(((byte)(129)))));
+            this.btnQuickSetup.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnQuickSetup.FlatAppearance.BorderSize = 0;
+            this.btnQuickSetup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnQuickSetup.Font = new System.Drawing.Font("Phetsarath OT", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnQuickSetup.ForeColor = System.Drawing.Color.White;
+            this.btnQuickSetup.Location = new System.Drawing.Point(595, 17);
+            this.btnQuickSetup.Name = "btnQuickSetup";
+            this.btnQuickSetup.Size = new System.Drawing.Size(175, 36);
+            this.btnQuickSetup.TabIndex = 4;
+            this.btnQuickSetup.Text = "⚡ ຕັ້ງຄ່າດ່ວນ";
+            this.btnQuickSetup.UseVisualStyleBackColor = false;
+            this.btnQuickSetup.Click += new System.EventHandler(this.btnQuickSetup_Click);
             // 
             // cmbLanguage
             // 
@@ -176,6 +195,7 @@ namespace ClassroomChecker.UI
         #endregion
 
         private System.Windows.Forms.Panel pnlHeader;
+        private System.Windows.Forms.Button btnQuickSetup;
         private System.Windows.Forms.Label lblAppTitle;
         private System.Windows.Forms.Label lblSubtitle;
         private System.Windows.Forms.ComboBox cmbLanguage;

@@ -55,4 +55,8 @@
 | `docs/adr/0001-architecture-and-runtime.md` | ADR-001: ການເລືອກ Runtime (.NET 4.8), ການ Build, ແລະ ບັນຈຸ Single-Exe |
 | `docs/adr/0002-wallpaper-rendering-and-resolution.md` | ADR-002: ການແຕ້ມຂໍ້ຄວາມພາສາລາວ ແລະ ການປັບຂະໜາດຮູບຕາມ Screen Resolution |
 | `docs/adr/0003-keyboard-and-font-installation.md` | ADR-003: ການຕິດຕັ້ງແປ້ນພິມ ແລະ ຟອນລາວ ແບບປອດໄພ (Non-destructive Append) |
+| `src/ClassroomChecker/Core/MasterSummaryService.cs` | ບໍລິການລວມໄຟລ໌ Spec Excel ແຕ່ລະເຄື່ອງໃນ `specs/` ເຂົ້າເປັນ Master Summary Excel 3 Sheets (Overview, Hardware, Checks) ພ້ອມ KPI Cards |
+| `src/ClassroomChecker/Core/QuickSetupRunner.cs` | ຕົວປະມວນຜົນການຕັ້ງຄ່າດ່ວນ 6 ຂັ້ນຕອນ (Wallpaper, Never Sleep, Font, Keyboard, Clean Temp, Spec Export) ພ້ອມ Auto-Increment PC Number |
+| `src/ClassroomChecker/UI/QuickSetupDialog.cs` | Modal Dialog ສະແດງຂະບວນການ Quick Setup 6 ຂັ້ນຕອນແບບ Live Progress, ສຽງເຕືອນ ແລະ ປິດອັດຕະໂນມັດ |
+| `test_features_1_2.ps1` | Script PowerShell ທົດສອບການເຮັດວຽກຂອງ Master Summary Excel (Feature 1) ແລະ Quick Setup (Feature 2) ຄົບ 25/25 Tests |
 | `docs/adr/0004-single-file-and-usb-deployment.md` | ADR-004: ການແພັກ Single Portable Executable ແລະ ການນຳໃຊ້ຜ່ານ USB Offline |
