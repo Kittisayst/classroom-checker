@@ -55,6 +55,9 @@ namespace ClassroomChecker.UI
         private ListBox lstBlockedExes;
         private Button btnAddBlockedExe;
         private Button btnDeleteBlockedExe;
+        private ListBox lstBlockedPaths;
+        private Button btnBrowseBlockedFolder;
+        private Button btnDeleteBlockedPath;
         private Button btnApplyLockNow;
         private Button btnUnlockNow;
 
@@ -72,8 +75,8 @@ namespace ClassroomChecker.UI
         private void InitializeComponent()
         {
             this.Text = Localizer.T("settings_title");
-            this.Size = new Size(640, 560);
-            this.MinimumSize = new Size(600, 520);
+            this.Size = new Size(710, 580);
+            this.MinimumSize = new Size(680, 540);
             this.StartPosition = FormStartPosition.CenterParent;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -362,14 +365,14 @@ namespace ClassroomChecker.UI
             {
                 Text = Localizer.T("settings_grp_security_policies"),
                 Location = new Point(16, 12),
-                Size = new Size(570, 125),
+                Size = new Size(640, 110),
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
             };
 
             chkBlockUsb = new CheckBox
             {
                 Text = Localizer.T("settings_chk_block_usb"),
-                Location = new Point(20, 26),
+                Location = new Point(20, 24),
                 AutoSize = true,
                 Checked = true
             };
@@ -377,7 +380,7 @@ namespace ClassroomChecker.UI
             chkBlockDownloads = new CheckBox
             {
                 Text = Localizer.T("settings_chk_block_downloads"),
-                Location = new Point(20, 56),
+                Location = new Point(20, 50),
                 AutoSize = true,
                 Checked = true
             };
@@ -385,34 +388,34 @@ namespace ClassroomChecker.UI
             chkBlockPopularGames = new CheckBox
             {
                 Text = Localizer.T("settings_chk_block_popular_games"),
-                Location = new Point(20, 86),
+                Location = new Point(20, 76),
                 AutoSize = true,
                 Checked = true
             };
 
             grpSec.Controls.AddRange(new Control[] { chkBlockUsb, chkBlockDownloads, chkBlockPopularGames });
 
-            // Group: Blocked Exes
+            // Group: Blocked Exes (Left)
             GroupBox grpExes = new GroupBox
             {
                 Text = Localizer.T("settings_grp_blocked_exes"),
-                Location = new Point(16, 145),
-                Size = new Size(570, 160),
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
+                Location = new Point(16, 128),
+                Size = new Size(315, 205),
+                Anchor = AnchorStyles.Top | AnchorStyles.Left
             };
 
             lstBlockedExes = new ListBox
             {
-                Location = new Point(20, 25),
-                Size = new Size(390, 120),
+                Location = new Point(15, 25),
+                Size = new Size(285, 125),
                 IntegralHeight = false
             };
 
             btnAddBlockedExe = new Button
             {
                 Text = Localizer.T("settings_btn_add_exe"),
-                Location = new Point(425, 25),
-                Size = new Size(130, 32),
+                Location = new Point(15, 160),
+                Size = new Size(138, 32),
                 Cursor = Cursors.Hand
             };
             btnAddBlockedExe.Click += btnAddBlockedExe_Click;
@@ -420,20 +423,56 @@ namespace ClassroomChecker.UI
             btnDeleteBlockedExe = new Button
             {
                 Text = Localizer.T("settings_btn_delete_exe"),
-                Location = new Point(425, 65),
-                Size = new Size(130, 32),
+                Location = new Point(160, 160),
+                Size = new Size(138, 32),
                 Cursor = Cursors.Hand
             };
             btnDeleteBlockedExe.Click += btnDeleteBlockedExe_Click;
 
             grpExes.Controls.AddRange(new Control[] { lstBlockedExes, btnAddBlockedExe, btnDeleteBlockedExe });
 
+            // Group: Blocked Folders (Right)
+            GroupBox grpPaths = new GroupBox
+            {
+                Text = Localizer.T("settings_grp_blocked_paths"),
+                Location = new Point(341, 128),
+                Size = new Size(315, 205),
+                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
+            };
+
+            lstBlockedPaths = new ListBox
+            {
+                Location = new Point(15, 25),
+                Size = new Size(285, 125),
+                IntegralHeight = false
+            };
+
+            btnBrowseBlockedFolder = new Button
+            {
+                Text = Localizer.T("settings_btn_browse_folder"),
+                Location = new Point(15, 160),
+                Size = new Size(150, 32),
+                Cursor = Cursors.Hand
+            };
+            btnBrowseBlockedFolder.Click += btnBrowseBlockedFolder_Click;
+
+            btnDeleteBlockedPath = new Button
+            {
+                Text = Localizer.T("settings_btn_delete_folder"),
+                Location = new Point(172, 160),
+                Size = new Size(125, 32),
+                Cursor = Cursors.Hand
+            };
+            btnDeleteBlockedPath.Click += btnDeleteBlockedPath_Click;
+
+            grpPaths.Controls.AddRange(new Control[] { lstBlockedPaths, btnBrowseBlockedFolder, btnDeleteBlockedPath });
+
             // Group: Immediate Actions
             GroupBox grpActions = new GroupBox
             {
                 Text = Localizer.T("settings_grp_security_actions"),
-                Location = new Point(16, 312),
-                Size = new Size(570, 75),
+                Location = new Point(16, 340),
+                Size = new Size(640, 75),
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
             };
 
@@ -445,7 +484,7 @@ namespace ClassroomChecker.UI
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Phetsarath OT", 9F, FontStyle.Bold),
                 Location = new Point(20, 26),
-                Size = new Size(190, 34),
+                Size = new Size(200, 34),
                 Cursor = Cursors.Hand
             };
             btnApplyLockNow.FlatAppearance.BorderSize = 0;
@@ -458,8 +497,8 @@ namespace ClassroomChecker.UI
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Phetsarath OT", 9F, FontStyle.Regular),
-                Location = new Point(225, 26),
-                Size = new Size(170, 34),
+                Location = new Point(235, 26),
+                Size = new Size(180, 34),
                 Cursor = Cursors.Hand
             };
             btnUnlockNow.FlatAppearance.BorderSize = 0;
@@ -467,7 +506,7 @@ namespace ClassroomChecker.UI
 
             grpActions.Controls.AddRange(new Control[] { btnApplyLockNow, btnUnlockNow });
 
-            tabSecurity.Controls.AddRange(new Control[] { grpSec, grpExes, grpActions });
+            tabSecurity.Controls.AddRange(new Control[] { grpSec, grpExes, grpPaths, grpActions });
 
             // Add Tabs
             tabControl.TabPages.AddRange(new TabPage[] { tabGeneral, tabWallpaper, tabCleanup, tabSecurity });
@@ -606,6 +645,15 @@ namespace ClassroomChecker.UI
                     foreach (var exe in cfg.security.blockedExes)
                     {
                         lstBlockedExes.Items.Add(exe);
+                    }
+                }
+
+                lstBlockedPaths.Items.Clear();
+                if (cfg.security.blockedPaths != null)
+                {
+                    foreach (var path in cfg.security.blockedPaths)
+                    {
+                        lstBlockedPaths.Items.Add(path);
                     }
                 }
             }
@@ -830,6 +878,12 @@ namespace ClassroomChecker.UI
                 cfg.security.blockedExes.Add(item.ToString());
             }
 
+            cfg.security.blockedPaths = new List<string>();
+            foreach (var item in lstBlockedPaths.Items)
+            {
+                cfg.security.blockedPaths.Add(item.ToString());
+            }
+
             ConfigService.Instance.Save();
 
             this.DialogResult = DialogResult.OK;
@@ -868,6 +922,32 @@ namespace ClassroomChecker.UI
             lstBlockedExes.Items.Remove(lstBlockedExes.SelectedItem);
         }
 
+        private void btnBrowseBlockedFolder_Click(object sender, EventArgs e)
+        {
+            using (var fbd = new FolderBrowserDialog())
+            {
+                fbd.Description = Localizer.T("settings_prompt_browse_folder");
+                if (fbd.ShowDialog(this) == DialogResult.OK)
+                {
+                    string selected = fbd.SelectedPath;
+                    if (!string.IsNullOrEmpty(selected))
+                    {
+                        foreach (var item in lstBlockedPaths.Items)
+                        {
+                            if (string.Equals(item.ToString(), selected, StringComparison.OrdinalIgnoreCase)) return;
+                        }
+                        lstBlockedPaths.Items.Add(selected);
+                    }
+                }
+            }
+        }
+
+        private void btnDeleteBlockedPath_Click(object sender, EventArgs e)
+        {
+            if (lstBlockedPaths.SelectedItem == null) return;
+            lstBlockedPaths.Items.Remove(lstBlockedPaths.SelectedItem);
+        }
+
         private void btnApplyLockNow_Click(object sender, EventArgs e)
         {
             var sec = new SecurityConfig
@@ -875,11 +955,16 @@ namespace ClassroomChecker.UI
                 blockUsbExecution = chkBlockUsb.Checked,
                 blockDownloadsExecution = chkBlockDownloads.Checked,
                 blockPopularGames = chkBlockPopularGames.Checked,
-                blockedExes = new List<string>()
+                blockedExes = new List<string>(),
+                blockedPaths = new List<string>()
             };
             foreach (var item in lstBlockedExes.Items)
             {
                 sec.blockedExes.Add(item.ToString());
+            }
+            foreach (var item in lstBlockedPaths.Items)
+            {
+                sec.blockedPaths.Add(item.ToString());
             }
 
             List<string> details;

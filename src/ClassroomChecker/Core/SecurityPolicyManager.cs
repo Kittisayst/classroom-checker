@@ -230,9 +230,15 @@ namespace ClassroomChecker.Core
 
         public static bool SetDownloadsExecutionBlocked(bool block, IEnumerable<string> additionalPaths = null)
         {
+            return SetPathRulesBlocked(block, additionalPaths);
+        }
+
+        public static bool SetPathRulesBlocked(bool blockDownloadsAndTemp, IEnumerable<string> additionalPaths)
+        {
             try
             {
-                if (block)
+                bool hasCustom = additionalPaths != null && additionalPaths.Any(p => !string.IsNullOrEmpty(p));
+                if (blockDownloadsAndTemp || hasCustom)
                 {
                     // 1. ເປີດລະບົບ Safer CodeIdentifiers ພື້ນຖານ
                     using (var baseKey = Registry.LocalMachine.CreateSubKey(REG_PATH_SAFER_BASE))
@@ -246,12 +252,18 @@ namespace ClassroomChecker.Core
                         }
                     }
 
-                    // 2. ສ້າງ Path Rules ຫ້າມ Downloads & Temp
-                    CreateSaferPathRule(SAFER_GUID_DOWNLOADS, @"%USERPROFILE%\Downloads\*", "ClassroomChecker: Block Downloads");
-                    CreateSaferPathRule(SAFER_GUID_TEMP, @"%TEMP%\*", "ClassroomChecker: Block Temp");
-                    CreateSaferPathRule(SAFER_GUID_LOCAL_TEMP, @"%USERPROFILE%\AppData\Local\Temp\*", "ClassroomChecker: Block Local Temp");
+                    // 2. ລຶບ Rules ເກົ່າຂອງ ClassroomChecker ອອກກ່ອນ
+                    DeleteAllClassroomCheckerSaferRules();
 
-                    // 3. ໂຟນເດີເພີ່ມເຕີມທີ່ຄູລະບຸ
+                    // 3. ສ້າງ Path Rules ຫ້າມ Downloads & Temp ຖ້າເລືອກ
+                    if (blockDownloadsAndTemp)
+                    {
+                        CreateSaferPathRule(SAFER_GUID_DOWNLOADS, @"%USERPROFILE%\Downloads\*", "ClassroomChecker: Block Downloads");
+                        CreateSaferPathRule(SAFER_GUID_TEMP, @"%TEMP%\*", "ClassroomChecker: Block Temp");
+                        CreateSaferPathRule(SAFER_GUID_LOCAL_TEMP, @"%USERPROFILE%\AppData\Local\Temp\*", "ClassroomChecker: Block Local Temp");
+                    }
+
+                    // 4. ໂຟນເດີເພີ່ມເຕີມທີ່ຄູເລືອກ (ລັອກທຸກ exe ໃນໂຟນເດີນັ້ນ)
                     if (additionalPaths != null)
                     {
                         int customIdx = 100;
@@ -260,24 +272,26 @@ namespace ClassroomChecker.Core
                             if (!string.IsNullOrEmpty(p))
                             {
                                 string customGuid = string.Format("{{D1A10001-B10C-4001-A001-{0:D12}}}", customIdx++);
-                                string pathPattern = p.EndsWith(@"\") || p.EndsWith(@"/") ? p + "*" : p + @"\*";
-                                CreateSaferPathRule(customGuid, pathPattern, "ClassroomChecker: Custom Block Path");
+                                string pathPattern = p.Trim();
+                                if (!pathPattern.EndsWith(@"\*") && !pathPattern.EndsWith("/*"))
+                                {
+                                    if (pathPattern.EndsWith(@"\") || pathPattern.EndsWith("/"))
+                                    {
+                                        pathPattern += "*";
+                                    }
+                                    else
+                                    {
+                                        pathPattern += @"\*";
+                                    }
+                                }
+                                CreateSaferPathRule(customGuid, pathPattern, "ClassroomChecker: Blocked Folder " + p);
                             }
                         }
                     }
                 }
                 else
                 {
-                    // ລຶບ Rules ຂອງ ClassroomChecker ອອກ
-                    DeleteSaferPathRule(SAFER_GUID_DOWNLOADS);
-                    DeleteSaferPathRule(SAFER_GUID_TEMP);
-                    DeleteSaferPathRule(SAFER_GUID_LOCAL_TEMP);
-
-                    for (int i = 100; i < 200; i++)
-                    {
-                        string customGuid = string.Format("{{D1A10001-B10C-4001-A001-{0:D12}}}", i);
-                        DeleteSaferPathRule(customGuid);
-                    }
+                    DeleteAllClassroomCheckerSaferRules();
                 }
 
                 return true;
@@ -286,6 +300,27 @@ namespace ClassroomChecker.Core
             {
                 return false;
             }
+        }
+
+        private static void DeleteAllClassroomCheckerSaferRules()
+        {
+            try
+            {
+                using (var pathsKey = Registry.LocalMachine.OpenSubKey(REG_PATH_SAFER_PATHS, true))
+                {
+                    if (pathsKey != null)
+                    {
+                        foreach (var sk in pathsKey.GetSubKeyNames())
+                        {
+                            if (sk.StartsWith("{D1A10001-", StringComparison.OrdinalIgnoreCase))
+                            {
+                                pathsKey.DeleteSubKeyTree(sk, false);
+                            }
+                        }
+                    }
+                }
+            }
+            catch { }
         }
 
         private static void CreateSaferPathRule(string guid, string itemData, string description)
@@ -351,16 +386,18 @@ namespace ClassroomChecker.Core
             }
 
             // 2. Downloads & Temp Lock
-            if (config.blockDownloadsExecution)
+            if (config.blockDownloadsExecution || (config.blockedPaths != null && config.blockedPaths.Count > 0))
             {
-                bool r = SetDownloadsExecutionBlocked(true, config.blockedPaths);
+                bool r = SetPathRulesBlocked(config.blockDownloadsExecution, config.blockedPaths);
                 allOk &= r;
-                logDetails.Add("Downloads & Temp Path Restriction: " + (r ? "ENABLED" : "FAILED"));
+                int customCount = config.blockedPaths != null ? config.blockedPaths.Count : 0;
+                logDetails.Add(string.Format("Path Restriction: {0} (Downloads={1}, CustomFolders={2})",
+                    r ? "ENABLED" : "FAILED", config.blockDownloadsExecution, customCount));
             }
             else
             {
-                SetDownloadsExecutionBlocked(false, null);
-                logDetails.Add("Downloads & Temp Path Restriction: DISABLED (by config)");
+                SetPathRulesBlocked(false, null);
+                logDetails.Add("Path Restriction: DISABLED (by config)");
             }
 
             // 3. Disallowed Exes
