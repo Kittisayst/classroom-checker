@@ -79,7 +79,7 @@ namespace ClassroomChecker.UI
             var cfg = ConfigService.Instance.Current;
             string room = (cfg != null && cfg.selected != null && !string.IsNullOrEmpty(cfg.selected.room))
                 ? cfg.selected.room
-                : "Lab1";
+                : "ຫ້ອງຄອມພິວເຕີ 1";
             int number = (cfg != null && cfg.selected != null)
                 ? cfg.selected.number
                 : 1;

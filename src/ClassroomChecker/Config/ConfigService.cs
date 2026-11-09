@@ -215,7 +215,16 @@ namespace ClassroomChecker.Config
         {
             if (cfg.rooms == null || cfg.rooms.Count == 0)
             {
-                cfg.rooms = new System.Collections.Generic.List<string> { "ຫ້ອງ A", "ຫ້ອງ B" };
+                cfg.rooms = new System.Collections.Generic.List<string> {
+                    "ຫ້ອງຄອມພິວເຕີ 1",
+                    "ຫ້ອງຄອມພິວເຕີ 2",
+                    "ຫ້ອງຄອມພິວເຕີ 3",
+                    "ຫ້ອງຄອມພິວເຕີ 4",
+                    "ຫ້ອງຄອມພິວເຕີ 5",
+                    "ຫ້ອງຄອມພິວເຕີ 6",
+                    "ຫ້ອງຄອມພິວເຕີ 7",
+                    "ຫ້ອງຄອມພິວເຕີ 8"
+                };
             }
             if (cfg.computerNumberRange == null)
             {

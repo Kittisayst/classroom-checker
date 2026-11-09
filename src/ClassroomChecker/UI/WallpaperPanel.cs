@@ -94,7 +94,16 @@ namespace ClassroomChecker.UI
 
             if (rooms == null || rooms.Count == 0)
             {
-                rooms = new System.Collections.Generic.List<string> { "ຫ້ອງ A" };
+                rooms = new System.Collections.Generic.List<string> {
+                    "ຫ້ອງຄອມພິວເຕີ 1",
+                    "ຫ້ອງຄອມພິວເຕີ 2",
+                    "ຫ້ອງຄອມພິວເຕີ 3",
+                    "ຫ້ອງຄອມພິວເຕີ 4",
+                    "ຫ້ອງຄອມພິວເຕີ 5",
+                    "ຫ້ອງຄອມພິວເຕີ 6",
+                    "ຫ້ອງຄອມພິວເຕີ 7",
+                    "ຫ້ອງຄອມພິວເຕີ 8"
+                };
                 ConfigService.Instance.Current.rooms = rooms;
             }
 
@@ -254,7 +263,7 @@ namespace ClassroomChecker.UI
         {
             try
             {
-                string room = cmbRooms.SelectedItem != null ? cmbRooms.SelectedItem.ToString() : "ຫ້ອງ A";
+                string room = cmbRooms.SelectedItem != null ? cmbRooms.SelectedItem.ToString() : "ຫ້ອງຄອມພິວເຕີ 1";
                 int number = (int)numComputerNumber.Value;
 
                 Rectangle screen = Screen.PrimaryScreen.Bounds;
@@ -281,7 +290,7 @@ namespace ClassroomChecker.UI
         {
             try
             {
-                string room = cmbRooms.SelectedItem != null ? cmbRooms.SelectedItem.ToString() : "ຫ້ອງ A";
+                string room = cmbRooms.SelectedItem != null ? cmbRooms.SelectedItem.ToString() : "ຫ້ອງຄອມພິວເຕີ 1";
                 int number = (int)numComputerNumber.Value;
 
                 string appliedPath;
@@ -325,7 +334,7 @@ namespace ClassroomChecker.UI
 
         private void btnQuickSetup_Click(object sender, EventArgs e)
         {
-            string room = cmbRooms.SelectedItem != null ? cmbRooms.SelectedItem.ToString() : "ຫ້ອງ A";
+            string room = cmbRooms.SelectedItem != null ? cmbRooms.SelectedItem.ToString() : "ຫ້ອງຄອມພິວເຕີ 1";
             int number = (int)numComputerNumber.Value;
 
             using (var dlg = new QuickSetupDialog(room, number))

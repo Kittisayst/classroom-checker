@@ -83,7 +83,7 @@ namespace ClassroomChecker.Modules
                 }
 
                 AppConfig cfg = ConfigService.Instance.Current;
-                string room = cfg.selected != null ? cfg.selected.room : "ຫ້ອງ A";
+                string room = cfg.selected != null ? cfg.selected.room : "ຫ້ອງຄອມພິວເຕີ 1";
                 int number = cfg.selected != null ? cfg.selected.number : 1;
 
                 SimpleXlsxWriter writer = new SimpleXlsxWriter();
@@ -249,7 +249,7 @@ namespace ClassroomChecker.Modules
         public string GetTargetExcelPath()
         {
             AppConfig cfg = ConfigService.Instance.Current;
-            string room = cfg.selected != null ? cfg.selected.room : "ຫ້ອງ A";
+            string room = cfg.selected != null ? cfg.selected.room : "ຫ້ອງຄອມພິວເຕີ 1";
             int number = cfg.selected != null ? cfg.selected.number : 1;
 
             string safeRoom = SanitizeFileName(room);

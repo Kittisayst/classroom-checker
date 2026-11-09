@@ -2,23 +2,27 @@
   "version": 1,
   "language": "lo",
   "rooms": [
-    "ຫ້ອງຄອມເບີ 1",
-    "ຫ້ອງຄອມເບີ 2",
-    "ຫ້ອງຄອມເບີ 3",
-    "ຫ້ອງຄອມເບີ 4",
-    "ຫ້ອງຄອມເບີ 5"
+    "ຫ້ອງຄອມພິວເຕີ 1",
+    "ຫ້ອງຄອມພິວເຕີ 2",
+    "ຫ້ອງຄອມພິວເຕີ 3",
+    "ຫ້ອງຄອມພິວເຕີ 4",
+    "ຫ້ອງຄອມພິວເຕີ 5",
+    "ຫ້ອງຄອມພິວເຕີ 6",
+    "ຫ້ອງຄອມພິວເຕີ 7",
+    "ຫ້ອງຄອມພິວເຕີ 8"
   ],
   "computerNumberRange": {
     "min": 1,
     "max": 45
   },
   "selected": {
-    "room": "ຫ້ອງຄອມເບີ 1",
+    "room": "ຫ້ອງຄອມພິວເຕີ 1",
     "number": 1
   },
   "background": {
     "imagePath": "bg.png",
-    "style": "fill"
+    "style": "fill",
+    "applyToAllUsers": false
   },
   "label": {
     "template": "{room} - {number}",
@@ -39,6 +43,23 @@
     "windowsUpdateCache": true,
     "browserCache": false,
     "excludePaths": [
+      
+    ]
+  },
+  "security": {
+    "blockUsbExecution": true,
+    "blockDownloadsExecution": true,
+    "blockPopularGames": true,
+    "blockedExes": [
+      "roblox.exe",
+      "robloxplayerlauncher.exe",
+      "steam.exe",
+      "epicgameslauncher.exe",
+      "garena.exe",
+      "minecraft.exe",
+      "discord.exe"
+    ],
+    "blockedPaths": [
       
     ]
   },
