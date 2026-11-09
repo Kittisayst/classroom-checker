@@ -491,8 +491,9 @@ namespace ClassroomChecker.Tests
 
             bool has7z = false;
             bool hasVlc = false;
-            bool hasLibre = false;
+            bool hasLaoScript = false;
             bool hasSumatra = false;
+            bool hasBrave = false;
 
             foreach (var pkg in catalog)
             {
@@ -504,14 +505,16 @@ namespace ClassroomChecker.Tests
 
                 if (pkg.Id == "7zip") has7z = true;
                 if (pkg.Id == "vlc") hasVlc = true;
-                if (pkg.Id == "libreoffice") hasLibre = true;
+                if (pkg.Id == "laoscript8") hasLaoScript = true;
                 if (pkg.Id == "sumatrapdf") hasSumatra = true;
+                if (pkg.Id == "brave") hasBrave = true;
             }
 
             Assert(has7z, "contains 7-Zip");
             Assert(hasVlc, "contains VLC");
-            Assert(hasLibre, "contains LibreOffice");
+            Assert(hasLaoScript, "contains LaoScript 8");
             Assert(hasSumatra, "contains SumatraPDF");
+            Assert(hasBrave, "contains Brave Browser");
         }
     }
 }

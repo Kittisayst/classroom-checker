@@ -14,6 +14,7 @@ dist/*.old*
 dist/logs/
 dist/reports/
 dist/specs/
+dist/installers
 
 
 *.pfx

@@ -93,22 +93,23 @@ namespace ClassroomChecker.Core
                 SilentArguments = "/S"
             });
 
-            // 4. Mozilla Firefox
+            // 4. Brave Browser
             _catalog.Add(new SoftwarePackage
             {
-                Id = "firefox",
-                Name = "Mozilla Firefox",
+                Id = "brave",
+                Name = "Brave Browser",
                 Category = "Web Browser",
-                Description = "ເວັບບຣາວເຊີ Open Source ມາດຕະຖານສາກົນ, ປອດໄພ, ໄວ",
-                LicenseType = "Open Source (MPL)",
-                ExeSearchName = "firefox.exe",
+                Description = "ເວັບບຣາວເຊີໄວ ແລະ ປອດໄພ, ບລັອກໂຄສະນາ ແລະ ສິ່ງລົບກວນອັດຕະໂນມັດ",
+                LicenseType = "Open Source (Brave / MPL)",
+                ExeSearchName = "brave.exe",
                 FallbackPaths = new string[]
                 {
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"Mozilla Firefox\firefox.exe"),
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"Mozilla Firefox\firefox.exe")
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"BraveSoftware\Brave-Browser\Application\brave.exe"),
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"BraveSoftware\Brave-Browser\Application\brave.exe"),
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"BraveSoftware\Brave-Browser\Application\brave.exe")
                 },
-                InstallerFilePatterns = new string[] { "*firefox*.exe" },
-                SilentArguments = "/S"
+                InstallerFilePatterns = new string[] { "*brave*.exe", "*bravesetup*.exe" },
+                SilentArguments = "/silent /install"
             });
 
             // 5. Google Chrome
@@ -148,22 +149,26 @@ namespace ClassroomChecker.Core
                 SilentArguments = "/S"
             });
 
-            // 7. LibreOffice
+            // 7. Lao Script for Windows (LaoScript 8)
             _catalog.Add(new SoftwarePackage
             {
-                Id = "libreoffice",
-                Name = "LibreOffice",
-                Category = "Office Suite",
-                Description = "ຊຸດເອກະສານຫ້ອງການ (Writer, Calc, Impress) ແທນ MS Office ຟຣີ 100%",
-                LicenseType = "Open Source (MPL)",
-                ExeSearchName = "soffice.exe",
+                Id = "laoscript8",
+                Name = "LaoScript 8 (Lao Script for Windows)",
+                Category = "Lao Language / Fonts",
+                Description = "ໂປຣແກຣມແປ້ນພິມ ແລະ ຕັດຄຳພາສາລາວ, ຟອນລາວ, ແປງລະຫັດຟອນເກົ່າ-ໃໝ່",
+                LicenseType = "Freeware (Lao Script)",
+                ExeSearchName = "laoscript8.exe",
                 FallbackPaths = new string[]
                 {
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"LibreOffice\program\soffice.exe"),
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"LibreOffice\program\soffice.exe")
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"Lao Script for Windows\laoscript8.exe"),
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"Lao Script for Windows\laoscript8.exe"),
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"Lao Script for Windows 8\laoscript8.exe"),
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"Lao Script for Windows 8\laoscript8.exe"),
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"Lao Script for Windows\ls8.exe"),
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"Lao Script for Windows\ls8.exe")
                 },
-                InstallerFilePatterns = new string[] { "*libreoffice*.msi", "*libreoffice*.exe" },
-                SilentArguments = "/qn /norestart"
+                InstallerFilePatterns = new string[] { "*laoscript*.exe", "*laoscript8*.exe", "*ls8*.exe" },
+                SilentArguments = "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART"
             });
 
             // 8. VS Code

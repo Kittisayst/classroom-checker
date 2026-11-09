@@ -19,8 +19,8 @@ Classroom Checker — Portable USB Admin Tool
 3. VLC Media Player:
    ໄຟລ໌: vlc-3.0.21-win64.exe (ຫຼື ໄຟລ໌ທີ່ມີຊື່ "vlc*.exe")
 
-4. Mozilla Firefox:
-   ໄຟລ໌: Firefox Setup 132.0.exe (ຫຼື ໄຟລ໌ທີ່ມີຊື່ "firefox*.exe")
+4. Brave Browser:
+   ໄຟລ໌: BraveBrowserSetup64.exe (ຫຼື ໄຟລ໌ທີ່ມີຊື່ "brave*.exe")
 
 5. Google Chrome (Standalone Offline Installer):
    ໄຟລ໌: ChromeStandaloneSetup64.exe (ຫຼື ໄຟລ໌ທີ່ມີຊື່ "chrome*.exe")
@@ -28,8 +28,8 @@ Classroom Checker — Portable USB Admin Tool
 6. Notepad++:
    ໄຟລ໌: npp.8.7.Installer.x64.exe (ຫຼື ໄຟລ໌ທີ່ມີຊື່ "npp*.exe")
 
-7. LibreOffice:
-   ໄຟລ໌: LibreOffice_24.8.3_Win_x86-64.msi (ຫຼື ໄຟລ໌ທີ່ມີຊື່ "libreoffice*.msi")
+7. LaoScript 8 (Lao Script for Windows):
+   ໄຟລ໌: laoscript8.exe (ຫຼື ໄຟລ໌ທີ່ມີຊື່ "laoscript*.exe", "ls8*.exe")
 
 8. Visual Studio Code:
    ໄຟລ໌: VSCodeUserSetup-x64.exe (ຫຼື ໄຟລ໌ທີ່ມີຊື່ "vscode*.exe")
