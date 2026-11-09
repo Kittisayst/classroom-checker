@@ -297,7 +297,7 @@ namespace ClassroomChecker.UI
                         string.Format("{0}\n\n{1}: {2}\n{3}",
                             Localizer.T("wallpaper_applied_success"),
                             Localizer.T("room"), room + " - " + number.ToString("D2"),
-                            Localizer.T("set_for_user", Environment.UserName)),
+                            Localizer.T("set_for_user", Environment.UserName) + WallpaperModule.Instance.LastAllUsersNote),
                         Localizer.T("app_title"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);

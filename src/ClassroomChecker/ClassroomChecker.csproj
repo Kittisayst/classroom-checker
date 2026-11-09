@@ -50,13 +50,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
-    <Compile Include="SpikeCli.cs" />
+    <Compile Include="SpikeCli.cs" Condition="'$(Configuration)' == 'Debug'" />
     <Compile Include="Phase5Verifier.cs" />
     <Compile Include="Config\AppConfig.cs" />
     <Compile Include="Config\ConfigService.cs" />
     <Compile Include="I18n\Localizer.cs" />
     <Compile Include="Core\ICheckModule.cs" />
     <Compile Include="Core\ScanRunner.cs" />
+    <Compile Include="Core\ReportService.cs" />
     <Compile Include="Core\SimpleXlsxWriter.cs" />
     <Compile Include="Core\MasterSummaryService.cs" />
     <Compile Include="Core\QuickSetupRunner.cs" />
@@ -68,8 +69,11 @@
     <Compile Include="Modules\PowerModule.cs" />
     <Compile Include="Modules\CleanupModule.cs" />
     <Compile Include="Modules\DriverCheckModule.cs" />
+    <Compile Include="Modules\DiskSpaceCheckModule.cs" />
+    <Compile Include="Modules\DefenderCheckModule.cs" />
     <Compile Include="Modules\SpecExportModule.cs" />
     <Compile Include="Modules\WallpaperModule.cs" />
+    <Compile Include="Modules\AllUsersWallpaper.cs" />
     <Compile Include="Native\NativeMethods.cs" />
     <Compile Include="UI\UiFontManager.cs" />
     <Compile Include="UI\InputDialog.cs">
@@ -99,10 +103,10 @@
     <Compile Include="UI\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\SpikeForm.cs">
+    <Compile Include="UI\SpikeForm.cs" Condition="'$(Configuration)' == 'Debug'">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\SpikeForm.Designer.cs">
+    <Compile Include="UI\SpikeForm.Designer.cs" Condition="'$(Configuration)' == 'Debug'">
       <DependentUpon>SpikeForm.cs</DependentUpon>
     </Compile>
   </ItemGroup>

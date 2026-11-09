@@ -41,6 +41,17 @@ namespace ClassroomChecker.Modules
 
                 if (File.Exists(targetPath))
                 {
+                    // ເຕືອນຖ້າໄຟລ໌ເດີມເປັນຂອງເຄື່ອງອື່ນ (ເລກເຄື່ອງຊ້ຳ)
+                    string curSerial, m1, m2, m3;
+                    GetSystemAndBiosInfo(out m1, out m2, out curSerial, out m3);
+                    string other = DescribeIfOtherMachine(targetPath, curSerial);
+                    if (other != null)
+                    {
+                        details.Add("DUPLICATE: " + other);
+                        return new CheckResult(CheckStatus.Warning,
+                            "⚠ ເລກເຄື່ອງນີ້ມີໄຟລ໌ Spec ຂອງເຄື່ອງອື່ນຢູ່ແລ້ວ (" + other + ")", details);
+                    }
+
                     FileInfo fi = new FileInfo(targetPath);
                     string summary = string.Format("ມີໄຟລ໌ Spec Excel ແລ້ວ: {0} ({1:F1} KB, {2})",
                         Path.GetFileName(targetPath), fi.Length / 1024.0, fi.LastWriteTime.ToString("yyyy-MM-dd HH:mm"));
@@ -93,6 +104,19 @@ namespace ClassroomChecker.Modules
                 // System & BIOS
                 string manufacturer, model, serial, board;
                 GetSystemAndBiosInfo(out manufacturer, out model, out serial, out board);
+
+                // ກວດເລກເຄື່ອງຊ້ຳ: ຖ້າໄຟລ໌ເດີມເປັນຂອງເຄື່ອງອື່ນ ຫ້າມຂຽນທັບ → ບັນທຶກເປັນໄຟລ໌ໃໝ່ ແລ້ວເຕືອນ
+                string duplicateOf = null;
+                if (File.Exists(targetPath))
+                {
+                    duplicateOf = DescribeIfOtherMachine(targetPath, serial);
+                    if (duplicateOf != null)
+                    {
+                        targetPath = Path.Combine(outputDir, string.Format("{0}_{1}_{2:yyyyMMdd_HHmmss}.xlsx",
+                            Path.GetFileNameWithoutExtension(targetPath),
+                            SanitizeFileName(Environment.MachineName), DateTime.Now));
+                    }
+                }
                 specSheet.AddRow("System & BIOS", "Manufacturer (ຍີ່ຫໍ້)", manufacturer);
                 specSheet.AddRow("System & BIOS", "Model (ລຸ້ນ)", model);
                 specSheet.AddRow("System & BIOS", "Serial Number", serial);
@@ -206,6 +230,13 @@ namespace ClassroomChecker.Modules
 
                 details.Add("Saved to: " + targetPath);
                 string summaryMsg = string.Format("Export Spec ເປັນ Excel ສຳເລັດ: {0}", Path.GetFileName(targetPath));
+                if (duplicateOf != null)
+                {
+                    details.Add("DUPLICATE: " + duplicateOf);
+                    return new CheckResult(CheckStatus.Warning,
+                        string.Format("⚠ ເລກເຄື່ອງ {0:D2} ຊ້ຳກັບເຄື່ອງອື່ນ ({1}) — ບໍ່ຂຽນທັບ, ບັນທຶກເປັນ {2}",
+                            number, duplicateOf, Path.GetFileName(targetPath)), details);
+                }
                 return new CheckResult(CheckStatus.Pass, summaryMsg, details);
             }
             catch (Exception ex)
@@ -293,6 +324,47 @@ namespace ClassroomChecker.Modules
             }
 
             return Path.Combine(targetDir, fileName);
+        }
+
+        /// <summary>
+        /// ອ່ານໄຟລ໌ spec ເດີມ ແລ້ວປຽບທຽບກັບເຄື່ອງນີ້ (serial ກ່ອນ, ຖ້າບໍ່ຮູ້ serial ຈຶ່ງໃຊ້ hostname).
+        /// ສົ່ງຄືນຄຳອະທິບາຍເຄື່ອງເດີມ ຖ້າເປັນຄົນລະເຄື່ອງ, null ຖ້າເປັນເຄື່ອງດຽວກັນ ຫຼື ອ່ານບໍ່ໄດ້
+        /// </summary>
+        internal static string DescribeIfOtherMachine(string existingPath, string currentSerial, string currentHostname = null)
+        {
+            try
+            {
+                MachineSpecSummary old = MasterSummaryService.ParseSingleMachineXlsx(existingPath);
+                if (old == null) return null;
+
+                string host = currentHostname ?? Environment.MachineName;
+                bool different = IsDifferentMachine(old.Hostname, old.Serial, host, currentSerial);
+                return different ? string.Format("{0} / S/N {1}", old.Hostname, old.Serial) : null;
+            }
+            catch
+            {
+                return null; // ອ່ານໄຟລ໌ເດີມບໍ່ໄດ້ → ຖືວ່າຂຽນທັບໄດ້ (ພຶດຕິກຳເດີມ)
+            }
+        }
+
+        internal static bool IsDifferentMachine(string oldHostname, string oldSerial, string currentHostname, string currentSerial)
+        {
+            bool oldKnown = IsKnownSerial(oldSerial);
+            bool nowKnown = IsKnownSerial(currentSerial);
+
+            if (oldKnown && nowKnown)
+                return !string.Equals(oldSerial.Trim(), currentSerial.Trim(), StringComparison.OrdinalIgnoreCase);
+
+            return !string.Equals(oldHostname, currentHostname, StringComparison.OrdinalIgnoreCase);
+        }
+
+        internal static bool IsKnownSerial(string s)
+        {
+            if (string.IsNullOrWhiteSpace(s)) return false;
+            string t = s.Trim();
+            return t != "-" && !t.Equals("Unknown", StringComparison.OrdinalIgnoreCase)
+                && !t.Equals("To Be Filled By O.E.M.", StringComparison.OrdinalIgnoreCase)
+                && !t.Equals("Default string", StringComparison.OrdinalIgnoreCase);
         }
 
         private string SanitizeFileName(string name)

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -35,6 +35,8 @@ namespace ClassroomChecker.UI
             _modules.Add(new PowerModule());
             _modules.Add(new CleanupModule());
             _modules.Add(new DriverCheckModule());
+            _modules.Add(new DiskSpaceCheckModule());
+            _modules.Add(new DefenderCheckModule());
             _modules.Add(new SpecExportModule());
         }
 
@@ -147,6 +149,7 @@ namespace ClassroomChecker.UI
             finally
             {
                 SetUiScanningState(false, 0);
+                AutoSaveReport();
                 UpdateSummaryLabel();
                 CheckFixButtonState();
             }
@@ -189,9 +192,18 @@ namespace ClassroomChecker.UI
             finally
             {
                 SetUiScanningState(false, 0);
+                AutoSaveReport();
                 UpdateSummaryLabel();
                 CheckFixButtonState();
             }
+        }
+
+        /// <summary>ບັນທຶກລາຍງານອັດຕະໂນມັດລົງ reports/ ຫຼັງສະແກນ/ແກ້ໄຂ (ບໍ່ຕ້ອງເລືອກ path ເອງ)</summary>
+        private void AutoSaveReport()
+        {
+            UpdateSummaryLabel();
+            string path = ReportService.AutoSaveReport(_results, lblSummary.Text);
+            ReportService.Log(path != null ? "Report saved: " + path : "Report auto-save failed");
         }
 
         private void SetUiScanningState(bool scanning, int total)
@@ -241,6 +253,7 @@ namespace ClassroomChecker.UI
             }
 
             _results[mod] = res;
+            ReportService.Log(string.Format("[{0}] {1}: {2}", res.Status, mod.Id, res.Summary));
 
             var row = FindRowForModule(mod);
             if (row != null)
@@ -374,35 +387,8 @@ namespace ClassroomChecker.UI
                 {
                     try
                     {
-                        StringBuilder sb = new StringBuilder();
-                        sb.AppendLine("=======================================================================");
-                        sb.AppendLine("   CLASSROOM CHECKER — SYSTEM SCAN REPORT");
-                        sb.AppendLine("=======================================================================");
-                        sb.AppendLine("Machine: " + Environment.MachineName);
-                        sb.AppendLine("User:    " + Environment.UserName);
-                        sb.AppendLine("Date:    " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                        sb.AppendLine("-----------------------------------------------------------------------");
-
-                        foreach (var kv in _results)
-                        {
-                            sb.AppendLine();
-                            sb.AppendLine(string.Format("[{0}] {1}", kv.Value.Status.ToString().ToUpper(), Localizer.T(kv.Key.DisplayNameKey)));
-                            sb.AppendLine("Summary: " + kv.Value.Summary);
-                            if (kv.Value.Details != null && kv.Value.Details.Count > 0)
-                            {
-                                foreach (var d in kv.Value.Details)
-                                {
-                                    sb.AppendLine("  • " + d);
-                                }
-                            }
-                        }
-
-                        sb.AppendLine();
-                        sb.AppendLine("=======================================================================");
-                        sb.AppendLine(lblSummary.Text);
-                        sb.AppendLine("=======================================================================");
-
-                        File.WriteAllText(sfd.FileName, sb.ToString(), Encoding.UTF8);
+                        string report = ReportService.BuildReport(_results, lblSummary.Text);
+                        File.WriteAllText(sfd.FileName, report, Encoding.UTF8);
                         MessageBox.Show("ບັນທຶກລາຍງານຮຽບຮ້ອຍແລ້ວ!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch (Exception ex)

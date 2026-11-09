@@ -238,15 +238,21 @@ namespace ClassroomChecker.UI
             }
             catch { }
 
-            int nextNum = _number + 1;
-            var cfg = ConfigService.Instance.Current;
-            if (cfg.computerNumberRange != null && nextNum > cfg.computerNumberRange.max)
-                nextNum = cfg.computerNumberRange.max;
+            int nextNum = _runner.NextNumber > 0 ? _runner.NextNumber : _number + 1;
+            bool isMaxReached = _runner.IsMaxReached;
 
             if (success)
             {
-                lblStatusMessage.Text = string.Format("✓ ສຳເລັດທຸກຂັ້ນຕອນ! ເລກເຄື່ອງຖືກປັບເປັນ {0:D2} ແລ້ວ (ພ້ອມສຽບເຄື່ອງຕໍ່ໄປ)", nextNum);
-                lblStatusMessage.ForeColor = Color.FromArgb(22, 163, 74);
+                if (isMaxReached)
+                {
+                    lblStatusMessage.Text = string.Format("✓ ສຳເລັດທຸກຂັ້ນຕອນ! ⚠ ຮອດເລກເຄື່ອງສູງສຸດແລ້ວ ({0:D2})", nextNum);
+                    lblStatusMessage.ForeColor = Color.FromArgb(22, 163, 74);
+                }
+                else
+                {
+                    lblStatusMessage.Text = string.Format("✓ ສຳເລັດທຸກຂັ້ນຕອນ! ເລກເຄື່ອງຖືກປັບເປັນ {0:D2} ແລ້ວ (ພ້ອມສຽບເຄື່ອງຕໍ່ໄປ)", nextNum);
+                    lblStatusMessage.ForeColor = Color.FromArgb(22, 163, 74);
+                }
             }
             else
             {
@@ -260,7 +266,8 @@ namespace ClassroomChecker.UI
             var handler = SetupCompleted;
             if (handler != null) handler();
 
-            if (chkAutoClose.Checked)
+            // ຖ້າຮອດເລກສູງສຸດແລ້ວ ຢ່າ auto-close ເພື່ອໃຫ້ Admin ຮັບຮູ້ວ່າສິ້ນສຸດຫ້ອງແລ້ວ
+            if (chkAutoClose.Checked && !isMaxReached)
             {
                 autoCloseCountdown = 2;
                 autoCloseTimer.Start();

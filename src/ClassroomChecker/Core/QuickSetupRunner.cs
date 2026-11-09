@@ -36,6 +36,17 @@ namespace ClassroomChecker.Core
     {
         public event EventHandler<QuickSetupStepEventArgs> StepProgress;
 
+        public int NextNumber { get; private set; }
+        public bool IsMaxReached { get; private set; }
+
+        internal static int CalculateNextNumber(int currentNumber, int maxNumber, out bool isMaxReached)
+        {
+            isMaxReached = currentNumber >= maxNumber;
+            int next = currentNumber + 1;
+            if (next > maxNumber) next = maxNumber;
+            return next;
+        }
+
         public async Task<bool> RunSetupAsync(string room, int number)
         {
             return await Task.Run(() =>
@@ -190,12 +201,24 @@ namespace ClassroomChecker.Core
                 {
                     var cfg = ConfigService.Instance.Current;
                     int maxNum = cfg.computerNumberRange != null ? cfg.computerNumberRange.max : 45;
-                    int nextNum = number + 1;
-                    if (nextNum > maxNum) nextNum = maxNum;
+                    bool isMax;
+                    int nextNum = CalculateNextNumber(number, maxNum, out isMax);
+
+                    IsMaxReached = isMax;
+                    NextNumber = nextNum;
 
                     cfg.selected.room = room;
                     cfg.selected.number = nextNum;
                     ConfigService.Instance.Save();
+
+                    if (isMax)
+                    {
+                        ReportService.Log(string.Format("QuickSetup: ຮອດເລກເຄື່ອງສູງສຸດແລ້ວ ({0:D2})", maxNum));
+                    }
+                    else
+                    {
+                        ReportService.Log(string.Format("QuickSetup: ປັບເລກເຄື່ອງຕໍ່ໄປເປັນ {0:D2}", nextNum));
+                    }
                 }
                 catch { }
 

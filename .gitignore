@@ -12,3 +12,4 @@ dist/ScanReport_*.txt
 dist/config.json
 
 
+*.pfx

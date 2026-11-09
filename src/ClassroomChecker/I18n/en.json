@@ -34,6 +34,8 @@
   "module_power": "Power Scheme (Never sleep)",
   "module_cleanup": "Temp Files Cleanup",
   "module_spec": "Export Machine Spec to Excel (.xlsx)",
+  "module_disk_space": "Disk Free Space",
+  "module_defender": "Windows Defender (Antivirus)",
   "btn_scan": "Scan",
   "btn_fix_selected": "Fix Selected",
   "btn_view_details": "View Details",

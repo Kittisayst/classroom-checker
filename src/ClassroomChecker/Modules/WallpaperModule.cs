@@ -102,6 +102,9 @@ namespace ClassroomChecker.Modules
         /// <summary>
         /// ບັນທຶກຮູບລົງ C:\ProgramData\ClassroomChecker\wallpaper.png ແລະ ສັ່ງຕັ້ງ Wallpaper ຈິງ
         /// </summary>
+        /// <summary>ຂໍ້ຄວາມສະຫຼຸບການຕັ້ງໃຫ້ user ອື່ນຈາກ ApplyWallpaper ຄັ້ງລ່າສຸດ (ວ່າງຖ້າບໍ່ໄດ້ເປີດໃຊ້)</summary>
+        public string LastAllUsersNote { get; private set; }
+
         public bool ApplyWallpaper(string room, int number, out string appliedPath, out string errorMessage)
         {
             appliedPath = string.Empty;
@@ -140,6 +143,17 @@ namespace ClassroomChecker.Modules
                     {
                         errorMessage = "SystemParametersInfo returned false.";
                         return false;
+                    }
+
+                    // ທາງເລືອກ: ຕັ້ງໃຫ້ user ອື່ນ ແລະ Default profile ນຳ (config background.applyToAllUsers)
+                    LastAllUsersNote = string.Empty;
+                    if (ConfigService.Instance.Current.background.applyToAllUsers)
+                    {
+                        var allUsersDetails = new System.Collections.Generic.List<string>();
+                        string note = AllUsersWallpaper.Apply(appliedPath, style, allUsersDetails);
+                        LastAllUsersNote = "\n" + note;
+                        ClassroomChecker.Core.ReportService.Log(note);
+                        foreach (string d in allUsersDetails) ClassroomChecker.Core.ReportService.Log("  " + d);
                     }
 
                     // ອັບເດດ selected ລົງ config

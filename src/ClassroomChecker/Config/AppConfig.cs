@@ -31,10 +31,17 @@ namespace ClassroomChecker.Config
         public string imagePath { get; set; }
         public string style { get; set; }
 
+        /// <summary>
+        /// true = ຕັ້ງ wallpaper ໃຫ້ທຸກ user ໃນເຄື່ອງ (ແກ້ registry hive ຂອງ user ອື່ນ + Default profile).
+        /// ຄ່າເລີ່ມຕົ້ນ false ເພາະແຕະຕ້ອງ profile ຂອງຄົນອື່ນ.
+        /// </summary>
+        public bool applyToAllUsers { get; set; }
+
         public BackgroundConfig()
         {
             imagePath = "bg.png";
             style = "fill";
+            applyToAllUsers = false;
         }
     }
 

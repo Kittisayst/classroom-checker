@@ -34,6 +34,8 @@
   "module_power": "Power Scheme (Never sleep)",
   "module_cleanup": "ລ້າງໄຟລ໌ Temp (Disk Cleanup)",
   "module_spec": "Export Spec ເຄື່ອງເປັນ Excel (.xlsx)",
+  "module_disk_space": "ພື້ນທີ່ວ່າງ Disk (Disk Space)",
+  "module_defender": "Windows Defender (Antivirus)",
   "btn_scan": "ສະແກນ (Scan)",
   "btn_fix_selected": "ແກ້ໄຂທີ່ເລືອກ (Fix)",
   "btn_view_details": "ເບິ່ງລາຍລະອຽດ",
