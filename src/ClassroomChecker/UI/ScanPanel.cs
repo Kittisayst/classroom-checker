@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using ClassroomChecker.Config;
@@ -435,8 +436,20 @@ namespace ClassroomChecker.UI
                 if (!Directory.Exists(specsDir))
                 {
                     MessageBox.Show(
-                        Localizer.T("merge_no_files", "ບໍ່ພົບໂຟນເດີ specs ຫຼື ບໍ່ມີໄຟລ໌ສະເປັກທີ່ຈະລວມ"),
-                        "Notice",
+                        Localizer.T("merge_specs_no_files"),
+                        Localizer.T("merge_specs_title"),
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                    return;
+                }
+
+                string[] allFiles = Directory.GetFiles(specsDir, "*.xlsx");
+                var machineFiles = allFiles.Where(f => !Path.GetFileName(f).StartsWith("Master_Summary_", StringComparison.OrdinalIgnoreCase)).ToArray();
+                if (machineFiles.Length == 0)
+                {
+                    MessageBox.Show(
+                        Localizer.T("merge_specs_no_files"),
+                        Localizer.T("merge_specs_title"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
                     return;
@@ -452,16 +465,16 @@ namespace ClassroomChecker.UI
                 if (string.IsNullOrEmpty(masterPath) || !File.Exists(masterPath))
                 {
                     MessageBox.Show(
-                        Localizer.T("merge_no_files", "ບໍ່ພົບໄຟລ໌ສະເປັກທີ່ຈະລວມ"),
-                        "Notice",
+                        Localizer.T("merge_specs_no_files"),
+                        Localizer.T("merge_specs_title"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
                     return;
                 }
 
                 var res = MessageBox.Show(
-                    Localizer.T("merge_success", "ລວມສະເປັກສຳເລັດແລ້ວ! ບັນທຶກໄວ້ທີ່:\n{0}\n\nຕ້ອງການເປີດໄຟລ໌ດຽວນີ້ບໍ່?", masterPath),
-                    Localizer.T("app_title"),
+                    Localizer.T("merge_success", masterPath),
+                    Localizer.T("merge_specs_title"),
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Information);
 
@@ -473,7 +486,7 @@ namespace ClassroomChecker.UI
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    Localizer.T("merge_error", "ເກີດຂໍ້ຜິດພາດໃນການລວມສະເປັກ:\n{0}", ex.Message),
+                    Localizer.T("merge_error", ex.Message),
                     "Error",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);

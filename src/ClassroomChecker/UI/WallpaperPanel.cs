@@ -63,7 +63,7 @@ namespace ClassroomChecker.UI
             lblBgImage.Text = Localizer.T("bg_image");
             btnBrowseBg.Text = Localizer.T("btn_browse");
             btnDefaultBg.Text = Localizer.T("btn_default_bg");
-            btnQuickSetup.Text = Localizer.T("btn_quick_setup", "⚡ ຕັ້ງຄ່າດ່ວນ");
+            btnQuickSetup.Text = Localizer.T("btn_quick_setup");
             btnApplyWallpaper.Text = Localizer.T("btn_apply_wallpaper");
             lblPreviewTitle.Text = Localizer.T("preview") + ":";
 

@@ -60,7 +60,7 @@ namespace ClassroomChecker.UI
             lblLanguage.Text = Localizer.T("language");
             tabWallpaper.Text = Localizer.T("tab_wallpaper");
             tabScan.Text = Localizer.T("tab_scan");
-            btnQuickSetup.Text = Localizer.T("btn_quick_setup", "⚡ ຕັ້ງຄ່າດ່ວນ");
+            btnQuickSetup.Text = Localizer.T("btn_quick_setup");
 
             if (Localizer.CurrentLanguage == "en")
             {
