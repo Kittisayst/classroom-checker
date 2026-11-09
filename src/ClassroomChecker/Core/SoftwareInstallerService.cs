@@ -207,6 +207,25 @@ namespace ClassroomChecker.Core
                 InstallerFilePatterns = new string[] { "*gimp*.exe" },
                 SilentArguments = "/VERYSILENT /NORESTART"
             });
+
+            // 10. ShareX
+            _catalog.Add(new SoftwarePackage
+            {
+                Id = "sharex",
+                Name = "ShareX",
+                Category = "Screen Capture / Recording",
+                Description = "ໂປຣແກຣມຖ່າຍພາບໜ້າຈໍ, ອັດວິດີໂອໜ້າຈໍ ແລະ ໃສ່ລູກສອນ/ຄຳບັນຍາຍຮູບພາບ",
+                LicenseType = "Open Source (GPLv3)",
+                ExeSearchName = "ShareX.exe",
+                FallbackPaths = new string[]
+                {
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"ShareX\ShareX.exe"),
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"ShareX\ShareX.exe"),
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"ShareX\ShareX.exe")
+                },
+                InstallerFilePatterns = new string[] { "*sharex*.exe", "*ShareX*.exe" },
+                SilentArguments = "/VERYSILENT /NORESTART"
+            });
         }
 
         public static List<SoftwarePackage> GetCatalog()

@@ -37,6 +37,9 @@ Classroom Checker — Portable USB Admin Tool
 9. GIMP:
    ໄຟລ໌: gimp-2.10.38-setup.exe (ຫຼື ໄຟລ໌ທີ່ມີຊື່ "gimp*.exe")
 
+10. ShareX:
+   ໄຟລ໌: ShareX-16.1.0-setup.exe (ຫຼື ໄຟລ໌ທີ່ມີຊື່ "sharex*.exe")
+
 ------------------------------------------------------------------------
 ໝາຍເຫດ: ໂປຣແກຣມຈະຕິດຕັ້ງດ້ວຍ Flag Silent (/S, /qn, /silent) ອັດຕະໂນມັດ
 ໂດຍບໍ່ຕ້ອງກົດ Next, Next, Finish ເລີຍ.

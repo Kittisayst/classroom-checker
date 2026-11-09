@@ -51,7 +51,7 @@ namespace ClassroomChecker.Tests
             Run("SecurityConfig: defaults include USB, Downloads, and popular games", SecurityConfig_Defaults);
             Run("AppLockModule: metadata and check result contract", AppLockModule_MetadataAndContract);
             Run("I18n: tab_install and installer keys localized", I18n_TabInstall_Localized);
-            Run("SoftwareInstaller: catalog contains 9 FOSS/essential packages", SoftwareInstaller_Catalog_PopulatedAndValid);
+            Run("SoftwareInstaller: catalog contains 10 FOSS/essential packages", SoftwareInstaller_Catalog_PopulatedAndValid);
 
             Cleanup();
 
@@ -487,13 +487,14 @@ namespace ClassroomChecker.Tests
         private static void SoftwareInstaller_Catalog_PopulatedAndValid()
         {
             var catalog = SoftwareInstallerService.GetCatalog();
-            Assert(catalog != null && catalog.Count == 9, "catalog has 9 packages");
+            Assert(catalog != null && catalog.Count == 10, "catalog has 10 packages");
 
             bool has7z = false;
             bool hasVlc = false;
             bool hasLaoScript = false;
             bool hasSumatra = false;
             bool hasBrave = false;
+            bool hasShareX = false;
 
             foreach (var pkg in catalog)
             {
@@ -508,6 +509,7 @@ namespace ClassroomChecker.Tests
                 if (pkg.Id == "laoscript8") hasLaoScript = true;
                 if (pkg.Id == "sumatrapdf") hasSumatra = true;
                 if (pkg.Id == "brave") hasBrave = true;
+                if (pkg.Id == "sharex") hasShareX = true;
             }
 
             Assert(has7z, "contains 7-Zip");
@@ -515,6 +517,7 @@ namespace ClassroomChecker.Tests
             Assert(hasLaoScript, "contains LaoScript 8");
             Assert(hasSumatra, "contains SumatraPDF");
             Assert(hasBrave, "contains Brave Browser");
+            Assert(hasShareX, "contains ShareX");
         }
     }
 }
