@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ClassroomChecker.Config;
 using ClassroomChecker.Core;
+using ClassroomChecker.I18n;
 using ClassroomChecker.Modules;
 
 namespace ClassroomChecker.Tests
@@ -45,6 +46,7 @@ namespace ClassroomChecker.Tests
             Run("SpecExport: duplicate detection when serial known", SpecExport_IsDifferentMachine_KnownSerial);
             Run("SpecExport: duplicate detection when serial unknown falls back to hostname", SpecExport_IsDifferentMachine_FallbackToHostname);
             Run("QuickSetup: PC number auto-increment and max limit boundary", QuickSetup_CalculateNextNumber);
+            Run("I18n: btn_save_report localized in both lo and en", I18n_BtnSaveReport_Localized);
 
             Cleanup();
 
@@ -397,6 +399,22 @@ namespace ClassroomChecker.Tests
             int n50 = QuickSetupRunner.CalculateNextNumber(50, 45, out isMax);
             AreEqual(45, n50, "50 clamped to 45");
             Assert(isMax, "50 is max");
+        }
+
+        private static void I18n_BtnSaveReport_Localized()
+        {
+            Localizer.SetLanguage("lo");
+            string loVal = Localizer.T("btn_save_report");
+            Assert(!string.IsNullOrEmpty(loVal) && loVal != "btn_save_report", "btn_save_report in Lao should not be key name");
+            AreEqual("ບັນທຶກລາຍງານ (.txt)", loVal, "Lao translation");
+
+            Localizer.SetLanguage("en");
+            string enVal = Localizer.T("btn_save_report");
+            Assert(!string.IsNullOrEmpty(enVal) && enVal != "btn_save_report", "btn_save_report in English should not be key name");
+            AreEqual("Save Report (.txt)", enVal, "English translation");
+
+            // Restore default
+            Localizer.SetLanguage("lo");
         }
     }
 }

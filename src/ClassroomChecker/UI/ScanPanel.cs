@@ -73,8 +73,8 @@ namespace ClassroomChecker.UI
             btnScan.Text = Localizer.T("btn_scan");
             btnFixSelected.Text = Localizer.T("btn_fix_selected");
             chkSelectAll.Text = Localizer.T("col_check") + " " + (Localizer.CurrentLanguage == "lo" ? "ທັງໝົດ" : "All");
-            btnSaveReport.Text = Localizer.T("btn_save_report", "ບັນທຶກລາຍງານ (.txt)");
-            btnMergeSpecs.Text = Localizer.T("btn_merge_specs", "📊 ລວມສະເປັກ (Master Excel)");
+            btnSaveReport.Text = Localizer.T("btn_save_report");
+            btnMergeSpecs.Text = Localizer.T("btn_merge_specs");
 
             colCheck.HeaderText = "✓";
             colStatus.HeaderText = Localizer.T("col_status");
@@ -374,7 +374,11 @@ namespace ClassroomChecker.UI
         {
             if (_results.Count == 0)
             {
-                MessageBox.Show("ກະລຸນາສະແກນກ່ອນບັນທຶກລາຍງານ", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(
+                    Localizer.T("report_please_scan_first"),
+                    Localizer.T("app_title"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
                 return;
             }
 
@@ -389,11 +393,19 @@ namespace ClassroomChecker.UI
                     {
                         string report = ReportService.BuildReport(_results, lblSummary.Text);
                         File.WriteAllText(sfd.FileName, report, Encoding.UTF8);
-                        MessageBox.Show("ບັນທຶກລາຍງານຮຽບຮ້ອຍແລ້ວ!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(
+                            Localizer.T("report_save_success"),
+                            Localizer.T("app_title"),
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("ເກີດຂໍ້ຜິດພາດໃນການບັນທຶກ: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(
+                            Localizer.T("report_save_error", ex.Message),
+                            "Error",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
                     }
                 }
             }
