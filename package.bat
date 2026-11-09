@@ -61,6 +61,7 @@ if not exist "%~dp0dist" mkdir "%~dp0dist"
 if not exist "%~dp0dist\backgrounds" mkdir "%~dp0dist\backgrounds"
 if not exist "%~dp0dist\specs" mkdir "%~dp0dist\specs"
 if not exist "%~dp0dist\drivers" mkdir "%~dp0dist\drivers"
+if not exist "%~dp0dist\installers" mkdir "%~dp0dist\installers"
 
 echo [3/3] Copying executable to dist...
 copy /Y "%~dp0src\ClassroomChecker\bin\Release\ClassroomChecker.exe" "%~dp0dist\ClassroomChecker.exe"

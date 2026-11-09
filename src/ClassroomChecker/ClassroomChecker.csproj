@@ -62,6 +62,8 @@
     <Compile Include="Core\MasterSummaryService.cs" />
     <Compile Include="Core\QuickSetupRunner.cs" />
     <Compile Include="Core\SecurityPolicyManager.cs" />
+    <Compile Include="Core\SoftwarePackage.cs" />
+    <Compile Include="Core\SoftwareInstallerService.cs" />
     <Compile Include="Modules\OfficeCheckModule.cs" />
     <Compile Include="Modules\WindowsLicenseCheckModule.cs" />
     <Compile Include="Modules\EssentialSoftwareCheckModule.cs" />
@@ -103,6 +105,9 @@
       <DependentUpon>ScanPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\SecurityPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\SoftwareInstallPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UI\MainForm.cs">

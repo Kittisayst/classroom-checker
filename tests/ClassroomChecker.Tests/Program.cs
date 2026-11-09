@@ -50,6 +50,8 @@ namespace ClassroomChecker.Tests
             Run("I18n: Settings keys localized in both lo and en", I18n_SettingsKeys_Localized);
             Run("SecurityConfig: defaults include USB, Downloads, and popular games", SecurityConfig_Defaults);
             Run("AppLockModule: metadata and check result contract", AppLockModule_MetadataAndContract);
+            Run("I18n: tab_install and installer keys localized", I18n_TabInstall_Localized);
+            Run("SoftwareInstaller: catalog contains 9 FOSS/essential packages", SoftwareInstaller_Catalog_PopulatedAndValid);
 
             Cleanup();
 
@@ -463,6 +465,53 @@ namespace ClassroomChecker.Tests
             Assert(res != null, "CheckResult should not be null");
             Assert(res.Status == CheckStatus.Pass || res.Status == CheckStatus.Warning || res.Status == CheckStatus.Unknown, "Valid status");
             Assert(res.Details != null && res.Details.Count > 0, "Details populated");
+        }
+
+        private static void I18n_TabInstall_Localized()
+        {
+            Localizer.SetLanguage("lo");
+            string loTab = Localizer.T("tab_install");
+            string loTitle = Localizer.T("installer_title");
+            Assert(!string.IsNullOrEmpty(loTab) && loTab != "tab_install", "tab_install in Lao");
+            Assert(!string.IsNullOrEmpty(loTitle) && loTitle != "installer_title", "installer_title in Lao");
+
+            Localizer.SetLanguage("en");
+            string enTab = Localizer.T("tab_install");
+            string enTitle = Localizer.T("installer_title");
+            Assert(!string.IsNullOrEmpty(enTab) && enTab != "tab_install", "tab_install in English");
+            Assert(!string.IsNullOrEmpty(enTitle) && enTitle != "installer_title", "installer_title in English");
+
+            Localizer.SetLanguage("lo");
+        }
+
+        private static void SoftwareInstaller_Catalog_PopulatedAndValid()
+        {
+            var catalog = SoftwareInstallerService.GetCatalog();
+            Assert(catalog != null && catalog.Count == 9, "catalog has 9 packages");
+
+            bool has7z = false;
+            bool hasVlc = false;
+            bool hasLibre = false;
+            bool hasSumatra = false;
+
+            foreach (var pkg in catalog)
+            {
+                Assert(!string.IsNullOrEmpty(pkg.Id), "pkg Id non-empty");
+                Assert(!string.IsNullOrEmpty(pkg.Name), "pkg Name non-empty");
+                Assert(!string.IsNullOrEmpty(pkg.Category), "pkg Category non-empty");
+                Assert(!string.IsNullOrEmpty(pkg.SilentArguments), "pkg SilentArguments non-empty");
+                Assert(pkg.InstallerFilePatterns != null && pkg.InstallerFilePatterns.Length > 0, "pkg Patterns non-empty");
+
+                if (pkg.Id == "7zip") has7z = true;
+                if (pkg.Id == "vlc") hasVlc = true;
+                if (pkg.Id == "libreoffice") hasLibre = true;
+                if (pkg.Id == "sumatrapdf") hasSumatra = true;
+            }
+
+            Assert(has7z, "contains 7-Zip");
+            Assert(hasVlc, "contains VLC");
+            Assert(hasLibre, "contains LibreOffice");
+            Assert(hasSumatra, "contains SumatraPDF");
         }
     }
 }

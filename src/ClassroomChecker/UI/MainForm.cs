@@ -61,6 +61,7 @@ namespace ClassroomChecker.UI
             tabWallpaper.Text = Localizer.T("tab_wallpaper");
             tabScan.Text = Localizer.T("tab_scan");
             tabSecurity.Text = Localizer.T("tab_security");
+            tabInstall.Text = Localizer.T("tab_install");
             btnQuickSetup.Text = Localizer.T("btn_quick_setup");
             btnSettings.Text = Localizer.T("btn_settings");
 
