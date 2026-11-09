@@ -49,6 +49,7 @@ namespace ClassroomChecker.UI
 
             PopulateGrid();
             ApplyLocalization();
+            UpdateActionButtonsState();
         }
 
         private void PopulateGrid()
@@ -209,11 +210,14 @@ namespace ClassroomChecker.UI
         private void SetUiScanningState(bool scanning, int total)
         {
             btnScan.Enabled = !scanning;
-            btnFixSelected.Enabled = !scanning;
             chkSelectAll.Enabled = !scanning;
 
             if (scanning)
             {
+                btnFixSelected.Enabled = false;
+                btnSaveReport.Enabled = false;
+                btnMergeSpecs.Enabled = false;
+
                 progressBar.Value = 0;
                 progressBar.Maximum = total;
                 progressBar.Visible = true;
@@ -222,6 +226,7 @@ namespace ClassroomChecker.UI
             {
                 progressBar.Visible = false;
                 lblProgress.Text = Localizer.T("scan_completed");
+                UpdateActionButtonsState();
             }
         }
 
@@ -327,8 +332,12 @@ namespace ClassroomChecker.UI
             }
         }
 
-        private void CheckFixButtonState()
+        private void UpdateActionButtonsState()
         {
+            bool hasScanned = _results != null && _results.Count > 0;
+            btnSaveReport.Enabled = hasScanned;
+            btnMergeSpecs.Enabled = hasScanned;
+
             bool hasFixable = false;
             foreach (DataGridViewRow row in dgvResults.Rows)
             {
@@ -344,6 +353,11 @@ namespace ClassroomChecker.UI
                 }
             }
             btnFixSelected.Enabled = hasFixable;
+        }
+
+        private void CheckFixButtonState()
+        {
+            UpdateActionButtonsState();
         }
 
         private void dgvResults_CellContentClick(object sender, DataGridViewCellEventArgs e)

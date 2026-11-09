@@ -136,6 +136,7 @@ namespace ClassroomChecker.UI
             // btnMergeSpecs
             // 
             this.btnMergeSpecs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnMergeSpecs.Enabled = false;
             this.btnMergeSpecs.Font = new System.Drawing.Font("Phetsarath OT", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnMergeSpecs.Location = new System.Drawing.Point(565, 10);
             this.btnMergeSpecs.Name = "btnMergeSpecs";
@@ -148,6 +149,7 @@ namespace ClassroomChecker.UI
             // btnSaveReport
             // 
             this.btnSaveReport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSaveReport.Enabled = false;
             this.btnSaveReport.Font = new System.Drawing.Font("Phetsarath OT", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSaveReport.Location = new System.Drawing.Point(760, 10);
             this.btnSaveReport.Name = "btnSaveReport";
