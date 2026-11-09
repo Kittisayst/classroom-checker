@@ -47,6 +47,7 @@ namespace ClassroomChecker.UI
             this.SuspendLayout();
 
             this.Dock = DockStyle.Fill;
+            this.Size = new Size(970, 543);
             this.Font = new Font("Phetsarath OT", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             this.BackColor = Color.FromArgb(248, 250, 252);
             this.Padding = new Padding(12);
@@ -57,9 +58,9 @@ namespace ClassroomChecker.UI
             pnlHeader = new Panel
             {
                 Dock = DockStyle.Top,
-                Height = 74,
+                Height = 76,
                 BackColor = Color.FromArgb(238, 242, 255), // Light Indigo
-                Padding = new Padding(14, 10, 14, 10)
+                Padding = new Padding(12, 10, 12, 10)
             };
             pnlHeader.Paint += (s, e) =>
             {
@@ -67,36 +68,25 @@ namespace ClassroomChecker.UI
                     Color.FromArgb(199, 210, 254), ButtonBorderStyle.Solid);
             };
 
-            lblHeaderTitle = new Label
+            FlowLayoutPanel flpHeaderActions = new FlowLayoutPanel
             {
-                Text = "📦 ລະບົບຕິດຕັ້ງຊອບແວພື້ນຖານ (Offline Software Installer)",
-                Font = new Font("Phetsarath OT", 10.5F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(30, 27, 75),
-                Location = new Point(14, 12),
-                Size = new Size(500, 24),
-                AutoEllipsis = true
-            };
-
-            lblHeaderSubtitle = new Label
-            {
-                Text = "ຕິດຕັ້ງໂປຣແກຣມ Open Source ແລະ ໂປຣແກຣມພື້ນຖານແບບ Silent ອັດຕະໂນມັດ ຈາກໂຟນເດີ installers/ ໃນ USB",
-                Font = new Font("Phetsarath OT", 8.5F, FontStyle.Regular),
-                ForeColor = Color.FromArgb(79, 70, 229),
-                Location = new Point(14, 38),
-                Size = new Size(520, 22),
-                AutoEllipsis = true
+                Dock = DockStyle.Right,
+                FlowDirection = FlowDirection.RightToLeft,
+                WrapContents = false,
+                AutoSize = true,
+                BackColor = Color.Transparent,
+                Padding = new Padding(0, 8, 0, 0)
             };
 
             btnInstallAllMissing = new Button
             {
                 Text = "⚡ ຕິດຕັ້ງທີ່ຂາດທັງໝົດ",
-                Anchor = AnchorStyles.Top | AnchorStyles.Right,
                 BackColor = Color.FromArgb(16, 185, 129), // Emerald
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Phetsarath OT", 9F, FontStyle.Bold),
-                Location = new Point(780, 18),
-                Size = new Size(160, 36),
+                Size = new Size(160, 38),
+                Margin = new Padding(4, 0, 4, 0),
                 Cursor = Cursors.Hand
             };
             btnInstallAllMissing.FlatAppearance.BorderSize = 0;
@@ -105,13 +95,12 @@ namespace ClassroomChecker.UI
             btnOpenFolder = new Button
             {
                 Text = "📁 ເປີດໂຟນເດີ installers",
-                Anchor = AnchorStyles.Top | AnchorStyles.Right,
                 BackColor = Color.White,
                 ForeColor = Color.FromArgb(30, 41, 59),
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Phetsarath OT", 8.5F, FontStyle.Regular),
-                Location = new Point(620, 18),
-                Size = new Size(152, 36),
+                Size = new Size(152, 38),
+                Margin = new Padding(4, 0, 4, 0),
                 Cursor = Cursors.Hand
             };
             btnOpenFolder.FlatAppearance.BorderColor = Color.FromArgb(203, 213, 225);
@@ -120,22 +109,52 @@ namespace ClassroomChecker.UI
             btnRefresh = new Button
             {
                 Text = "🔄 ກວດສອບໃໝ່",
-                Anchor = AnchorStyles.Top | AnchorStyles.Right,
                 BackColor = Color.White,
                 ForeColor = Color.FromArgb(30, 41, 59),
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Phetsarath OT", 8.5F, FontStyle.Regular),
-                Location = new Point(505, 18),
-                Size = new Size(108, 36),
+                Size = new Size(108, 38),
+                Margin = new Padding(4, 0, 4, 0),
                 Cursor = Cursors.Hand
             };
             btnRefresh.FlatAppearance.BorderColor = Color.FromArgb(203, 213, 225);
             btnRefresh.Click += async (s, e) => await RefreshGridAsync();
 
-            pnlHeader.Controls.AddRange(new Control[] {
-                lblHeaderTitle, lblHeaderSubtitle,
-                btnRefresh, btnOpenFolder, btnInstallAllMissing
-            });
+            flpHeaderActions.Controls.Add(btnInstallAllMissing);
+            flpHeaderActions.Controls.Add(btnOpenFolder);
+            flpHeaderActions.Controls.Add(btnRefresh);
+
+            Panel pnlHeaderText = new Panel
+            {
+                Dock = DockStyle.Fill,
+                BackColor = Color.Transparent,
+                Padding = new Padding(4, 4, 4, 4)
+            };
+
+            lblHeaderTitle = new Label
+            {
+                Text = "📦 ລະບົບຕິດຕັ້ງຊອບແວພື້ນຖານ (Offline Software Installer)",
+                Font = new Font("Phetsarath OT", 10.5F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(30, 27, 75),
+                Dock = DockStyle.Top,
+                Height = 26,
+                AutoEllipsis = true
+            };
+
+            lblHeaderSubtitle = new Label
+            {
+                Text = "ຕິດຕັ້ງໂປຣແກຣມ Open Source ແລະ ໂປຣແກຣມພື້ນຖານແບບ Silent ອັດຕະໂນມັດ ຈາກໂຟນເດີ installers/ ໃນ USB",
+                Font = new Font("Phetsarath OT", 8.5F, FontStyle.Regular),
+                ForeColor = Color.FromArgb(79, 70, 229),
+                Dock = DockStyle.Fill,
+                AutoEllipsis = true
+            };
+
+            pnlHeaderText.Controls.Add(lblHeaderSubtitle);
+            pnlHeaderText.Controls.Add(lblHeaderTitle);
+
+            pnlHeader.Controls.Add(pnlHeaderText);
+            pnlHeader.Controls.Add(flpHeaderActions);
 
             // -------------------------------------------------------------
             // 2. DataGridView for Software Catalog

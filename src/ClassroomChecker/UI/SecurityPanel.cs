@@ -53,6 +53,7 @@ namespace ClassroomChecker.UI
         {
             this.SuspendLayout();
 
+            this.Size = new Size(970, 543);
             this.Dock = DockStyle.Fill;
             this.Font = new Font("Phetsarath OT", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             this.BackColor = Color.FromArgb(248, 250, 252);
@@ -64,9 +65,9 @@ namespace ClassroomChecker.UI
             pnlStatus = new Panel
             {
                 Dock = DockStyle.Top,
-                Height = 74,
+                Height = 76,
                 BackColor = Color.FromArgb(236, 253, 245),
-                Padding = new Padding(14, 10, 14, 10)
+                Padding = new Padding(12, 10, 12, 10)
             };
             pnlStatus.Paint += (s, e) =>
             {
@@ -74,45 +75,25 @@ namespace ClassroomChecker.UI
                     Color.FromArgb(167, 243, 208), ButtonBorderStyle.Solid);
             };
 
-            lblStatusIcon = new Label
+            FlowLayoutPanel flpStatusActions = new FlowLayoutPanel
             {
-                Text = "🛡️",
-                Font = new Font("Segoe UI Emoji", 20F, FontStyle.Regular),
-                Location = new Point(12, 14),
-                Size = new Size(42, 44),
-                TextAlign = ContentAlignment.MiddleCenter
-            };
-
-            lblStatusTitle = new Label
-            {
-                Text = "ລະບົບປ້ອງກັນ ແລະ ລັອກໂປຣແກຣມ / ເກມ",
-                Font = new Font("Phetsarath OT", 10.5F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(15, 23, 42),
-                Location = new Point(58, 12),
-                Size = new Size(420, 24),
-                AutoEllipsis = true
-            };
-
-            lblStatusDesc = new Label
-            {
-                Text = "ກຳລັງກວດສອບສະຖານະ...",
-                Font = new Font("Phetsarath OT", 9F, FontStyle.Regular),
-                ForeColor = Color.FromArgb(4, 120, 87),
-                Location = new Point(58, 38),
-                Size = new Size(420, 22),
-                AutoEllipsis = true
+                Dock = DockStyle.Right,
+                FlowDirection = FlowDirection.RightToLeft,
+                WrapContents = false,
+                AutoSize = true,
+                BackColor = Color.Transparent,
+                Padding = new Padding(0, 8, 0, 0)
             };
 
             btnUnlockNow = new Button
             {
-                Text = "🔓 ປົດລັອກທັງໝົດ",
-                Anchor = AnchorStyles.Top | AnchorStyles.Right,
+                Text = "🔓 ປິດການລັອກ",
                 BackColor = Color.FromArgb(71, 85, 105),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Phetsarath OT", 9F, FontStyle.Regular),
-                Location = new Point(810, 18),
-                Size = new Size(130, 36),
+                Size = new Size(130, 38),
+                Margin = new Padding(4, 0, 4, 0),
                 Cursor = Cursors.Hand
             };
             btnUnlockNow.FlatAppearance.BorderSize = 0;
@@ -120,14 +101,13 @@ namespace ClassroomChecker.UI
 
             btnLockNow = new Button
             {
-                Text = "🔒 ເປີດການລັອກດຽວນີ້",
-                Anchor = AnchorStyles.Top | AnchorStyles.Right,
+                Text = "🔒 ເປີດການລັອກ",
                 BackColor = Color.FromArgb(239, 68, 68),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Phetsarath OT", 9F, FontStyle.Bold),
-                Location = new Point(640, 18),
-                Size = new Size(162, 36),
+                Size = new Size(150, 38),
+                Margin = new Padding(4, 0, 4, 0),
                 Cursor = Cursors.Hand
             };
             btnLockNow.FlatAppearance.BorderSize = 0;
@@ -136,22 +116,62 @@ namespace ClassroomChecker.UI
             btnRefresh = new Button
             {
                 Text = "🔄 ກວດສອບ",
-                Anchor = AnchorStyles.Top | AnchorStyles.Right,
                 BackColor = Color.White,
                 ForeColor = Color.FromArgb(30, 41, 59),
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Phetsarath OT", 8.5F, FontStyle.Regular),
-                Location = new Point(526, 18),
-                Size = new Size(106, 36),
+                Size = new Size(100, 38),
+                Margin = new Padding(4, 0, 4, 0),
                 Cursor = Cursors.Hand
             };
             btnRefresh.FlatAppearance.BorderColor = Color.FromArgb(203, 213, 225);
             btnRefresh.Click += (s, e) => RefreshPolicyStatus();
 
-            pnlStatus.Controls.AddRange(new Control[] {
-                lblStatusIcon, lblStatusTitle, lblStatusDesc,
-                btnRefresh, btnLockNow, btnUnlockNow
-            });
+            flpStatusActions.Controls.Add(btnUnlockNow);
+            flpStatusActions.Controls.Add(btnLockNow);
+            flpStatusActions.Controls.Add(btnRefresh);
+
+            lblStatusIcon = new Label
+            {
+                Text = "🛡️",
+                Font = new Font("Segoe UI Emoji", 20F, FontStyle.Regular),
+                Dock = DockStyle.Left,
+                Width = 46,
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+
+            Panel pnlStatusInfo = new Panel
+            {
+                Dock = DockStyle.Fill,
+                BackColor = Color.Transparent,
+                Padding = new Padding(8, 4, 8, 4)
+            };
+
+            lblStatusTitle = new Label
+            {
+                Text = "ລະບົບປ້ອງກັນ ແລະ ລັອກໂປຣແກຣມ / ເກມ",
+                Font = new Font("Phetsarath OT", 10.5F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(15, 23, 42),
+                Dock = DockStyle.Top,
+                Height = 26,
+                AutoEllipsis = true
+            };
+
+            lblStatusDesc = new Label
+            {
+                Text = "ກຳລັງກວດສອບສະຖານະ...",
+                Font = new Font("Phetsarath OT", 9F, FontStyle.Regular),
+                ForeColor = Color.FromArgb(4, 120, 87),
+                Dock = DockStyle.Fill,
+                AutoEllipsis = true
+            };
+
+            pnlStatusInfo.Controls.Add(lblStatusDesc);
+            pnlStatusInfo.Controls.Add(lblStatusTitle);
+
+            pnlStatus.Controls.Add(pnlStatusInfo);
+            pnlStatus.Controls.Add(lblStatusIcon);
+            pnlStatus.Controls.Add(flpStatusActions);
 
             // -------------------------------------------------------------
             // 2. Policies Options Group
@@ -326,32 +346,32 @@ namespace ClassroomChecker.UI
                 Padding = new Padding(0, 6, 0, 0)
             };
 
-            lblNote = new Label
-            {
-                Text = "💡 ໝາຍເຫດ: ການລັອກຈະມີຜົນທັນທີກັບທຸກ User ໃນເຄື່ອງ. ສາມາດປົດລັອກຄືນໄດ້ທຸກເວລາດ້ວຍປຸ່ມ 'ປົດລັອກທັງໝົດ'.",
-                Font = new Font("Phetsarath OT", 8.5F, FontStyle.Italic),
-                ForeColor = Color.FromArgb(100, 116, 139),
-                Location = new Point(4, 12),
-                Size = new Size(740, 24),
-                AutoEllipsis = true
-            };
-
             btnSaveConfig = new Button
             {
                 Text = "💾 ບັນທຶກການຕັ້ງຄ່າ",
-                Anchor = AnchorStyles.Top | AnchorStyles.Right,
+                Dock = DockStyle.Right,
+                Width = 160,
                 BackColor = Color.FromArgb(16, 185, 129),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Phetsarath OT", 9F, FontStyle.Bold),
-                Location = new Point(780, 6),
-                Size = new Size(160, 34),
                 Cursor = Cursors.Hand
             };
             btnSaveConfig.FlatAppearance.BorderSize = 0;
             btnSaveConfig.Click += btnSaveConfig_Click;
 
-            pnlBottom.Controls.AddRange(new Control[] { lblNote, btnSaveConfig });
+            lblNote = new Label
+            {
+                Text = "💡 ໝາຍເຫດ: ການລັອກຈະມີຜົນທັນທີກັບທຸກ User ໃນເຄື່ອງ. ສາມາດປິດການລັອກຄືນໄດ້ທຸກເວລາດ້ວຍປຸ່ມ 'ປິດການລັອກ'.",
+                Font = new Font("Phetsarath OT", 8.5F, FontStyle.Italic),
+                ForeColor = Color.FromArgb(100, 116, 139),
+                Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.MiddleLeft,
+                AutoEllipsis = true
+            };
+
+            pnlBottom.Controls.Add(lblNote);
+            pnlBottom.Controls.Add(btnSaveConfig);
 
             // -------------------------------------------------------------
             // Main Controls Hierarchy (Dock order matters)
@@ -401,7 +421,7 @@ namespace ClassroomChecker.UI
             btnDeletePath.Text = Localizer.T("settings_btn_delete_folder");
 
             btnSaveConfig.Text = Localizer.T("btn_save");
-            lblNote.Text = Localizer.T("security_panel_note", "💡 ໝາຍເຫດ: ການລັອກຈະມີຜົນທັນທີກັບທຸກ User ໃນເຄື່ອງ. ສາມາດປົດລັອກຄືນໄດ້ທຸກເວລາດ້ວຍປຸ່ມ 'ປົດລັອກທັງໝົດ'.");
+            lblNote.Text = Localizer.T("security_panel_note", "💡 ໝາຍເຫດ: ການລັອກຈະມີຜົນທັນທີກັບທຸກ User ໃນເຄື່ອງ. ສາມາດປິດການລັອກຄືນໄດ້ທຸກເວລາດ້ວຍປຸ່ມ 'ປິດການລັອກ'.");
         }
 
         public void LoadFromConfig()
