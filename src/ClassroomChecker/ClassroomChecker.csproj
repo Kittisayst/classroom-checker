@@ -61,6 +61,7 @@
     <Compile Include="Core\SimpleXlsxWriter.cs" />
     <Compile Include="Core\MasterSummaryService.cs" />
     <Compile Include="Core\QuickSetupRunner.cs" />
+    <Compile Include="Core\SecurityPolicyManager.cs" />
     <Compile Include="Modules\OfficeCheckModule.cs" />
     <Compile Include="Modules\WindowsLicenseCheckModule.cs" />
     <Compile Include="Modules\EssentialSoftwareCheckModule.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Modules\DriverCheckModule.cs" />
     <Compile Include="Modules\DiskSpaceCheckModule.cs" />
     <Compile Include="Modules\DefenderCheckModule.cs" />
+    <Compile Include="Modules\AppLockModule.cs" />
     <Compile Include="Modules\SpecExportModule.cs" />
     <Compile Include="Modules\WallpaperModule.cs" />
     <Compile Include="Modules\AllUsersWallpaper.cs" />

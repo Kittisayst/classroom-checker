@@ -87,6 +87,32 @@ namespace ClassroomChecker.Config
         }
     }
 
+    public class SecurityConfig
+    {
+        public bool blockUsbExecution { get; set; }
+        public bool blockDownloadsExecution { get; set; }
+        public bool blockPopularGames { get; set; }
+        public List<string> blockedExes { get; set; }
+        public List<string> blockedPaths { get; set; }
+
+        public SecurityConfig()
+        {
+            blockUsbExecution = true;
+            blockDownloadsExecution = true;
+            blockPopularGames = true;
+            blockedExes = new List<string> {
+                "roblox.exe",
+                "robloxplayerlauncher.exe",
+                "steam.exe",
+                "epicgameslauncher.exe",
+                "garena.exe",
+                "minecraft.exe",
+                "discord.exe"
+            };
+            blockedPaths = new List<string>();
+        }
+    }
+
     /// <summary>
     /// ໂຄງສ້າງການຕັ້ງຄ່າທັງໝົດຂອງ config.json ຕາມ cm-spec.md ຂໍ້ 4
     /// </summary>
@@ -101,6 +127,7 @@ namespace ClassroomChecker.Config
         public LabelConfig label { get; set; }
         public List<string> requiredFonts { get; set; }
         public CleanupConfig cleanup { get; set; }
+        public SecurityConfig security { get; set; }
         public string specOutputDir { get; set; }
 
         public AppConfig()
@@ -114,6 +141,7 @@ namespace ClassroomChecker.Config
             label = new LabelConfig();
             requiredFonts = new List<string> { "Phetsarath OT" };
             cleanup = new CleanupConfig();
+            security = new SecurityConfig();
             specOutputDir = "specs";
         }
     }

@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using ClassroomChecker.Config;
+using ClassroomChecker.Core;
 using ClassroomChecker.I18n;
 
 namespace ClassroomChecker.UI
@@ -15,6 +16,7 @@ namespace ClassroomChecker.UI
         private TabPage tabGeneral;
         private TabPage tabWallpaper;
         private TabPage tabCleanup;
+        private TabPage tabSecurity;
 
         // General
         private NumericUpDown numMinNumber;
@@ -45,6 +47,16 @@ namespace ClassroomChecker.UI
         private CheckBox chkBrowserCache;
         private Button btnOpenConfig;
         private Button btnResetDefaults;
+
+        // Security / App Lock
+        private CheckBox chkBlockUsb;
+        private CheckBox chkBlockDownloads;
+        private CheckBox chkBlockPopularGames;
+        private ListBox lstBlockedExes;
+        private Button btnAddBlockedExe;
+        private Button btnDeleteBlockedExe;
+        private Button btnApplyLockNow;
+        private Button btnUnlockNow;
 
         // Bottom
         private Button btnSave;
@@ -336,8 +348,129 @@ namespace ClassroomChecker.UI
 
             tabCleanup.Controls.AddRange(new Control[] { grpCleanup, grpConfigMgmt });
 
+            // -----------------------------------------------------------------
+            // Tab 4: Security & App/Game Lock
+            // -----------------------------------------------------------------
+            tabSecurity = new TabPage(Localizer.T("settings_tab_security"))
+            {
+                BackColor = Color.White,
+                Padding = new Padding(16)
+            };
+
+            // Group: Policies
+            GroupBox grpSec = new GroupBox
+            {
+                Text = Localizer.T("settings_grp_security_policies"),
+                Location = new Point(16, 12),
+                Size = new Size(570, 125),
+                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
+            };
+
+            chkBlockUsb = new CheckBox
+            {
+                Text = Localizer.T("settings_chk_block_usb"),
+                Location = new Point(20, 26),
+                AutoSize = true,
+                Checked = true
+            };
+
+            chkBlockDownloads = new CheckBox
+            {
+                Text = Localizer.T("settings_chk_block_downloads"),
+                Location = new Point(20, 56),
+                AutoSize = true,
+                Checked = true
+            };
+
+            chkBlockPopularGames = new CheckBox
+            {
+                Text = Localizer.T("settings_chk_block_popular_games"),
+                Location = new Point(20, 86),
+                AutoSize = true,
+                Checked = true
+            };
+
+            grpSec.Controls.AddRange(new Control[] { chkBlockUsb, chkBlockDownloads, chkBlockPopularGames });
+
+            // Group: Blocked Exes
+            GroupBox grpExes = new GroupBox
+            {
+                Text = Localizer.T("settings_grp_blocked_exes"),
+                Location = new Point(16, 145),
+                Size = new Size(570, 160),
+                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
+            };
+
+            lstBlockedExes = new ListBox
+            {
+                Location = new Point(20, 25),
+                Size = new Size(390, 120),
+                IntegralHeight = false
+            };
+
+            btnAddBlockedExe = new Button
+            {
+                Text = Localizer.T("settings_btn_add_exe"),
+                Location = new Point(425, 25),
+                Size = new Size(130, 32),
+                Cursor = Cursors.Hand
+            };
+            btnAddBlockedExe.Click += btnAddBlockedExe_Click;
+
+            btnDeleteBlockedExe = new Button
+            {
+                Text = Localizer.T("settings_btn_delete_exe"),
+                Location = new Point(425, 65),
+                Size = new Size(130, 32),
+                Cursor = Cursors.Hand
+            };
+            btnDeleteBlockedExe.Click += btnDeleteBlockedExe_Click;
+
+            grpExes.Controls.AddRange(new Control[] { lstBlockedExes, btnAddBlockedExe, btnDeleteBlockedExe });
+
+            // Group: Immediate Actions
+            GroupBox grpActions = new GroupBox
+            {
+                Text = Localizer.T("settings_grp_security_actions"),
+                Location = new Point(16, 312),
+                Size = new Size(570, 75),
+                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
+            };
+
+            btnApplyLockNow = new Button
+            {
+                Text = Localizer.T("settings_btn_lock_now"),
+                BackColor = Color.FromArgb(239, 68, 68),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Phetsarath OT", 9F, FontStyle.Bold),
+                Location = new Point(20, 26),
+                Size = new Size(190, 34),
+                Cursor = Cursors.Hand
+            };
+            btnApplyLockNow.FlatAppearance.BorderSize = 0;
+            btnApplyLockNow.Click += btnApplyLockNow_Click;
+
+            btnUnlockNow = new Button
+            {
+                Text = Localizer.T("settings_btn_unlock_now"),
+                BackColor = Color.FromArgb(71, 85, 105),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Phetsarath OT", 9F, FontStyle.Regular),
+                Location = new Point(225, 26),
+                Size = new Size(170, 34),
+                Cursor = Cursors.Hand
+            };
+            btnUnlockNow.FlatAppearance.BorderSize = 0;
+            btnUnlockNow.Click += btnUnlockNow_Click;
+
+            grpActions.Controls.AddRange(new Control[] { btnApplyLockNow, btnUnlockNow });
+
+            tabSecurity.Controls.AddRange(new Control[] { grpSec, grpExes, grpActions });
+
             // Add Tabs
-            tabControl.TabPages.AddRange(new TabPage[] { tabGeneral, tabWallpaper, tabCleanup });
+            tabControl.TabPages.AddRange(new TabPage[] { tabGeneral, tabWallpaper, tabCleanup, tabSecurity });
 
             // -----------------------------------------------------------------
             // Bottom Panel: Save & Cancel
@@ -458,6 +591,23 @@ namespace ClassroomChecker.UI
                 chkRecycleBin.Checked = cfg.cleanup.recycleBin;
                 chkWindowsUpdate.Checked = cfg.cleanup.windowsUpdateCache;
                 chkBrowserCache.Checked = cfg.cleanup.browserCache;
+            }
+
+            // Security
+            if (cfg.security != null)
+            {
+                chkBlockUsb.Checked = cfg.security.blockUsbExecution;
+                chkBlockDownloads.Checked = cfg.security.blockDownloadsExecution;
+                chkBlockPopularGames.Checked = cfg.security.blockPopularGames;
+
+                lstBlockedExes.Items.Clear();
+                if (cfg.security.blockedExes != null)
+                {
+                    foreach (var exe in cfg.security.blockedExes)
+                    {
+                        lstBlockedExes.Items.Add(exe);
+                    }
+                }
             }
         }
 
@@ -670,10 +820,90 @@ namespace ClassroomChecker.UI
             cfg.cleanup.windowsUpdateCache = chkWindowsUpdate.Checked;
             cfg.cleanup.browserCache = chkBrowserCache.Checked;
 
+            if (cfg.security == null) cfg.security = new SecurityConfig();
+            cfg.security.blockUsbExecution = chkBlockUsb.Checked;
+            cfg.security.blockDownloadsExecution = chkBlockDownloads.Checked;
+            cfg.security.blockPopularGames = chkBlockPopularGames.Checked;
+            cfg.security.blockedExes = new List<string>();
+            foreach (var item in lstBlockedExes.Items)
+            {
+                cfg.security.blockedExes.Add(item.ToString());
+            }
+
             ConfigService.Instance.Save();
 
             this.DialogResult = DialogResult.OK;
             this.Close();
+        }
+
+        private void btnAddBlockedExe_Click(object sender, EventArgs e)
+        {
+            string exe = null;
+            using (var dlg = new InputDialog(Localizer.T("settings_prompt_add_exe_title"), Localizer.T("settings_prompt_add_exe"), "game.exe"))
+            {
+                if (dlg.ShowDialog(this) == DialogResult.OK)
+                {
+                    exe = dlg.InputText;
+                }
+            }
+
+            if (string.IsNullOrEmpty(exe)) return;
+            exe = exe.Trim().ToLowerInvariant();
+            if (!exe.EndsWith(".exe"))
+            {
+                exe += ".exe";
+            }
+
+            foreach (var item in lstBlockedExes.Items)
+            {
+                if (string.Equals(item.ToString(), exe, StringComparison.OrdinalIgnoreCase)) return;
+            }
+
+            lstBlockedExes.Items.Add(exe);
+        }
+
+        private void btnDeleteBlockedExe_Click(object sender, EventArgs e)
+        {
+            if (lstBlockedExes.SelectedItem == null) return;
+            lstBlockedExes.Items.Remove(lstBlockedExes.SelectedItem);
+        }
+
+        private void btnApplyLockNow_Click(object sender, EventArgs e)
+        {
+            var sec = new SecurityConfig
+            {
+                blockUsbExecution = chkBlockUsb.Checked,
+                blockDownloadsExecution = chkBlockDownloads.Checked,
+                blockPopularGames = chkBlockPopularGames.Checked,
+                blockedExes = new List<string>()
+            };
+            foreach (var item in lstBlockedExes.Items)
+            {
+                sec.blockedExes.Add(item.ToString());
+            }
+
+            List<string> details;
+            bool ok = SecurityPolicyManager.ApplyFullLock(sec, out details);
+
+            if (ok)
+            {
+                MessageBox.Show(Localizer.T("settings_lock_applied_success"), Localizer.T("app_title"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show(Localizer.T("settings_lock_applied_error"), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void btnUnlockNow_Click(object sender, EventArgs e)
+        {
+            var res = MessageBox.Show(Localizer.T("settings_unlock_confirm"), Localizer.T("settings_title"), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (res == DialogResult.Yes)
+            {
+                List<string> details;
+                SecurityPolicyManager.UnlockAll(out details);
+                MessageBox.Show(Localizer.T("settings_unlock_applied_success"), Localizer.T("app_title"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
     }
 }

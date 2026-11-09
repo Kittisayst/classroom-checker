@@ -237,6 +237,10 @@ namespace ClassroomChecker.Config
             {
                 cfg.cleanup = new CleanupConfig();
             }
+            if (cfg.security == null)
+            {
+                cfg.security = new SecurityConfig();
+            }
             if (string.IsNullOrEmpty(cfg.language))
             {
                 cfg.language = "lo";

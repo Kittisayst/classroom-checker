@@ -48,6 +48,8 @@ namespace ClassroomChecker.Tests
             Run("QuickSetup: PC number auto-increment and max limit boundary", QuickSetup_CalculateNextNumber);
             Run("I18n: btn_save_report localized in both lo and en", I18n_BtnSaveReport_Localized);
             Run("I18n: Settings keys localized in both lo and en", I18n_SettingsKeys_Localized);
+            Run("SecurityConfig: defaults include USB, Downloads, and popular games", SecurityConfig_Defaults);
+            Run("AppLockModule: metadata and check result contract", AppLockModule_MetadataAndContract);
 
             Cleanup();
 
@@ -433,6 +435,30 @@ namespace ClassroomChecker.Tests
             Assert(!string.IsNullOrEmpty(enTitle) && enTitle != "settings_title", "settings_title in English");
 
             Localizer.SetLanguage("lo");
+        }
+
+        private static void SecurityConfig_Defaults()
+        {
+            var sec = new SecurityConfig();
+            Assert(sec.blockUsbExecution, "blockUsbExecution default true");
+            Assert(sec.blockDownloadsExecution, "blockDownloadsExecution default true");
+            Assert(sec.blockPopularGames, "blockPopularGames default true");
+            Assert(sec.blockedExes != null && sec.blockedExes.Count >= 5, "blockedExes contains popular games");
+            Assert(sec.blockedExes.Contains("roblox.exe"), "contains roblox.exe");
+            Assert(sec.blockedExes.Contains("steam.exe"), "contains steam.exe");
+        }
+
+        private static void AppLockModule_MetadataAndContract()
+        {
+            var mod = new AppLockModule();
+            AreEqual("app_lock", mod.Id, "Module Id");
+            AreEqual("module_app_lock", mod.DisplayNameKey, "DisplayNameKey");
+            Assert(mod.CanFix, "CanFix should be true");
+
+            var res = mod.Check();
+            Assert(res != null, "CheckResult should not be null");
+            Assert(res.Status == CheckStatus.Pass || res.Status == CheckStatus.Warning || res.Status == CheckStatus.Unknown, "Valid status");
+            Assert(res.Details != null && res.Details.Count > 0, "Details populated");
         }
     }
 }
