@@ -47,6 +47,7 @@ namespace ClassroomChecker.Tests
             Run("SpecExport: duplicate detection when serial unknown falls back to hostname", SpecExport_IsDifferentMachine_FallbackToHostname);
             Run("QuickSetup: PC number auto-increment and max limit boundary", QuickSetup_CalculateNextNumber);
             Run("I18n: btn_save_report localized in both lo and en", I18n_BtnSaveReport_Localized);
+            Run("I18n: Settings keys localized in both lo and en", I18n_SettingsKeys_Localized);
 
             Cleanup();
 
@@ -414,6 +415,23 @@ namespace ClassroomChecker.Tests
             AreEqual("Save Report (.txt)", enVal, "English translation");
 
             // Restore default
+            Localizer.SetLanguage("lo");
+        }
+
+        private static void I18n_SettingsKeys_Localized()
+        {
+            Localizer.SetLanguage("lo");
+            string loBtn = Localizer.T("btn_settings");
+            string loTitle = Localizer.T("settings_title");
+            Assert(!string.IsNullOrEmpty(loBtn) && loBtn != "btn_settings", "btn_settings in Lao");
+            Assert(!string.IsNullOrEmpty(loTitle) && loTitle != "settings_title", "settings_title in Lao");
+
+            Localizer.SetLanguage("en");
+            string enBtn = Localizer.T("btn_settings");
+            string enTitle = Localizer.T("settings_title");
+            Assert(!string.IsNullOrEmpty(enBtn) && enBtn != "btn_settings", "btn_settings in English");
+            Assert(!string.IsNullOrEmpty(enTitle) && enTitle != "settings_title", "settings_title in English");
+
             Localizer.SetLanguage("lo");
         }
     }

@@ -61,6 +61,7 @@ namespace ClassroomChecker.UI
             tabWallpaper.Text = Localizer.T("tab_wallpaper");
             tabScan.Text = Localizer.T("tab_scan");
             btnQuickSetup.Text = Localizer.T("btn_quick_setup");
+            btnSettings.Text = Localizer.T("btn_settings");
 
             if (Localizer.CurrentLanguage == "en")
             {
@@ -87,6 +88,22 @@ namespace ClassroomChecker.UI
                 if (dlg.ShowDialog(this) == DialogResult.OK)
                 {
                     wallpaperPanel.RefreshFromConfig();
+                }
+            }
+        }
+
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            using (var dlg = new SettingsDialog())
+            {
+                if (dlg.ShowDialog(this) == DialogResult.OK)
+                {
+                    wallpaperPanel.RefreshFromConfig();
+                    MessageBox.Show(
+                        Localizer.T("settings_saved_success"),
+                        Localizer.T("app_title"),
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
                 }
             }
         }
