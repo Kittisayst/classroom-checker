@@ -39,7 +39,7 @@ namespace ClassroomChecker.Modules
                 bool disallowActive = SecurityPolicyManager.IsDisallowRunActive();
                 int disallowCount = SecurityPolicyManager.GetDisallowedExesCount();
 
-                details.Add("USB Deny Execute: " + (usbBlocked ? "LOCKED (✓)" : "UNLOCKED (✗)"));
+                details.Add("USB Execution Lock (ClassroomChecker Whitelisted): " + (usbBlocked ? "LOCKED (✓)" : "UNLOCKED (✗)"));
                 details.Add("Downloads & Temp Safer: " + (dlBlocked ? "LOCKED (✓)" : "UNLOCKED (✗)"));
                 details.Add(string.Format("DisallowRun App Lock: {0} ({1} exes)", disallowActive ? "LOCKED (✓)" : "UNLOCKED (✗)", disallowCount));
 

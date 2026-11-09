@@ -9,8 +9,8 @@ namespace ClassroomChecker.Core
 {
     /// <summary>
     /// ຈັດການນະໂຍບາຍຄວາມປອດໄພຂອງ Windows (Security Policies) ຜ່ານ Registry
-    /// - ຫ້າມ Run exe ຈາກ USB Flash Drive
-    /// - ຫ້າມ Run exe ຈາກ Downloads ແລະ Temp (Safer Path Rules)
+    /// - ຫ້າມ Run exe ຈາກ USB Flash Drive ໂດຍຍົກເວັ້ນ (Whitelist) ClassroomChecker.exe
+    /// - ຫ້າມ Run exe ຈາກ Downloads ແລະ Temp ແລະ Folders ທີ່ກຳນົດ (Safer Path Rules)
     /// - ບລັອກເກມ/ໂປຣແກຣມທີ່ບໍ່ໄດ້ຮັບອະນຸຍາດ (DisallowRun)
     /// </summary>
     public static class SecurityPolicyManager
@@ -20,19 +20,41 @@ namespace ClassroomChecker.Core
         private const string REG_PATH_EXPLORER_POLICIES = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer";
         private const string REG_PATH_SAFER_BASE = @"SOFTWARE\Policies\Microsoft\Windows\Safer\CodeIdentifiers";
         private const string REG_PATH_SAFER_PATHS = @"SOFTWARE\Policies\Microsoft\Windows\Safer\CodeIdentifiers\0\Paths";
+        private const string REG_PATH_SAFER_UNRESTRICTED = @"SOFTWARE\Policies\Microsoft\Windows\Safer\CodeIdentifiers\262144\Paths";
 
+        private const string SAFER_GUID_PATH_PREFIX = "{D1A10001-B10C-4001-A001-";
         private const string SAFER_GUID_DOWNLOADS = "{D1A10001-B10C-4001-A001-000000000001}";
         private const string SAFER_GUID_TEMP = "{D1A10001-B10C-4001-A001-000000000002}";
         private const string SAFER_GUID_LOCAL_TEMP = "{D1A10001-B10C-4001-A001-000000000003}";
 
+        private const string SAFER_GUID_USB_PREFIX = "{D1A10001-B10C-4001-B001-";
+        private const string SAFER_GUID_WHITELIST_EXE = "{D1A10001-B10C-4001-W001-000000000001}";
+        private const string SAFER_GUID_WHITELIST_APPNAME = "{D1A10001-B10C-4001-W001-000000000002}";
+
         // -----------------------------------------------------------------
-        // 1. USB Execution Lock
+        // 1. USB Execution Lock (with ClassroomChecker Whitelist)
         // -----------------------------------------------------------------
 
         public static bool IsUsbExecutionBlocked()
         {
             try
             {
+                // 1. ກວດ Safer rules ສຳລັບ Drive ທີ່ເປັນ Removable/USB (ລະບົບໃໝ່ທີ່ມີ Whitelist)
+                using (var pathsKey = Registry.LocalMachine.OpenSubKey(REG_PATH_SAFER_PATHS, false))
+                {
+                    if (pathsKey != null)
+                    {
+                        foreach (var sk in pathsKey.GetSubKeyNames())
+                        {
+                            if (sk.StartsWith(SAFER_GUID_USB_PREFIX, StringComparison.OrdinalIgnoreCase))
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+
+                // 2. Fallback ກວດ legacy RemovableStorageDevices
                 using (var key = Registry.LocalMachine.OpenSubKey(REG_PATH_REMOVABLE + @"\" + GUID_REMOVABLE_STORAGE, false))
                 {
                     if (key != null)
@@ -60,34 +82,85 @@ namespace ClassroomChecker.Core
         {
             try
             {
+                // ລ້າງ legacy RemovableStorageDevices ສະເໝີ ເພື່ອບໍ່ໃຫ້ບລັອກ USB ທັງໝົດແບບບໍ່ມີ Whitelist
+                ClearLegacyRemovableStorageDeny();
+
                 if (block)
                 {
-                    using (var key = Registry.LocalMachine.CreateSubKey(REG_PATH_REMOVABLE + @"\" + GUID_REMOVABLE_STORAGE))
+                    EnsureSaferBaseInitialized();
+
+                    // ຊອກຫາ drive ທີ່ເປັນ Fixed (ເຊັ່ນ C:, D: ຖ້າເປັນ HDD/SSD ພາຍໃນເຄື່ອງ)
+                    var fixedDrives = new HashSet<char>();
+                    try
                     {
-                        if (key != null) key.SetValue("Deny_Execute", 1, RegistryValueKind.DWord);
+                        foreach (var d in DriveInfo.GetDrives())
+                        {
+                            if (d.DriveType == DriveType.Fixed)
+                            {
+                                fixedDrives.Add(char.ToUpperInvariant(d.Name[0]));
+                            }
+                        }
                     }
-                    using (var key = Registry.LocalMachine.CreateSubKey(REG_PATH_REMOVABLE))
+                    catch { }
+
+                    string sysDrive = Path.GetPathRoot(Environment.SystemDirectory);
+                    if (!string.IsNullOrEmpty(sysDrive))
                     {
-                        if (key != null) key.SetValue("Deny_Execute", 1, RegistryValueKind.DWord);
+                        fixedDrives.Add(char.ToUpperInvariant(sysDrive[0]));
                     }
+
+                    // ລຶບ USB rules ເກົ່າອອກກ່ອນ
+                    DeleteUsbSaferRules();
+
+                    // ສ້າງ Safer Level 0 (Disallowed) rules ສຳລັບ Drive ທີ່ບໍ່ແມ່ນ Fixed (D ເຖິງ Z)
+                    for (char c = 'D'; c <= 'Z'; c++)
+                    {
+                        if (fixedDrives.Contains(c)) continue; // ບໍ່ບລັອກ drive ພາຍໃນເຄື່ອງ
+
+                        string guid = string.Format("{{D1A10001-B10C-4001-B001-{0:D12}}}", (int)c);
+                        CreateSaferPathRule(guid, c + @":\*", "ClassroomChecker: Block Removable Drive " + c);
+                    }
+
+                    // ສ້າງ Whitelist ໃນ Level 262144 (Unrestricted) ເພື່ອໃຫ້ ClassroomChecker.exe ເປີດຈາກ USB ໄດ້
+                    EnsureClassroomCheckerWhitelisted();
                 }
                 else
                 {
-                    using (var key = Registry.LocalMachine.OpenSubKey(REG_PATH_REMOVABLE + @"\" + GUID_REMOVABLE_STORAGE, true))
+                    DeleteUsbSaferRules();
+
+                    // ຖ້າບໍ່ມີ Safer rule ອື່ນເຫຼືອ (Downloads/Temp ຫຼື Custom) ໃຫ້ລຶບ Whitelist ນຳ
+                    if (!IsDownloadsExecutionBlocked() && !IsAnyOtherFolderRuleActive())
                     {
-                        if (key != null) key.DeleteValue("Deny_Execute", false);
-                    }
-                    using (var key = Registry.LocalMachine.OpenSubKey(REG_PATH_REMOVABLE, true))
-                    {
-                        if (key != null) key.DeleteValue("Deny_Execute", false);
+                        DeleteAllClassroomCheckerWhitelistRules();
                     }
                 }
+
                 return true;
             }
             catch
             {
                 return false;
             }
+        }
+
+        private static void ClearLegacyRemovableStorageDeny()
+        {
+            try
+            {
+                using (var key = Registry.LocalMachine.OpenSubKey(REG_PATH_REMOVABLE + @"\" + GUID_REMOVABLE_STORAGE, true))
+                {
+                    if (key != null) key.DeleteValue("Deny_Execute", false);
+                }
+            }
+            catch { }
+            try
+            {
+                using (var key = Registry.LocalMachine.OpenSubKey(REG_PATH_REMOVABLE, true))
+                {
+                    if (key != null) key.DeleteValue("Deny_Execute", false);
+                }
+            }
+            catch { }
         }
 
         // -----------------------------------------------------------------
@@ -207,7 +280,7 @@ namespace ClassroomChecker.Core
         }
 
         // -----------------------------------------------------------------
-        // 3. Safer Path Rules (Block Downloads & Temp execution)
+        // 3. Safer Path Rules (Block Downloads, Temp & Folders)
         // -----------------------------------------------------------------
 
         public static bool IsDownloadsExecutionBlocked()
@@ -241,19 +314,10 @@ namespace ClassroomChecker.Core
                 if (blockDownloadsAndTemp || hasCustom)
                 {
                     // 1. ເປີດລະບົບ Safer CodeIdentifiers ພື້ນຖານ
-                    using (var baseKey = Registry.LocalMachine.CreateSubKey(REG_PATH_SAFER_BASE))
-                    {
-                        if (baseKey != null)
-                        {
-                            baseKey.SetValue("AuthenticodeEnabled", 0, RegistryValueKind.DWord);
-                            baseKey.SetValue("DefaultLevel", 262144, RegistryValueKind.DWord); // 0x40000 = Unrestricted default
-                            baseKey.SetValue("PolicyScope", 0, RegistryValueKind.DWord);      // 0 = All Users
-                            baseKey.SetValue("TransparentEnabled", 1, RegistryValueKind.DWord); // 1 = All software except libraries
-                        }
-                    }
+                    EnsureSaferBaseInitialized();
 
-                    // 2. ລຶບ Rules ເກົ່າຂອງ ClassroomChecker ອອກກ່ອນ
-                    DeleteAllClassroomCheckerSaferRules();
+                    // 2. ລຶບສະເພາະ Path Rules ເກົ່າຂອງ ClassroomChecker (Folder / Downloads / Temp)
+                    DeletePathFolderSaferRules();
 
                     // 3. ສ້າງ Path Rules ຫ້າມ Downloads & Temp ຖ້າເລືອກ
                     if (blockDownloadsAndTemp)
@@ -288,10 +352,17 @@ namespace ClassroomChecker.Core
                             }
                         }
                     }
+
+                    // Whitelist ClassroomChecker ສະເໝີ
+                    EnsureClassroomCheckerWhitelisted();
                 }
                 else
                 {
-                    DeleteAllClassroomCheckerSaferRules();
+                    DeletePathFolderSaferRules();
+                    if (!IsUsbExecutionBlocked())
+                    {
+                        DeleteAllClassroomCheckerWhitelistRules();
+                    }
                 }
 
                 return true;
@@ -300,6 +371,81 @@ namespace ClassroomChecker.Core
             {
                 return false;
             }
+        }
+
+        private static void EnsureSaferBaseInitialized()
+        {
+            try
+            {
+                using (var baseKey = Registry.LocalMachine.CreateSubKey(REG_PATH_SAFER_BASE))
+                {
+                    if (baseKey != null)
+                    {
+                        baseKey.SetValue("AuthenticodeEnabled", 0, RegistryValueKind.DWord);
+                        baseKey.SetValue("DefaultLevel", 262144, RegistryValueKind.DWord); // 0x40000 = Unrestricted default
+                        baseKey.SetValue("PolicyScope", 0, RegistryValueKind.DWord);      // 0 = All Users
+                        baseKey.SetValue("TransparentEnabled", 1, RegistryValueKind.DWord); // 1 = All software except libraries
+                    }
+                }
+            }
+            catch { }
+        }
+
+        private static void EnsureClassroomCheckerWhitelisted()
+        {
+            try
+            {
+                CreateSaferWhitelistRule(SAFER_GUID_WHITELIST_EXE, @"*\ClassroomChecker.exe", "ClassroomChecker: Whitelisted Admin Tool");
+
+                string currentExeName = Path.GetFileName(AppDomain.CurrentDomain.FriendlyName);
+                if (!string.IsNullOrEmpty(currentExeName) && !currentExeName.Equals("ClassroomChecker.exe", StringComparison.OrdinalIgnoreCase))
+                {
+                    CreateSaferWhitelistRule(SAFER_GUID_WHITELIST_APPNAME, @"*\" + currentExeName, "ClassroomChecker: Whitelisted Host Process");
+                }
+            }
+            catch { }
+        }
+
+        private static void DeletePathFolderSaferRules()
+        {
+            try
+            {
+                using (var pathsKey = Registry.LocalMachine.OpenSubKey(REG_PATH_SAFER_PATHS, true))
+                {
+                    if (pathsKey != null)
+                    {
+                        foreach (var sk in pathsKey.GetSubKeyNames())
+                        {
+                            if (sk.StartsWith(SAFER_GUID_PATH_PREFIX, StringComparison.OrdinalIgnoreCase))
+                            {
+                                pathsKey.DeleteSubKeyTree(sk, false);
+                            }
+                        }
+                    }
+                }
+            }
+            catch { }
+        }
+
+        private static void DeleteUsbSaferRules()
+        {
+            try
+            {
+                using (var pathsKey = Registry.LocalMachine.OpenSubKey(REG_PATH_SAFER_PATHS, true))
+                {
+                    if (pathsKey != null)
+                    {
+                        foreach (var sk in pathsKey.GetSubKeyNames())
+                        {
+                            if (sk.StartsWith(SAFER_GUID_USB_PREFIX, StringComparison.OrdinalIgnoreCase))
+                            {
+                                pathsKey.DeleteSubKeyTree(sk, false);
+                            }
+                        }
+                    }
+                }
+            }
+            catch { }
         }
 
         private static void DeleteAllClassroomCheckerSaferRules()
@@ -321,6 +467,51 @@ namespace ClassroomChecker.Core
                 }
             }
             catch { }
+
+            DeleteAllClassroomCheckerWhitelistRules();
+        }
+
+        private static void DeleteAllClassroomCheckerWhitelistRules()
+        {
+            try
+            {
+                using (var pathsKey = Registry.LocalMachine.OpenSubKey(REG_PATH_SAFER_UNRESTRICTED, true))
+                {
+                    if (pathsKey != null)
+                    {
+                        foreach (var sk in pathsKey.GetSubKeyNames())
+                        {
+                            if (sk.StartsWith("{D1A10001-", StringComparison.OrdinalIgnoreCase))
+                            {
+                                pathsKey.DeleteSubKeyTree(sk, false);
+                            }
+                        }
+                    }
+                }
+            }
+            catch { }
+        }
+
+        private static bool IsAnyOtherFolderRuleActive()
+        {
+            try
+            {
+                using (var pathsKey = Registry.LocalMachine.OpenSubKey(REG_PATH_SAFER_PATHS, false))
+                {
+                    if (pathsKey != null)
+                    {
+                        foreach (var sk in pathsKey.GetSubKeyNames())
+                        {
+                            if (sk.StartsWith(SAFER_GUID_PATH_PREFIX, StringComparison.OrdinalIgnoreCase))
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            catch { }
+            return false;
         }
 
         private static void CreateSaferPathRule(string guid, string itemData, string description)
@@ -340,15 +531,17 @@ namespace ClassroomChecker.Core
             catch { }
         }
 
-        private static void DeleteSaferPathRule(string guid)
+        private static void CreateSaferWhitelistRule(string guid, string itemData, string description)
         {
             try
             {
-                using (var pathsKey = Registry.LocalMachine.OpenSubKey(REG_PATH_SAFER_PATHS, true))
+                using (var key = Registry.LocalMachine.CreateSubKey(REG_PATH_SAFER_UNRESTRICTED + @"\" + guid))
                 {
-                    if (pathsKey != null)
+                    if (key != null)
                     {
-                        pathsKey.DeleteSubKeyTree(guid, false);
+                        key.SetValue("ItemData", itemData, RegistryValueKind.String);
+                        key.SetValue("SaferFlags", 0, RegistryValueKind.DWord); // 0 = Unrestricted rule
+                        key.SetValue("Description", description, RegistryValueKind.String);
                     }
                 }
             }
@@ -372,20 +565,20 @@ namespace ClassroomChecker.Core
 
             bool allOk = true;
 
-            // 1. USB Lock
+            // 1. USB Lock (with ClassroomChecker Whitelist)
             if (config.blockUsbExecution)
             {
                 bool r = SetUsbExecutionBlocked(true);
                 allOk &= r;
-                logDetails.Add("USB Deny Execute: " + (r ? "ENABLED" : "FAILED"));
+                logDetails.Add("USB Execution Lock (with ClassroomChecker Whitelist): " + (r ? "ENABLED" : "FAILED"));
             }
             else
             {
                 SetUsbExecutionBlocked(false);
-                logDetails.Add("USB Deny Execute: DISABLED (by config)");
+                logDetails.Add("USB Execution Lock: DISABLED (by config)");
             }
 
-            // 2. Downloads & Temp Lock
+            // 2. Downloads & Temp Lock + Custom Folders
             if (config.blockDownloadsExecution || (config.blockedPaths != null && config.blockedPaths.Count > 0))
             {
                 bool r = SetPathRulesBlocked(config.blockDownloadsExecution, config.blockedPaths);
@@ -431,8 +624,8 @@ namespace ClassroomChecker.Core
             bool r2 = SetDownloadsExecutionBlocked(false, null);
             bool r3 = SetDisallowedExes(false, null);
 
-            logDetails.Add("USB Deny Execute: REMOVED");
-            logDetails.Add("Downloads/Temp Safer Rules: REMOVED");
+            logDetails.Add("USB Execution Lock & Whitelist: REMOVED");
+            logDetails.Add("Downloads/Temp & Folder Safer Rules: REMOVED");
             logDetails.Add("DisallowRun Rules: REMOVED");
 
             return r1 && r2 && r3;

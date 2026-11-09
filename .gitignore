@@ -10,6 +10,10 @@ obj/
 specs/*.xlsx
 dist/ScanReport_*.txt
 dist/config.json
+dist/*.old*
+dist/logs/
+dist/reports/
+dist/specs/
 
 
 *.pfx
