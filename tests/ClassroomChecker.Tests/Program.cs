@@ -425,14 +425,18 @@ namespace ClassroomChecker.Tests
             Localizer.SetLanguage("lo");
             string loBtn = Localizer.T("btn_settings");
             string loTitle = Localizer.T("settings_title");
+            string loTabSec = Localizer.T("tab_security");
             Assert(!string.IsNullOrEmpty(loBtn) && loBtn != "btn_settings", "btn_settings in Lao");
             Assert(!string.IsNullOrEmpty(loTitle) && loTitle != "settings_title", "settings_title in Lao");
+            Assert(!string.IsNullOrEmpty(loTabSec) && loTabSec != "tab_security", "tab_security in Lao");
 
             Localizer.SetLanguage("en");
             string enBtn = Localizer.T("btn_settings");
             string enTitle = Localizer.T("settings_title");
+            string enTabSec = Localizer.T("tab_security");
             Assert(!string.IsNullOrEmpty(enBtn) && enBtn != "btn_settings", "btn_settings in English");
             Assert(!string.IsNullOrEmpty(enTitle) && enTitle != "settings_title", "settings_title in English");
+            Assert(!string.IsNullOrEmpty(enTabSec) && enTabSec != "tab_security", "tab_security in English");
 
             Localizer.SetLanguage("lo");
         }

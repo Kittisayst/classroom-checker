@@ -2,6 +2,7 @@
   "app_title": "Classroom Checker — ເຄື່ອງມືກວດສອບຄອມພິວເຕີຫ້ອງຮຽນ",
   "tab_wallpaper": "ພື້ນຫຼັງ",
   "tab_scan": "ກວດສອບລະບົບ",
+  "tab_security": "ປ້ອງກັນ",
   "room": "ຫ້ອງຮຽນ:",
   "btn_add_room": "+ ເພີ່ມຫ້ອງ",
   "btn_delete_room": "ລຶບຫ້ອງ",
@@ -132,6 +133,12 @@
   "settings_lock_applied_error": "ເປີດລະບົບລັອກບາງລາຍການບໍ່ສຳເລັດ (ກະລຸນາກວດສອບສິດ Administrator)",
   "settings_unlock_confirm": "ທ່ານຕ້ອງການປົດລັອກນະໂຍບາຍຄວາມປອດໄພທັງໝົດແທ້ບໍ່?",
   "settings_unlock_applied_success": "ປົດລັອກນະໂຍບາຍທັງໝົດຮຽບຮ້ອຍແລ້ວ!",
+  "security_panel_title": "ລະບົບປ້ອງກັນ ແລະ ລັອກໂປຣແກຣມ / ເກມ (Security & App Lock)",
+  "security_btn_refresh": "🔄 ກວດສອບ",
+  "security_status_full_locked": "🔒 ລະບົບປ້ອງກັນກຳລັງເຮັດວຽກ: USB, Downloads/Temp ແລະ ເກມຖືກບລັອກຮຽບຮ້ອຍແລ້ວ (Whitelisted ClassroomChecker)",
+  "security_status_partial": "⚠️ ເປີດລັອກບາງສ່ວນ: USB={0}, Downloads={1}, ເກມ={2} ({3} exes)",
+  "security_status_unlocked": "⚠️ ຍັງບໍ່ໄດ້ເປີດການລັອກ: ນັກຮຽນຍັງສາມາດ Run ເກມ ຫຼື ໂປຣແກຣມຈາກ USB ແລະ Downloads ໄດ້",
+  "security_panel_note": "💡 ໝາຍເຫດ: ການລັອກຈະມີຜົນທັນທີກັບທຸກ User ໃນເຄື່ອງ. ສາມາດປົດລັອກຄືນໄດ້ທຸກເວລາດ້ວຍປຸ່ມ 'ປົດລັອກທັງໝົດ'.",
   "btn_save": "💾 ບັນທຶກ",
   "btn_cancel": "ຍົກເລີກ"
 }

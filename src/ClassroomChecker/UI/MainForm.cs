@@ -60,6 +60,7 @@ namespace ClassroomChecker.UI
             lblLanguage.Text = Localizer.T("language");
             tabWallpaper.Text = Localizer.T("tab_wallpaper");
             tabScan.Text = Localizer.T("tab_scan");
+            tabSecurity.Text = Localizer.T("tab_security");
             btnQuickSetup.Text = Localizer.T("btn_quick_setup");
             btnSettings.Text = Localizer.T("btn_settings");
 
@@ -99,6 +100,8 @@ namespace ClassroomChecker.UI
                 if (dlg.ShowDialog(this) == DialogResult.OK)
                 {
                     wallpaperPanel.RefreshFromConfig();
+                    securityPanel.LoadFromConfig();
+                    securityPanel.RefreshPolicyStatus();
                     MessageBox.Show(
                         Localizer.T("settings_saved_success"),
                         Localizer.T("app_title"),

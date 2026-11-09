@@ -102,6 +102,9 @@
     <Compile Include="UI\ScanPanel.Designer.cs">
       <DependentUpon>ScanPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\SecurityPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="UI\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

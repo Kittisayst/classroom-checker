@@ -2,6 +2,7 @@
   "app_title": "Classroom Checker — Classroom Computer Inspection Tool",
   "tab_wallpaper": "Wallpaper",
   "tab_scan": "System Check",
+  "tab_security": "Protection & Lock",
   "room": "Room:",
   "btn_add_room": "+ Add Room",
   "btn_delete_room": "Delete Room",
@@ -132,6 +133,12 @@
   "settings_lock_applied_error": "Failed to apply some policies (please verify Administrator rights)",
   "settings_unlock_confirm": "Are you sure you want to unlock all security restrictions?",
   "settings_unlock_applied_success": "All security restrictions have been unlocked!",
+  "security_panel_title": "Security & App/Game Lock",
+  "security_btn_refresh": "🔄 Refresh",
+  "security_status_full_locked": "🔒 Protection Active: USB, Downloads/Temp and Games are blocked (ClassroomChecker Whitelisted)",
+  "security_status_partial": "⚠️ Partially Locked: USB={0}, Downloads={1}, Games={2} ({3} exes)",
+  "security_status_unlocked": "⚠️ Protection Inactive: Students can still execute games or installers from USB/Downloads",
+  "security_panel_note": "💡 Note: Restrictions take effect immediately for all users. You can revert anytime via 'Unlock All'.",
   "btn_save": "💾 Save",
   "btn_cancel": "Cancel"
 }
