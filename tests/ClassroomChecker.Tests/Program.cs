@@ -51,7 +51,9 @@ namespace ClassroomChecker.Tests
             Run("SecurityConfig: defaults include USB, Downloads, and popular games", SecurityConfig_Defaults);
             Run("AppLockModule: metadata and check result contract", AppLockModule_MetadataAndContract);
             Run("I18n: tab_install and installer keys localized", I18n_TabInstall_Localized);
-            Run("SoftwareInstaller: catalog contains 10 FOSS/essential packages", SoftwareInstaller_Catalog_PopulatedAndValid);
+            Run("SoftwareInstaller: catalog contains 11 FOSS/essential packages", SoftwareInstaller_Catalog_PopulatedAndValid);
+            Run("SoftwareInstaller: CreateShortcut generates valid .lnk via COM", SoftwareInstaller_CreateShortcut);
+            Run("SoftwareInstaller: RAMMap64 is flagged as portable", SoftwareInstaller_RamMapIsPortable);
 
             Cleanup();
 
@@ -487,7 +489,7 @@ namespace ClassroomChecker.Tests
         private static void SoftwareInstaller_Catalog_PopulatedAndValid()
         {
             var catalog = SoftwareInstallerService.GetCatalog();
-            Assert(catalog != null && catalog.Count == 10, "catalog has 10 packages");
+            Assert(catalog != null && catalog.Count == 11, "catalog has 11 packages");
 
             bool has7z = false;
             bool hasVlc = false;
@@ -495,6 +497,7 @@ namespace ClassroomChecker.Tests
             bool hasSumatra = false;
             bool hasBrave = false;
             bool hasShareX = false;
+            bool hasRamMap = false;
 
             foreach (var pkg in catalog)
             {
@@ -510,6 +513,7 @@ namespace ClassroomChecker.Tests
                 if (pkg.Id == "sumatrapdf") hasSumatra = true;
                 if (pkg.Id == "brave") hasBrave = true;
                 if (pkg.Id == "sharex") hasShareX = true;
+                if (pkg.Id == "rammap64") hasRamMap = true;
             }
 
             Assert(has7z, "contains 7-Zip");
@@ -518,6 +522,37 @@ namespace ClassroomChecker.Tests
             Assert(hasSumatra, "contains SumatraPDF");
             Assert(hasBrave, "contains Brave Browser");
             Assert(hasShareX, "contains ShareX");
+            Assert(hasRamMap, "contains RAMMap64");
+        }
+
+        private static void SoftwareInstaller_CreateShortcut()
+        {
+            string tmpDir = Path.Combine(Path.GetTempPath(), "cc_sc_test_" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(tmpDir);
+            try
+            {
+                string targetPath = @"C:\Windows\notepad.exe";
+                string shortcutPath = Path.Combine(tmpDir, "TestShortcut.lnk");
+
+                bool created = SoftwareInstallerService.CreateShortcut(shortcutPath, targetPath, "Test shortcut description");
+                Assert(created, "CreateShortcut returns true");
+                Assert(File.Exists(shortcutPath), "shortcut file exists on disk");
+                Assert(new FileInfo(shortcutPath).Length > 0, "shortcut file has non-zero size");
+            }
+            finally
+            {
+                try { Directory.Delete(tmpDir, true); } catch { }
+            }
+        }
+
+        private static void SoftwareInstaller_RamMapIsPortable()
+        {
+            var catalog = SoftwareInstallerService.GetCatalog();
+            var rammap = catalog.Find(p => p.Id == "rammap64");
+            Assert(rammap != null, "rammap found in catalog");
+            Assert(rammap.IsPortable, "rammap is marked IsPortable");
+            AreEqual("RAMMap", rammap.PortableTargetSubDir, "PortableTargetSubDir is RAMMap");
+            Assert(!string.IsNullOrEmpty(rammap.ShortcutName), "ShortcutName is specified");
         }
     }
 }

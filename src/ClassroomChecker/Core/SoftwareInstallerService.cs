@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Win32;
 
@@ -226,6 +227,30 @@ namespace ClassroomChecker.Core
                 InstallerFilePatterns = new string[] { "*sharex*.exe", "*ShareX*.exe" },
                 SilentArguments = "/VERYSILENT /NORESTART"
             });
+
+            // 11. RAMMap64 (Sysinternals Portable Memory Cleaner)
+            _catalog.Add(new SoftwarePackage
+            {
+                Id = "rammap64",
+                Name = "RAMMap64 (Clear RAM)",
+                Category = "System Utility / Memory",
+                Description = "ໂປຣແກຣມວິເຄາະ ແລະ Clear RAM (Empty Standby List/Working Sets) ແບບ Portable ບໍ່ຕ້ອງຕິດຕັ້ງ",
+                LicenseType = "Freeware (Microsoft Sysinternals)",
+                ExeSearchName = "RAMMap64.exe",
+                FallbackPaths = new string[]
+                {
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"RAMMap\RAMMap64.exe"),
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"RAMMap\RAMMap.exe"),
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"RAMMap\RAMMap64.exe"),
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"RAMMap\RAMMap.exe"),
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Programs\RAMMap\RAMMap64.exe"),
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Programs\RAMMap\RAMMap.exe")
+                },
+                InstallerFilePatterns = new string[] { "*rammap64*.exe", "*rammap*.exe", "*RAMMap*.exe" },
+                IsPortable = true,
+                PortableTargetSubDir = "RAMMap",
+                ShortcutName = "RAMMap (Clear RAM).lnk"
+            });
         }
 
         public static List<SoftwarePackage> GetCatalog()
@@ -362,7 +387,7 @@ namespace ClassroomChecker.Core
         }
 
         /// <summary>
-        /// ດຳເນີນການຕິດຕັ້ງຊອບແວແບບ Silent ໃນ Background Thread
+        /// ດຳເນີນການຕິດຕັ້ງຊອບແວແບບ Silent ຫຼື ຄັດລອກ Portable Tools ພ້ອມສ້າງ Desktop Shortcut
         /// </summary>
         public static Task<InstallResult> InstallAsync(SoftwarePackage pkg, string installerPath)
         {
@@ -374,6 +399,82 @@ namespace ClassroomChecker.Core
                     return new InstallResult(false, "ບໍ່ພົບໄຟລ໌ຕິດຕັ້ງ: " + installerPath);
                 }
 
+                // -------------------------------------------------------------
+                // 1. Portable Tool Installation (Copy to Program Files + Shortcut)
+                // -------------------------------------------------------------
+                if (pkg.IsPortable)
+                {
+                    try
+                    {
+                        string subDir = !string.IsNullOrEmpty(pkg.PortableTargetSubDir) ? pkg.PortableTargetSubDir : pkg.Name;
+                        string targetDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), subDir);
+                        if (!Directory.Exists(targetDir))
+                        {
+                            Directory.CreateDirectory(targetDir);
+                        }
+
+                        string srcFileName = Path.GetFileName(installerPath);
+                        string destExePath = Path.Combine(targetDir, srcFileName);
+                        File.Copy(installerPath, destExePath, true);
+
+                        // ຖ້າໄຟລ໌ຊື່ RAMMap64.exe ໃຫ້ກັອບປີ້ເປັນ RAMMap.exe ໄວ້ນຳ ເພື່ອຄວາມສະດວກ
+                        if (srcFileName.Equals("RAMMap64.exe", StringComparison.OrdinalIgnoreCase))
+                        {
+                            string aliasPath = Path.Combine(targetDir, "RAMMap.exe");
+                            try { File.Copy(installerPath, aliasPath, true); } catch { }
+                        }
+
+                        // Register App Paths ເພື່ອໃຫ້ກົດ Win+R ແລ້ວພິມຊື່ໂປຣແກຣມໄດ້ເລີຍ
+                        try
+                        {
+                            using (var k = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\" + srcFileName))
+                            {
+                                if (k != null)
+                                {
+                                    k.SetValue("", destExePath);
+                                    k.SetValue("Path", targetDir);
+                                }
+                            }
+                        }
+                        catch { }
+
+                        // ຕັ້ງຄ່າ Auto-Accept EULA ສຳລັບ Sysinternals RAMMap
+                        try
+                        {
+                            using (var k = Registry.CurrentUser.CreateSubKey(@"Software\Sysinternals\RAMMap"))
+                            {
+                                if (k != null) k.SetValue("EulaAccepted", 1, RegistryValueKind.DWord);
+                            }
+                        }
+                        catch { }
+
+                        // Create Desktop Shortcuts
+                        string shortcutName = !string.IsNullOrEmpty(pkg.ShortcutName) ? pkg.ShortcutName : (pkg.Name + ".lnk");
+                        string userDesktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+                        string commonDesktop = Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory);
+
+                        if (!string.IsNullOrEmpty(userDesktop) && Directory.Exists(userDesktop))
+                        {
+                            CreateShortcut(Path.Combine(userDesktop, shortcutName), destExePath, pkg.Description);
+                        }
+
+                        if (!string.IsNullOrEmpty(commonDesktop) && Directory.Exists(commonDesktop))
+                        {
+                            try { CreateShortcut(Path.Combine(commonDesktop, shortcutName), destExePath, pkg.Description); } catch { }
+                        }
+
+                        return new InstallResult(true,
+                            string.Format("ຄັດລອກ {0} ໄປທີ່ {1} ແລະ ສ້າງ Shortcut ໜ້າຈໍ Desktop ສຳເລັດແລ້ວ!", srcFileName, targetDir));
+                    }
+                    catch (Exception ex)
+                    {
+                        return new InstallResult(false, "ເກີດຂໍ້ຜິດພາດໃນການຄັດລອກ Portable: " + ex.Message);
+                    }
+                }
+
+                // -------------------------------------------------------------
+                // 2. Standard Installer (.exe / .msi)
+                // -------------------------------------------------------------
                 string ext = Path.GetExtension(installerPath).ToLowerInvariant();
                 bool isMsi = ext == ".msi";
 
@@ -428,6 +529,39 @@ namespace ClassroomChecker.Core
                     return new InstallResult(false, "ເກີດຂໍ້ຜິດພາດ: " + ex.Message);
                 }
             });
+        }
+
+        /// <summary>
+        /// ສ້າງ Windows Shortcut (.lnk) ໂດຍໃຊ້ WScript.Shell ຜ່ານ COM Reflection (ບໍ່ຕ້ອງໃຊ້ NuGet ພາຍນອກ)
+        /// </summary>
+        public static bool CreateShortcut(string shortcutPath, string targetPath, string description = "")
+        {
+            try
+            {
+                Type shellType = Type.GetTypeFromProgID("WScript.Shell");
+                if (shellType == null) return false;
+                object shell = Activator.CreateInstance(shellType);
+                object shortcut = shellType.InvokeMember("CreateShortcut",
+                    BindingFlags.InvokeMethod, null, shell, new object[] { shortcutPath });
+
+                Type scType = shortcut.GetType();
+                scType.InvokeMember("TargetPath",
+                    BindingFlags.SetProperty, null, shortcut, new object[] { targetPath });
+                scType.InvokeMember("WorkingDirectory",
+                    BindingFlags.SetProperty, null, shortcut, new object[] { Path.GetDirectoryName(targetPath) });
+                if (!string.IsNullOrEmpty(description))
+                {
+                    scType.InvokeMember("Description",
+                        BindingFlags.SetProperty, null, shortcut, new object[] { description });
+                }
+                scType.InvokeMember("Save",
+                    BindingFlags.InvokeMethod, null, shortcut, null);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private static string GetFileVersion(string exePath)

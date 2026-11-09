@@ -40,6 +40,11 @@ Classroom Checker — Portable USB Admin Tool
 10. ShareX:
    ໄຟລ໌: ShareX-16.1.0-setup.exe (ຫຼື ໄຟລ໌ທີ່ມີຊື່ "sharex*.exe")
 
+11. RAMMap64 (Sysinternals Clear RAM — Portable):
+   ໄຟລ໌: RAMMap64.exe (ຫຼື ໄຟລ໌ທີ່ມີຊື່ "rammap*.exe", "RAMMap.exe")
+   ໂປຣແກຣມ Portable ບໍ່ຕ້ອງຕິດຕັ້ງ: ລະບົບຈະຄັດລອກລົງໂຟນເດີ Program Files\RAMMap
+   ແລະ ສ້າງ Desktop Shortcut ໄວ້ໜ້າຈໍໃຫ້ອັດຕະໂນມັດ ພ້ອມຕັ້ງຄ່າ Auto-Accept EULA.
+
 ------------------------------------------------------------------------
 ໝາຍເຫດ: ໂປຣແກຣມຈະຕິດຕັ້ງດ້ວຍ Flag Silent (/S, /qn, /silent) ອັດຕະໂນມັດ
 ໂດຍບໍ່ຕ້ອງກົດ Next, Next, Finish ເລີຍ.

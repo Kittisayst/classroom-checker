@@ -17,12 +17,16 @@ namespace ClassroomChecker.Core
         public string[] InstallerFilePatterns { get; set; }
         public string SilentArguments { get; set; }
         public bool IsMsi { get; set; }
+        public bool IsPortable { get; set; }
+        public string PortableTargetSubDir { get; set; }
+        public string ShortcutName { get; set; }
 
         public SoftwarePackage()
         {
             FallbackPaths = new string[0];
             InstallerFilePatterns = new string[0];
             SilentArguments = "/S";
+            IsPortable = false;
         }
     }
 }
