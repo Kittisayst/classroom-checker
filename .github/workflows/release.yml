@@ -34,6 +34,7 @@ jobs:
       - name: Prepare Release Artifacts
         shell: pwsh
         run: |
+          $ProgressPreference = 'SilentlyContinue'
           $ver = if ($env:GITHUB_REF_NAME) { $env:GITHUB_REF_NAME } else { "v1.0.0" }
           New-Item -ItemType Directory -Force -Path .\release-artifacts
           New-Item -ItemType Directory -Force -Path .\portable-pack\installers
@@ -42,10 +43,10 @@ jobs:
 
           # Copy files into portable pack
           Copy-Item "src\ClassroomChecker\bin\Release\ClassroomChecker.exe" -Destination ".\portable-pack\"
-          Copy-Item "dist\config.json" -Destination ".\portable-pack\"
-          Copy-Item "dist\bg.png" -Destination ".\portable-pack\"
-          Copy-Item "README.md" -Destination ".\portable-pack\"
-          Copy-Item "dist\installers\README.txt" -Destination ".\portable-pack\installers\"
+          if (Test-Path "dist\config.json") { Copy-Item "dist\config.json" -Destination ".\portable-pack\" }
+          if (Test-Path "src\ClassroomChecker\Assets\bg.png") { Copy-Item "src\ClassroomChecker\Assets\bg.png" -Destination ".\portable-pack\bg.png" }
+          if (Test-Path "README.md") { Copy-Item "README.md" -Destination ".\portable-pack\" }
+          if (Test-Path "dist\installers\README.txt") { Copy-Item "dist\installers\README.txt" -Destination ".\portable-pack\installers\" }
 
           # Standalone executable
           Copy-Item "src\ClassroomChecker\bin\Release\ClassroomChecker.exe" -Destination ".\release-artifacts\ClassroomChecker.exe"
@@ -54,8 +55,9 @@ jobs:
           $zipPath = ".\release-artifacts\ClassroomChecker-$ver-Portable.zip"
           Compress-Archive -Path ".\portable-pack\*" -DestinationPath $zipPath
 
-          # Generate SHA-256 Checksums
-          Get-FileHash -Algorithm SHA256 .\release-artifacts\* | Out-File ".\release-artifacts\checksums-sha256.txt" -Encoding utf8
+          # Generate SHA-256 Checksums cleanly
+          $hashes = Get-FileHash -Algorithm SHA256 .\release-artifacts\ClassroomChecker.exe, $zipPath
+          $hashes | Format-Table -AutoSize | Out-String | Set-Content ".\release-artifacts\checksums-sha256.txt" -Encoding utf8
 
       - name: Upload Build Artifacts (CI Archive)
         uses: actions/upload-artifact@v4
