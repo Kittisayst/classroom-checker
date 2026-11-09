@@ -8,6 +8,12 @@
 
 > **Classroom Checker** ເປັນໂປຣແກຣມ Portable ແບບ Single Executable ຂະໜາດກະທັດຮັດ ທີ່ອອກແບບມາສະເພາະສຳລັບ ຄູ-ອາຈານ ແລະ ຜູ້ດູແລລະບົບຫ້ອງຄອມພິວເຕີ (IT Admin) ໃຊ້ງານຜ່ານ **USB Flash Drive** ໂດຍກົງ ໂດຍບໍ່ຕ້ອງຕິດຕັ້ງລົງໃນເຄື່ອງ ເພື່ອຕັ້ງຄ່າ Wallpaper, ກວດສອບຄວາມພ້ອມຂອງ Hardware & Software, ລັອກປ້ອງກັນເກມ/USB, ແລະ ຕິດຕັ້ງຊອບແວພື້ນຖານແບບ Offline ອັດຕະໂນມັດ.
 
+<p align="center">
+  <img src="docs/images/screenshot.jpg" alt="Classroom Checker UI Screenshot" width="880" />
+  <br>
+  <em>ພາບຕົວຢ່າງໜ້າຕ່າງຫຼັກຂອງ Classroom Checker — ແທັບພື້ນຫຼັງ ແລະ ຕົວຢ່າງ Wallpaper ພ້ອມປ້າຍຊື່ຫ້ອງ ແລະ ເລກເຄື່ອງ</em>
+</p>
+
 ---
 
 ## 📑 ສາລະບານ (Table of Contents)
