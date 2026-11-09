@@ -152,5 +152,11 @@
   "installer_col_action": "Action",
   "installer_tip": "💡 Tip: Simply download offline setup files (.exe/.msi) into installers/ on USB, and the system will detect and install them silently.",
   "btn_save": "💾 Save",
-  "btn_cancel": "Cancel"
+  "btn_cancel": "Cancel",
+  "btn_help": "📖 Guide",
+  "guide_dialog_title": "📖 Classroom Checker User Guide & Manual",
+  "guide_header_title": "📖 Classroom Checker v1.0 User Manual",
+  "guide_header_subtitle": "Portable Admin Tool for inspection, wallpaper labeling, security lock, and software installation",
+  "guide_btn_open_readme": "📄 Open README.md",
+  "btn_close": "Close"
 }

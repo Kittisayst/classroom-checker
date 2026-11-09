@@ -20,6 +20,7 @@ namespace ClassroomChecker.UI
             this.pnlHeader = new System.Windows.Forms.Panel();
             this.btnQuickSetup = new System.Windows.Forms.Button();
             this.btnSettings = new System.Windows.Forms.Button();
+            this.btnHelp = new System.Windows.Forms.Button();
             this.cmbLanguage = new System.Windows.Forms.ComboBox();
             this.lblLanguage = new System.Windows.Forms.Label();
             this.lblSubtitle = new System.Windows.Forms.Label();
@@ -46,6 +47,7 @@ namespace ClassroomChecker.UI
             this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(115)))), ((int)(((byte)(232)))));
             this.pnlHeader.Controls.Add(this.btnQuickSetup);
             this.pnlHeader.Controls.Add(this.btnSettings);
+            this.pnlHeader.Controls.Add(this.btnHelp);
             this.pnlHeader.Controls.Add(this.cmbLanguage);
             this.pnlHeader.Controls.Add(this.lblLanguage);
             this.pnlHeader.Controls.Add(this.lblSubtitle);
@@ -66,9 +68,9 @@ namespace ClassroomChecker.UI
             this.btnQuickSetup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnQuickSetup.Font = new System.Drawing.Font("Phetsarath OT", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnQuickSetup.ForeColor = System.Drawing.Color.White;
-            this.btnQuickSetup.Location = new System.Drawing.Point(465, 17);
+            this.btnQuickSetup.Location = new System.Drawing.Point(415, 17);
             this.btnQuickSetup.Name = "btnQuickSetup";
-            this.btnQuickSetup.Size = new System.Drawing.Size(175, 36);
+            this.btnQuickSetup.Size = new System.Drawing.Size(145, 36);
             this.btnQuickSetup.TabIndex = 4;
             this.btnQuickSetup.Text = "⚡ ຕັ້ງຄ່າດ່ວນ";
             this.btnQuickSetup.UseVisualStyleBackColor = false;
@@ -83,13 +85,30 @@ namespace ClassroomChecker.UI
             this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSettings.Font = new System.Drawing.Font("Phetsarath OT", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(26)))), ((int)(((byte)(115)))), ((int)(((byte)(232)))));
-            this.btnSettings.Location = new System.Drawing.Point(650, 17);
+            this.btnSettings.Location = new System.Drawing.Point(568, 17);
             this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(115, 36);
+            this.btnSettings.Size = new System.Drawing.Size(100, 36);
             this.btnSettings.TabIndex = 5;
             this.btnSettings.Text = "⚙️ ຕັ້ງຄ່າ";
             this.btnSettings.UseVisualStyleBackColor = false;
             this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
+            // 
+            // btnHelp
+            // 
+            this.btnHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnHelp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(241)))), ((int)(((byte)(245)))), ((int)(((byte)(249)))));
+            this.btnHelp.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnHelp.FlatAppearance.BorderSize = 0;
+            this.btnHelp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnHelp.Font = new System.Drawing.Font("Phetsarath OT", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHelp.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(41)))), ((int)(((byte)(59)))));
+            this.btnHelp.Location = new System.Drawing.Point(676, 17);
+            this.btnHelp.Name = "btnHelp";
+            this.btnHelp.Size = new System.Drawing.Size(95, 36);
+            this.btnHelp.TabIndex = 6;
+            this.btnHelp.Text = "📖 ຄູ່ມື";
+            this.btnHelp.UseVisualStyleBackColor = false;
+            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
             // 
             // cmbLanguage
             // 
@@ -270,6 +289,7 @@ namespace ClassroomChecker.UI
         private System.Windows.Forms.Panel pnlHeader;
         private System.Windows.Forms.Button btnQuickSetup;
         private System.Windows.Forms.Button btnSettings;
+        private System.Windows.Forms.Button btnHelp;
         private System.Windows.Forms.Label lblAppTitle;
         private System.Windows.Forms.Label lblSubtitle;
         private System.Windows.Forms.ComboBox cmbLanguage;

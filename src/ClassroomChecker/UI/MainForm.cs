@@ -64,6 +64,7 @@ namespace ClassroomChecker.UI
             tabInstall.Text = Localizer.T("tab_install");
             btnQuickSetup.Text = Localizer.T("btn_quick_setup");
             btnSettings.Text = Localizer.T("btn_settings");
+            btnHelp.Text = Localizer.T("btn_help", "📖 ຄູ່ມື");
 
             if (Localizer.CurrentLanguage == "en")
             {
@@ -109,6 +110,14 @@ namespace ClassroomChecker.UI
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
                 }
+            }
+        }
+
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            using (var dlg = new UserGuideDialog())
+            {
+                dlg.ShowDialog(this);
             }
         }
 

@@ -152,5 +152,11 @@
   "installer_col_action": "ດຳເນີນການ (Action)",
   "installer_tip": "💡 ຄຳແນະນຳ: ພຽງແຕ່ດາວໂຫຼດໄຟລ໌ Setup (.exe/.msi) ມາໂຍນໃສ່ໂຟນເດີ installers/ ໃນ USB ລະບົບຈະກວດພົບ ແລະ ຕິດຕັ້ງງຽບໆໃຫ້ທັນທີ.",
   "btn_save": "💾 ບັນທຶກ",
-  "btn_cancel": "ຍົກເລີກ"
+  "btn_cancel": "ຍົກເລີກ",
+  "btn_help": "📖 ຄູ່ມື",
+  "guide_dialog_title": "📖 ຄູ່ມືການນຳໃຊ້ລະບົບ Classroom Checker (User Guide)",
+  "guide_header_title": "📖 ຄູ່ມືການນຳໃຊ້ Classroom Checker v1.0",
+  "guide_header_subtitle": "ເຄື່ອງມື Admin ແບບ Portable ສຳລັບກວດສອບ, ຕັ້ງ Wallpaper, ລັອກຄວາມປອດໄພ ແລະ ຕິດຕັ້ງຊອບແວຫ້ອງຮຽນ",
+  "guide_btn_open_readme": "📄 ເປີດໄຟລ໌ README.md",
+  "btn_close": "ປິດໜ້າຕ່າງ"
 }
