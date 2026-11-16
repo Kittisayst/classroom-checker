@@ -45,6 +45,9 @@ namespace ClassroomChecker
             Application.ThreadException += (s, e) => ReportFatal(e.Exception);
             AppDomain.CurrentDomain.UnhandledException += (s, e) => ReportFatal(e.ExceptionObject as Exception);
 
+            // ລຶບ exe ເກົ່າ (.old) ທີ່ເຫຼືອຈາກການອັບເດດຄັ້ງກ່ອນ
+            ClassroomChecker.Core.UpdateService.CleanupAfterUpdate();
+
             try
             {
                 Application.Run(new MainForm());

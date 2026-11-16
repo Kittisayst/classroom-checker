@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpikeCli.cs" Condition="'$(Configuration)' == 'Debug'" />
     <Compile Include="Phase5Verifier.cs" />
     <Compile Include="Config\AppConfig.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Core\DesktopIconService.cs" />
     <Compile Include="Core\LogonScreenService.cs" />
     <Compile Include="Core\UserAccountService.cs" />
+    <Compile Include="Core\UpdateService.cs" />
     <Compile Include="Core\PerformanceTuningService.cs" />
     <Compile Include="Core\ComputerNameService.cs" />
     <Compile Include="Core\UsbVirusCleanerService.cs" />
@@ -103,6 +105,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UI\SettingsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\AboutDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UI\UserGuideDialog.cs">

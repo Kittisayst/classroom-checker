@@ -23,6 +23,25 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
+      - name: Stamp Version From Tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        run: |
+          # v1.2.0 -> 1.2.0.0 (the in-app updater compares this with the latest release tag)
+          $tag = "${{ github.ref_name }}"
+          if ($tag -notmatch '^v(\d+)\.(\d+)\.(\d+)$') { throw "Tag '$tag' must look like v1.2.3" }
+          $v3 = "$($Matches[1]).$($Matches[2]).$($Matches[3])"
+          $v4 = "$v3.0"
+          $info = "src\ClassroomChecker\Properties\AssemblyInfo.cs"
+          $text = Get-Content $info -Raw -Encoding utf8
+          $text = $text -replace 'AssemblyVersion\("[^"]*"\)', "AssemblyVersion(`"$v4`")"
+          $text = $text -replace 'AssemblyFileVersion\("[^"]*"\)', "AssemblyFileVersion(`"$v4`")"
+          $text = $text -replace 'AssemblyInformationalVersion\("[^"]*"\)', "AssemblyInformationalVersion(`"$v3`")"
+          Set-Content $info $text -Encoding utf8 -NoNewline
+          $man = "src\ClassroomChecker\app.manifest"
+          (Get-Content $man -Raw -Encoding utf8) -replace 'assemblyIdentity version="[^"]*"', "assemblyIdentity version=`"$v4`"" | Set-Content $man -Encoding utf8 -NoNewline
+          Write-Host "Version stamped: $v4"
+
       - name: Build Solution (Release x64)
         run: |
           msbuild ClassroomChecker.sln /p:Configuration=Release /p:Platform=x64 /t:Rebuild
@@ -57,9 +76,11 @@ jobs:
           $zipPath = ".\release-artifacts\ClassroomChecker-$ver-Portable.zip"
           Compress-Archive -Path ".\portable-pack\*" -DestinationPath $zipPath
 
-          # Generate SHA-256 Checksums cleanly
-          $hashes = Get-FileHash -Algorithm SHA256 .\release-artifacts\ClassroomChecker.exe, $zipPath
-          $hashes | Format-Table -AutoSize | Out-String | Set-Content ".\release-artifacts\checksums-sha256.txt" -Encoding utf8
+          # SHA-256 checksums, one "<hash>  <file name>" line per file (sha256sum format;
+          # the in-app updater reads this to verify the downloaded exe)
+          $lines = Get-FileHash -Algorithm SHA256 .\release-artifacts\ClassroomChecker.exe, $zipPath |
+            ForEach-Object { "{0}  {1}" -f $_.Hash.ToLowerInvariant(), (Split-Path $_.Path -Leaf) }
+          [IO.File]::WriteAllLines("$PWD\release-artifacts\checksums-sha256.txt", [string[]]$lines)
 
       - name: Upload Build Artifacts (CI Archive)
         uses: actions/upload-artifact@v4

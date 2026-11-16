@@ -10,6 +10,7 @@ namespace ClassroomChecker.UI
     {
         private bool _isChangingLanguage = false;
         private FlowLayoutPanel _headerActions;
+        private Button _btnAbout;
         private readonly ToolTip _headerToolTip = new ToolTip();
 
         public MainForm()
@@ -89,7 +90,22 @@ namespace ClassroomChecker.UI
                 Margin = new Padding(0)
             };
 
-            foreach (var btn in new[] { btnQuickSetup, btnSettings, btnHelp })
+            _btnAbout = new Button
+            {
+                BackColor = btnHelp.BackColor,
+                ForeColor = btnHelp.ForeColor,
+                FlatStyle = FlatStyle.Flat,
+                Font = btnHelp.Font,
+                Cursor = Cursors.Hand,
+                UseVisualStyleBackColor = false
+            };
+            _btnAbout.FlatAppearance.BorderSize = 0;
+            _btnAbout.Click += (s, e) =>
+            {
+                using (var dlg = new AboutDialog()) dlg.ShowDialog(this);
+            };
+
+            foreach (var btn in new[] { btnQuickSetup, btnSettings, btnHelp, _btnAbout })
             {
                 pnlHeader.Controls.Remove(btn);
                 btn.Anchor = AnchorStyles.None;
@@ -155,6 +171,7 @@ namespace ClassroomChecker.UI
             btnQuickSetup.Text = Localizer.T("btn_quick_setup_short");
             btnSettings.Text = Localizer.T("btn_settings");
             btnHelp.Text = Localizer.T("btn_help", "📖 ຄູ່ມື");
+            if (_btnAbout != null) _btnAbout.Text = Localizer.T("btn_about");
 
             if (Localizer.CurrentLanguage == "en")
             {

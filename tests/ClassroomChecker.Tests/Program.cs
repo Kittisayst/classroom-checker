@@ -70,6 +70,12 @@ namespace ClassroomChecker.Tests
             Run("DateTime: date formats, 12/24-hour patterns and preview", DateTime_FormatsAndPreview);
             Run("DesktopIcons: Office shortcut detection (no duplicates)", DesktopIcons_OfficeShortcutDetection);
             Run("Performance: low-spec rules, safe service list and defaults", Performance_RulesAndDefaults);
+            Run("Update: tag parsing, version compare and formatting", Update_VersionParsingAndCompare);
+            Run("Update: release JSON parsing (digest, assets, allowed URLs)", Update_ParseRelease);
+            Run("Update: checksum file parsing (sha256sum format)", Update_ParseChecksums);
+            Run("Update: downloaded exe verification (MZ + SHA-256)", Update_VerifyDownloadedExe);
+            Run("Update: exe swap keeps old copy and rolls back on failure", Update_SwapExecutable);
+            Run("I18n: about and update keys localized in lo and en", I18n_About_Localized);
 
             Cleanup();
 
@@ -1029,6 +1035,135 @@ namespace ClassroomChecker.Tests
             {
                 Assert(res.Details.Any(d => d.Contains(name)), "Details mention " + name);
             }
+        }
+    
+        private static void Update_VersionParsingAndCompare()
+        {
+            AreEqual(new Version(1, 2, 0, 0), UpdateService.ParseTagVersion("v1.2.0"), "v1.2.0");
+            AreEqual(new Version(1, 2, 0, 0), UpdateService.ParseTagVersion("1.2"), "1.2");
+            AreEqual(new Version(2, 0, 1, 3), UpdateService.ParseTagVersion("V2.0.1.3"), "V2.0.1.3");
+            Assert(UpdateService.ParseTagVersion("latest") == null, "non-version tag -> null");
+            Assert(UpdateService.ParseTagVersion("v1.2.0-beta") == null, "pre-release suffix -> null");
+            Assert(UpdateService.ParseTagVersion(null) == null, "null -> null");
+
+            Assert(UpdateService.IsNewer(new Version(1, 2, 0), new Version(1, 1, 0, 0)), "1.2.0 > 1.1.0.0");
+            Assert(UpdateService.IsNewer(new Version(1, 10, 0), new Version(1, 9, 0)), "numeric compare, not text (1.10 > 1.9)");
+            Assert(!UpdateService.IsNewer(new Version(1, 2), new Version(1, 2, 0, 0)), "1.2 == 1.2.0.0 is not newer");
+            Assert(!UpdateService.IsNewer(new Version(1, 1, 0), new Version(1, 2, 0)), "older is not newer");
+            Assert(!UpdateService.IsNewer(null, new Version(1, 0)), "null latest is not newer");
+
+            AreEqual("1.2.0", UpdateService.FormatVersion(new Version(1, 2, 0, 0)), "format hides revision 0");
+            AreEqual("1.2.0.5", UpdateService.FormatVersion(new Version(1, 2, 0, 5)), "format keeps revision");
+            Assert(UpdateService.CurrentVersion.Major >= 1, "assembly has a real version (AssemblyInfo), got " + UpdateService.CurrentVersion);
+        }
+
+        private static void Update_ParseRelease()
+        {
+            string hash = new string('a', 64);
+            string json = "{\"tag_name\":\"v1.3.0\",\"html_url\":\"https://github.com/Kittisayst/classroom-checker/releases/tag/v1.3.0\","
+                + "\"body\":\"## What's Changed\\n* **fix** stuff\",\"published_at\":\"2026-11-20T08:00:00Z\",\"assets\":["
+                + "{\"name\":\"ClassroomChecker.exe\",\"size\":2259968,\"digest\":\"sha256:" + hash.ToUpperInvariant() + "\","
+                + "\"browser_download_url\":\"https://github.com/Kittisayst/classroom-checker/releases/download/v1.3.0/ClassroomChecker.exe\"},"
+                + "{\"name\":\"checksums-sha256.txt\",\"browser_download_url\":\"https://github.com/Kittisayst/classroom-checker/releases/download/v1.3.0/checksums-sha256.txt\"}]}";
+            ReleaseInfo r = UpdateService.ParseRelease(json);
+            Assert(r != null, "parsed");
+            AreEqual(new Version(1, 3, 0, 0), r.Version, "version");
+            AreEqual(hash, r.ExeSha256, "digest lower-cased without sha256: prefix");
+            AreEqual(2259968L, r.ExeSize, "size");
+            Assert(r.PublishedAt.HasValue, "published date parsed");
+            Assert(UpdateService.IsAllowedDownloadUrl(r.ExeUrl), "exe URL is from this repo");
+            Assert(UpdateService.IsAllowedDownloadUrl(r.ChecksumsUrl), "checksums URL is from this repo");
+
+            Assert(!UpdateService.IsAllowedDownloadUrl("https://evil.example/ClassroomChecker.exe"), "other host rejected");
+            Assert(!UpdateService.IsAllowedDownloadUrl("http://github.com/Kittisayst/classroom-checker/releases/download/v1/x.exe"), "plain http rejected");
+            Assert(!UpdateService.IsAllowedDownloadUrl("https://github.com/someone-else/classroom-checker/releases/download/v1/x.exe"), "other repo rejected");
+
+            ReleaseInfo noDigest = UpdateService.ParseRelease("{\"tag_name\":\"v1.3.0\",\"assets\":[{\"name\":\"ClassroomChecker.exe\",\"browser_download_url\":\"u\"}]}");
+            Assert(noDigest.ExeSha256 == null, "missing digest -> null (falls back to checksums file)");
+            Assert(UpdateService.ParseRelease("{\"tag_name\":\"nightly\"}") == null, "non-version tag -> null");
+
+            string notes = UpdateService.CleanNotes("## What's Changed\n* **fix** stuff");
+            AreEqual("What's Changed\r\n* fix stuff", notes, "release notes cleaned for TextBox");
+        }
+
+        private static void Update_ParseChecksums()
+        {
+            string a = new string('a', 64), b = new string('B', 64);
+            string text = a + "  ClassroomChecker.exe\r\n" + b + " *ClassroomChecker-v1.3.0-Portable.zip\n";
+            AreEqual(a, UpdateService.ParseChecksums(text, "ClassroomChecker.exe"), "two-space format");
+            AreEqual(b.ToLowerInvariant(), UpdateService.ParseChecksums(text, "ClassroomChecker-v1.3.0-Portable.zip"), "binary-marker format");
+            Assert(UpdateService.ParseChecksums(text, "Other.exe") == null, "unknown file -> null");
+
+            // ຮູບແບບຕາຕະລາງເກົ່າ (v1.0.0, v1.1.0) ຕັດຊື່ໄຟລ໌ເປັນ "..." ຈຶ່ງໃຊ້ບໍ່ໄດ້ -> null (ບໍ່ເດົາ)
+            string oldTable = "\r\nAlgorithm Hash Path\r\n--------- ---- ----\r\nSHA256    " + b + " D:\\a\\classroom-checker\\rel\u2026\r\n";
+            Assert(UpdateService.ParseChecksums(oldTable, "ClassroomChecker.exe") == null, "old truncated table is not trusted");
+        }
+
+        private static void Update_VerifyDownloadedExe()
+        {
+            string dir = Path.Combine(Path.GetTempPath(), "cc_upd_" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(dir);
+            try
+            {
+                string exe = Path.Combine(dir, "a.exe");
+                File.WriteAllBytes(exe, new byte[] { (byte)'M', (byte)'Z', 1, 2, 3 });
+                string hash;
+                using (var fs = File.OpenRead(exe)) hash = UpdateService.ComputeSha256(fs);
+                AreEqual(64, hash.Length, "hash length");
+
+                Assert(UpdateService.VerifyDownloadedExe(exe, hash) == null, "matching hash passes");
+                Assert(UpdateService.VerifyDownloadedExe(exe, hash.ToUpperInvariant()) == null, "hash compare ignores case");
+                Assert(UpdateService.VerifyDownloadedExe(exe, new string('0', 64)) != null, "wrong hash fails");
+
+                string txt = Path.Combine(dir, "b.exe");
+                File.WriteAllText(txt, "<html>not found</html>");
+                string txtHash;
+                using (var fs = File.OpenRead(txt)) txtHash = UpdateService.ComputeSha256(fs);
+                Assert(UpdateService.VerifyDownloadedExe(txt, txtHash) != null, "non-MZ file fails even with matching hash");
+                Assert(UpdateService.VerifyDownloadedExe(Path.Combine(dir, "missing.exe"), hash) != null, "missing file fails");
+            }
+            finally { Directory.Delete(dir, true); }
+        }
+
+        private static void Update_SwapExecutable()
+        {
+            string dir = Path.Combine(Path.GetTempPath(), "cc_swap_" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(dir);
+            try
+            {
+                string current = Path.Combine(dir, "ClassroomChecker.exe");
+                string fresh = current + ".new";
+                File.WriteAllText(current, "old");
+                File.WriteAllText(fresh, "new");
+                File.WriteAllText(current + ".old", "stale");
+
+                UpdateService.SwapExecutable(current, fresh);
+                AreEqual("new", File.ReadAllText(current), "new exe in place");
+                AreEqual("old", File.ReadAllText(current + ".old"), "previous exe kept as .old (stale .old replaced)");
+                Assert(!File.Exists(fresh), ".new consumed");
+
+                // ໄຟລ໌ໃໝ່ຫາຍ -> ຍ້າຍ exe ເກົ່າກັບຄືນ
+                File.WriteAllText(current, "v2");
+                bool threw = false;
+                try { UpdateService.SwapExecutable(current, Path.Combine(dir, "nope.exe")); }
+                catch (FileNotFoundException) { threw = true; }
+                Assert(threw, "missing new exe throws");
+                AreEqual("v2", File.ReadAllText(current), "rolled back: current exe restored");
+            }
+            finally { Directory.Delete(dir, true); }
+        }
+
+        private static void I18n_About_Localized()
+        {
+            string[] keys = { "btn_about", "about_title", "about_version", "about_btn_check", "about_btn_install",
+                "about_update_latest", "about_update_available", "about_update_offline", "about_install_confirm",
+                "about_update_bad_file", "about_update_install_failed" };
+            foreach (string lang in new[] { "lo", "en" })
+            {
+                Localizer.SetLanguage(lang);
+                foreach (string k in keys) Assert(Localizer.T(k, "1.2.0", "x") != k, lang + " has " + k);
+            }
+            Localizer.SetLanguage("lo");
         }
     }
 }
