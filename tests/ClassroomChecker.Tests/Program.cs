@@ -60,6 +60,8 @@ namespace ClassroomChecker.Tests
             Run("DesktopIconService: system icons and office shortcuts contract", DesktopIconService_ConstantsAndContract);
             Run("UsbVirusCleanerService: clean, unhide, remove scripts and create vaccine", UsbVirusCleanerService_CleanAndRestore_Contract);
             Run("I18n: UsbCleaner and Vaccine keys localized in lo and en", I18n_UsbCleaner_Localized);
+            Run("ComputerNameService: name generation, sanitization and validation contract", ComputerNameService_Contract);
+            Run("ComputerNameModule: metadata and check result contract", ComputerNameModule_MetadataAndContract);
 
             Cleanup();
 
@@ -780,6 +782,49 @@ namespace ClassroomChecker.Tests
             Assert(!string.IsNullOrEmpty(Localizer.T("usb_cleaner_btn_start")), "en: usb_cleaner_btn_start non-empty");
 
             Localizer.SetLanguage("lo"); // restore Lao
+        }
+
+        private static void ComputerNameService_Contract()
+        {
+            // Generation
+            string name1 = ComputerNameService.GenerateDefaultName("ຫ້ອງຄອມພິວເຕີ 1", 1);
+            Assert(name1 == "COM1-01", "room 1 -> COM1-01 (got " + name1 + ")");
+
+            string name2 = ComputerNameService.GenerateDefaultName("ຫ້ອງຄອມພິວເຕີ 2", 9);
+            Assert(name2 == "COM2-09", "room 2 -> COM2-09 (got " + name2 + ")");
+
+            string name10 = ComputerNameService.GenerateDefaultName("ຫ້ອງຄອມພິວເຕີ 1", 10);
+            Assert(name10 == "COM1-10", "pc 10 -> COM1-10 (got " + name10 + ")");
+
+            // Sanitization
+            string clean1 = ComputerNameService.SanitizeName("lab-pc 01!");
+            Assert(clean1 == "LAB-PC-01", "Sanitize removes special chars and spaces (got " + clean1 + ")");
+
+            string clean2 = ComputerNameService.SanitizeName("---pc---01---");
+            Assert(clean2 == "PC-01", "Sanitize trims hyphens (got " + clean2 + ")");
+
+            // Validation
+            string err;
+            Assert(ComputerNameService.ValidateName("COM1-01", out err), "COM1-01 is valid");
+            Assert(ComputerNameService.ValidateName("LAB-PC-05", out err), "LAB-PC-05 is valid");
+            Assert(!ComputerNameService.ValidateName("", out err), "empty name invalid");
+            Assert(!ComputerNameService.ValidateName("TOOLONGNAMEEXCEEDING15CHARS", out err), ">15 chars invalid");
+            Assert(!ComputerNameService.ValidateName("PC 01", out err), "space invalid");
+            Assert(!ComputerNameService.ValidateName("12345", out err), "numbers only invalid");
+            Assert(!ComputerNameService.ValidateName("-PC01", out err), "starting with hyphen invalid");
+        }
+
+        private static void ComputerNameModule_MetadataAndContract()
+        {
+            var mod = new ComputerNameModule();
+            Assert(mod.Id == "computer_name", "Id is computer_name");
+            Assert(mod.DisplayNameKey == "module_computer_name", "DisplayNameKey is module_computer_name");
+            Assert(mod.CanFix, "CanFix is true");
+
+            var res = mod.Check();
+            Assert(res != null, "CheckResult non-null");
+            Assert(res.Status == CheckStatus.Pass || res.Status == CheckStatus.Warning, "Valid status");
+            Assert(res.Details != null && res.Details.Count >= 2, "Details contains hostname info");
         }
     }
 }

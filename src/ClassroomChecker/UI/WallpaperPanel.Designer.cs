@@ -23,6 +23,9 @@ namespace ClassroomChecker.UI
             this.btnBrowseBg = new System.Windows.Forms.Button();
             this.txtBgPath = new System.Windows.Forms.TextBox();
             this.lblBgImage = new System.Windows.Forms.Label();
+            this.btnRenameComputer = new System.Windows.Forms.Button();
+            this.txtComputerName = new System.Windows.Forms.TextBox();
+            this.lblComputerName = new System.Windows.Forms.Label();
             this.numComputerNumber = new System.Windows.Forms.NumericUpDown();
             this.lblNumber = new System.Windows.Forms.Label();
             this.btnDeleteRoom = new System.Windows.Forms.Button();
@@ -57,6 +60,9 @@ namespace ClassroomChecker.UI
             // 
             // grpWallpaperSettings
             // 
+            this.grpWallpaperSettings.Controls.Add(this.btnRenameComputer);
+            this.grpWallpaperSettings.Controls.Add(this.txtComputerName);
+            this.grpWallpaperSettings.Controls.Add(this.lblComputerName);
             this.grpWallpaperSettings.Controls.Add(this.btnDefaultBg);
             this.grpWallpaperSettings.Controls.Add(this.btnBrowseBg);
             this.grpWallpaperSettings.Controls.Add(this.txtBgPath);
@@ -113,6 +119,35 @@ namespace ClassroomChecker.UI
             this.lblBgImage.Size = new System.Drawing.Size(65, 15);
             this.lblBgImage.TabIndex = 6;
             this.lblBgImage.Text = "ຮູບພື້ນຫຼັງ:";
+            // 
+            // lblComputerName
+            // 
+            this.lblComputerName.AutoSize = true;
+            this.lblComputerName.Location = new System.Drawing.Point(540, 29);
+            this.lblComputerName.Name = "lblComputerName";
+            this.lblComputerName.Size = new System.Drawing.Size(53, 15);
+            this.lblComputerName.TabIndex = 10;
+            this.lblComputerName.Text = "ຊື່ເຄື່ອງ:";
+            // 
+            // txtComputerName
+            // 
+            this.txtComputerName.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.txtComputerName.Font = new System.Drawing.Font("Phetsarath OT", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtComputerName.Location = new System.Drawing.Point(595, 25);
+            this.txtComputerName.MaxLength = 15;
+            this.txtComputerName.Name = "txtComputerName";
+            this.txtComputerName.Size = new System.Drawing.Size(100, 24);
+            this.txtComputerName.TabIndex = 11;
+            // 
+            // btnRenameComputer
+            // 
+            this.btnRenameComputer.Location = new System.Drawing.Point(702, 24);
+            this.btnRenameComputer.Name = "btnRenameComputer";
+            this.btnRenameComputer.Size = new System.Drawing.Size(85, 26);
+            this.btnRenameComputer.TabIndex = 12;
+            this.btnRenameComputer.Text = "ປ່ຽນຊື່ເຄື່ອງ";
+            this.btnRenameComputer.UseVisualStyleBackColor = true;
+            this.btnRenameComputer.Click += new System.EventHandler(this.btnRenameComputer_Click);
             // 
             // numComputerNumber
             // 
@@ -310,6 +345,9 @@ namespace ClassroomChecker.UI
         private System.Windows.Forms.Button btnDeleteRoom;
         private System.Windows.Forms.Label lblNumber;
         private System.Windows.Forms.NumericUpDown numComputerNumber;
+        private System.Windows.Forms.Label lblComputerName;
+        private System.Windows.Forms.TextBox txtComputerName;
+        private System.Windows.Forms.Button btnRenameComputer;
         private System.Windows.Forms.Label lblBgImage;
         private System.Windows.Forms.TextBox txtBgPath;
         private System.Windows.Forms.Button btnBrowseBg;

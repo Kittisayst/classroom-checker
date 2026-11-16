@@ -38,9 +38,10 @@
 ## 1. ຈຸດເດັ່ນຫຼັກຂອງລະບົບ (Core Features)
 
 * **🚀 Portable 100%:** ໄຟລ໌ດຽວ `ClassroomChecker.exe` ສຽບ USB ແລ້ວ Run ໄດ້ທັນທີ, ບໍ່ມີຂັ້ນຕອນຕິດຕັ້ງ.
-* **⚡ Quick Setup (1-Click):** ຕັ້ງ Wallpaper + Never Sleep + Font ລາວ + ແປ້ນພິມລາວ + Timezone +7 + ຮູບແບບວັນທີ່ ວ/ດ/ປ + ໄອຄອນໜ້າຈໍ (This PC, Control Panel, Office) + ລ້າງ Temp + Export Spec ໃນຄລິກດຽວ ພ້ອມລະບົບ Auto-increment ເລກເຄື່ອງ (01 -> 02 -> 03...).
+* **⚡ Quick Setup (1-Click):** ຕັ້ງ Wallpaper + Never Sleep + Font ລາວ + ແປ້ນພິມລາວ + Timezone +7 + ຮູບແບບວັນທີ່ ວ/ດ/ປ + ໄອຄອນໜ້າຈໍ (This PC, Control Panel, Office) + ລ້າງ Temp + Export Spec + ວັກຊີນ AutoRun + ປ່ຽນຊື່ເຄື່ອງ (COM1-01) ໃນຄລິກດຽວ ພ້ອມລະບົບ Auto-increment ເລກເຄື່ອງ (01 -> 02 -> 03...).
 * **🖼️ Crisp Lao Typography:** ຝັງ Font ມາດຕະຖານ **Phetsarath OT** ໃນຕົວໂປຣແກຣມ Render ປ້າຍຊື່ຫ້ອງ ແລະ ເລກເຄື່ອງລົງ Wallpaper ຄົມຊັດສວຍງາມ.
-* **🔍 Deep 14-Point Inspection:** ກວດສອບ MS Office, Windows License, Font, ແປ້ນພິມ, Timezone +7, ຮູບແບບວັນທີ່ dd/MM/yyyy, ໄອຄອນໜ້າຈໍ, Power, Temp, Driver, Disk, Defender, App Lock, Spec Export ພ້ອມປຸ່ມ Auto-Fix.
+* **💻 Computer Hostname Standardization:** ລະບົບຕັ້ງຊື່ຄອມພິວເຕີຕາມຫ້ອງຮຽນ (ເຊັ່ນ: `COM1-01`) ອັດຕະໂນມັດ ພ້ອມຊ່ອງ Input ໃຫ້ພິມແກ້ໄຂຊື່ໄດ້ຕາມໃຈ, ປ່ຽນຊື່ຜ່ານ WMI/Win32 API ແລະ ກວດສອບຊື່ເລີ່ມຕົ້ນ (DESKTOP-XXXX).
+* **🔍 Deep 16-Point Inspection:** ກວດສອບ MS Office, Windows License, Font, ແປ້ນພິມ, Timezone +7, ຮູບແບບວັນທີ່ dd/MM/yyyy, ໄອຄອນໜ້າຈໍ, ຊື່ຄອມພິວເຕີ (Hostname), Power, Temp, Driver, Disk, Defender, App Lock, USB Vaccine, Spec Export ພ້ອມປຸ່ມ Auto-Fix.
 * **🛡️ Smart Security Lock:** ບລັອກບໍ່ໃຫ້ນັກຮຽນ Run ເກມ ຫຼື ໂປຣແກຣມຈາກ USB ແລະ Downloads ໂດຍມີ **Smart Whitelist** ຍົກເວັ້ນໃຫ້ `ClassroomChecker.exe` ໃນ USB ໃຊ້ງານໄດ້ສະເໝີ.
 * **💉 USB Virus Cleaner & Vaccine:** ແກ້ໄຂບັນຫາ Flash Drive ຕິດໄວຣັສ Shortcut, ໂຟນເດີກາຍເປັນ .exe ຫຼື .lnk, ກູ້ໄຟລ໌ທີ່ຖືກເຊື່ອງຄືນມາ (Unhide), ສ້າງວັກຊີນປ້ອງກັນ `autorun.inf` ແລະ ປິດ Windows AutoRun/AutoPlay (`NoDriveTypeAutoRun = 0xFF`) ປ້ອງກັນເຄື່ອງຫ້ອງຮຽນຖາວອນ.
 * **🖥️ Desktop & International Standards:** ຕັ້ງ Timezone ເປັນ UTC+07:00 (SE Asia), ວັນທີ່ເປັນ ວັນທີ່/ເດືອນ/ປີ (`dd/MM/yyyy`), ພ້ອມສ້າງໄອຄອນໜ້າຈໍ **This PC**, **Control Panel**, ແລະ **MS Office (Word, Excel, PowerPoint)**.

@@ -47,11 +47,11 @@ namespace ClassroomChecker.Core
             return next;
         }
 
-        public async Task<bool> RunSetupAsync(string room, int number)
+        public async Task<bool> RunSetupAsync(string room, int number, string computerName = null, bool renameComputer = true)
         {
             return await Task.Run(() =>
             {
-                int totalSteps = 9;
+                int totalSteps = 10;
                 bool allSuccessful = true;
 
                 // -----------------------------------------------------------------
@@ -253,6 +253,36 @@ namespace ClassroomChecker.Core
                 }
 
                 // -----------------------------------------------------------------
+                // ຂັ້ນຕອນທີ 10: ປ່ຽນຊື່ຄອມພິວເຕີ (Computer Name / Hostname)
+                // -----------------------------------------------------------------
+                string targetHost = !string.IsNullOrEmpty(computerName)
+                    ? computerName.Trim().ToUpperInvariant()
+                    : ComputerNameService.GenerateDefaultName(room, number);
+
+                string step10Name = Localizer.T("quick_setup_step_rename", targetHost);
+                Notify(10, totalSteps, step10Name, false, false);
+
+                try
+                {
+                    if (renameComputer)
+                    {
+                        string renameMsg;
+                        bool renameOk = ComputerNameService.RenameComputer(targetHost, out renameMsg);
+                        Notify(10, totalSteps, step10Name, true, renameOk, renameMsg);
+                        if (!renameOk) allSuccessful = false;
+                    }
+                    else
+                    {
+                        Notify(10, totalSteps, step10Name, true, true, "ຂ້າມການປ່ຽນຊື່ເຄື່ອງ (Skipped)");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    allSuccessful = false;
+                    Notify(10, totalSteps, step10Name, true, false, ex.Message);
+                }
+
+                // -----------------------------------------------------------------
                 // Auto-Increment PC Number ສຳລັບເຄື່ອງຕໍ່ໄປ
                 // -----------------------------------------------------------------
                 try
@@ -267,6 +297,7 @@ namespace ClassroomChecker.Core
 
                     cfg.selected.room = room;
                     cfg.selected.number = nextNum;
+                    cfg.selected.computerName = "";
                     ConfigService.Instance.Save();
 
                     if (isMax)

@@ -18,11 +18,13 @@ namespace ClassroomChecker.Config
     {
         public string room { get; set; }
         public int number { get; set; }
+        public string computerName { get; set; }
 
         public SelectedConfig()
         {
             room = "ຫ້ອງຄອມພິວເຕີ 1";
             number = 1;
+            computerName = "";
         }
     }
 

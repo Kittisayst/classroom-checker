@@ -18,6 +18,10 @@ namespace ClassroomChecker.UI
         private Panel pnlHeader;
         private Label lblTitle;
         private Label lblRoomBadge;
+        private Panel pnlComputerName;
+        private CheckBox chkRenameComputer;
+        private TextBox txtComputerName;
+        private Label lblCurrentHost;
         private Panel pnlSteps;
         private Label[] lblStepItems;
         private Label[] lblStepIcons;
@@ -45,7 +49,7 @@ namespace ClassroomChecker.UI
         private void InitializeComponent()
         {
             this.Text = Localizer.T("quick_setup_title");
-            this.Size = new Size(580, 610);
+            this.Size = new Size(580, 670);
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.StartPosition = FormStartPosition.CenterParent;
             this.MaximizeBox = false;
@@ -92,14 +96,70 @@ namespace ClassroomChecker.UI
             pnlHeader.Controls.Add(lblTitle);
             pnlHeader.Controls.Add(lblRoomBadge);
 
-            // 2. Steps Panel
-            pnlSteps = new Panel
+            // 2. Computer Name Card (Editable Hostname)
+            string defaultCompName = ComputerNameService.GenerateDefaultName(_room, _number);
+            var cfg = ConfigService.Instance.Current;
+            if (cfg != null && cfg.selected != null && !string.IsNullOrEmpty(cfg.selected.computerName))
+            {
+                defaultCompName = cfg.selected.computerName;
+            }
+
+            pnlComputerName = new Panel
             {
                 Location = new Point(20, 95),
-                Size = new Size(525, 330),
+                Size = new Size(525, 48),
+                BackColor = Color.FromArgb(241, 245, 249),
+                BorderStyle = BorderStyle.FixedSingle,
+                Padding = new Padding(10, 8, 10, 8)
+            };
+
+            chkRenameComputer = new CheckBox
+            {
+                Text = "ປ່ຽນຊື່ເຄື່ອງ (Hostname):",
+                Font = UiFontManager.GetFont(9F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(30, 41, 59),
+                Location = new Point(10, 12),
+                Size = new Size(185, 24),
+                Checked = true
+            };
+
+            txtComputerName = new TextBox
+            {
+                Text = defaultCompName,
+                Font = UiFontManager.GetFont(9.5F, FontStyle.Bold),
+                Location = new Point(195, 11),
+                Size = new Size(135, 26),
+                CharacterCasing = CharacterCasing.Upper,
+                MaxLength = 15
+            };
+
+            lblCurrentHost = new Label
+            {
+                Text = string.Format("(ປັດຈຸບັນ: {0})", Environment.MachineName),
+                Font = UiFontManager.GetFont(8.5F, FontStyle.Regular),
+                ForeColor = Color.FromArgb(100, 116, 139),
+                Location = new Point(335, 14),
+                Size = new Size(180, 22),
+                AutoEllipsis = true
+            };
+
+            chkRenameComputer.CheckedChanged += (s, e) =>
+            {
+                txtComputerName.Enabled = chkRenameComputer.Checked;
+            };
+
+            pnlComputerName.Controls.Add(chkRenameComputer);
+            pnlComputerName.Controls.Add(txtComputerName);
+            pnlComputerName.Controls.Add(lblCurrentHost);
+
+            // 3. Steps Panel
+            pnlSteps = new Panel
+            {
+                Location = new Point(20, 150),
+                Size = new Size(525, 345),
                 BackColor = Color.White,
                 BorderStyle = BorderStyle.FixedSingle,
-                Padding = new Padding(16, 8, 16, 8)
+                Padding = new Padding(16, 6, 16, 6)
             };
 
             string[] stepTitles = new string[]
@@ -112,15 +172,16 @@ namespace ClassroomChecker.UI
                 "6. ສ້າງໄອຄອນໜ້າຈໍ This PC, Control Panel ແລະ MS Office",
                 "7. ລ້າງໄຟລ໌ຂີ້ເຫຍື້ອ Temp/Cache ປອດໄພ",
                 string.Format("8. Export Spec ເຄື່ອງເປັນ Excel (.xlsx) ລົງໂຟນເດີ specs/"),
-                "9. ປິດ AutoRun & ວັກຊີນປ້ອງກັນ USB Shortcut"
+                "9. ປິດ AutoRun & ວັກຊີນປ້ອງກັນ USB Shortcut",
+                string.Format("10. ປ່ຽນຊື່ເຄື່ອງຄອມພິວເຕີເປັນ {0}", txtComputerName.Text)
             };
 
-            lblStepItems = new Label[9];
-            lblStepIcons = new Label[9];
+            lblStepItems = new Label[10];
+            lblStepIcons = new Label[10];
 
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < 10; i++)
             {
-                int y = 8 + (i * 35);
+                int y = 6 + (i * 34);
 
                 lblStepIcons[i] = new Label
                 {
@@ -138,20 +199,28 @@ namespace ClassroomChecker.UI
                     Font = UiFontManager.GetFont(9F, FontStyle.Regular),
                     ForeColor = Color.FromArgb(71, 85, 105), // Slate 600
                     Location = new Point(44, y),
-                    Size = new Size(460, 28)
+                    Size = new Size(460, 26)
                 };
 
                 pnlSteps.Controls.Add(lblStepIcons[i]);
                 pnlSteps.Controls.Add(lblStepItems[i]);
             }
 
-            // 3. Progress Bar & Status Message
+            txtComputerName.TextChanged += (s, e) =>
+            {
+                if (lblStepItems != null && lblStepItems.Length >= 10 && lblStepItems[9] != null)
+                {
+                    lblStepItems[9].Text = string.Format("10. ປ່ຽນຊື່ເຄື່ອງຄອມພິວເຕີເປັນ {0}", txtComputerName.Text.Trim().ToUpperInvariant());
+                }
+            };
+
+            // 4. Progress Bar & Status Message
             prgSetup = new ProgressBar
             {
-                Location = new Point(20, 436),
+                Location = new Point(20, 502),
                 Size = new Size(525, 20),
                 Minimum = 0,
-                Maximum = 9,
+                Maximum = 10,
                 Value = 0
             };
 
@@ -160,12 +229,12 @@ namespace ClassroomChecker.UI
                 Text = "ກົດ \"ເລີ່ມຕົ້ນຕັ້ງຄ່າ\" ເພື່ອດຳເນີນການທຸກຂັ້ນຕອນອັດຕະໂນມັດ",
                 Font = UiFontManager.GetFont(9F, FontStyle.Regular),
                 ForeColor = Color.FromArgb(100, 116, 139),
-                Location = new Point(20, 464),
+                Location = new Point(20, 528),
                 Size = new Size(525, 22),
                 TextAlign = ContentAlignment.MiddleLeft
             };
 
-            // 4. Bottom Panel
+            // 5. Bottom Panel
             pnlBottom = new Panel
             {
                 Dock = DockStyle.Bottom,
@@ -213,6 +282,7 @@ namespace ClassroomChecker.UI
             pnlBottom.Controls.Add(btnClose);
 
             this.Controls.Add(pnlSteps);
+            this.Controls.Add(pnlComputerName);
             this.Controls.Add(prgSetup);
             this.Controls.Add(lblStatusMessage);
             this.Controls.Add(pnlBottom);
@@ -233,7 +303,7 @@ namespace ClassroomChecker.UI
             lblStatusMessage.Text = "ກຳລັງຕັ້ງຄ່າລະບົບ...";
             lblStatusMessage.ForeColor = Color.FromArgb(37, 99, 235);
 
-            bool success = await _runner.RunSetupAsync(_room, _number);
+            bool success = await _runner.RunSetupAsync(_room, _number, txtComputerName.Text.Trim(), chkRenameComputer.Checked);
 
             try
             {

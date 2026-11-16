@@ -63,7 +63,8 @@
     <Compile Include="Core\QuickSetupRunner.cs" />
     <Compile Include="Core\SecurityPolicyManager.cs" />
     <Compile Include="Core\DateTimeService.cs" />
-    <Compile Include="Core\DesktopIconService.cs" />
+    <Compile Include="Core\DesktopIconService.cs" />
+    <Compile Include="Core\ComputerNameService.cs" />
     <Compile Include="Core\UsbVirusCleanerService.cs" />
     <Compile Include="Core\SoftwarePackage.cs" />
     <Compile Include="Core\SoftwareInstallerService.cs" />
@@ -73,7 +74,8 @@
     <Compile Include="Modules\FontCheckModule.cs" />
     <Compile Include="Modules\KeyboardCheckModule.cs" />
     <Compile Include="Modules\DateTimeCheckModule.cs" />
-    <Compile Include="Modules\DesktopIconsModule.cs" />
+    <Compile Include="Modules\DesktopIconsModule.cs" />
+    <Compile Include="Modules\ComputerNameModule.cs" />
     <Compile Include="Modules\PowerModule.cs" />
     <Compile Include="Modules\CleanupModule.cs" />
     <Compile Include="Modules\DriverCheckModule.cs" />

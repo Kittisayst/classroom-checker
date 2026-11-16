@@ -35,6 +35,7 @@ namespace ClassroomChecker.UI
             _modules.Add(new KeyboardCheckModule());
             _modules.Add(new DateTimeCheckModule());
             _modules.Add(new DesktopIconsModule());
+            _modules.Add(new ComputerNameModule());
             _modules.Add(new PowerModule());
             _modules.Add(new CleanupModule());
             _modules.Add(new DriverCheckModule());

@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using ClassroomChecker.Config;
+using ClassroomChecker.Core;
 using ClassroomChecker.I18n;
 using ClassroomChecker.Modules;
 
@@ -47,7 +48,18 @@ namespace ClassroomChecker.UI
             // 2. ໂຫຼດລາຍຊື່ຫ້ອງ
             ReloadRoomList(cfg.selected != null ? cfg.selected.room : null);
 
-            // 3. ຕັ້ງຄ່າຮູບພື້ນຫຼັງ
+            // 3. ຕັ້ງຄ່າຊື່ເຄື່ອງ
+            if (cfg.selected != null && !string.IsNullOrEmpty(cfg.selected.computerName))
+            {
+                txtComputerName.Text = cfg.selected.computerName;
+            }
+            else
+            {
+                string r = cfg.selected != null ? cfg.selected.room : "ຫ້ອງຄອມພິວເຕີ 1";
+                txtComputerName.Text = ComputerNameService.GenerateDefaultName(r, selectedNum);
+            }
+
+            // 4. ຕັ້ງຄ່າຮູບພື້ນຫຼັງ
             txtBgPath.Text = cfg.background != null && !string.IsNullOrEmpty(cfg.background.imagePath)
                 ? cfg.background.imagePath
                 : "bg.png";
@@ -60,6 +72,8 @@ namespace ClassroomChecker.UI
             btnAddRoom.Text = Localizer.T("btn_add_room");
             btnDeleteRoom.Text = Localizer.T("btn_delete_room");
             lblNumber.Text = Localizer.T("computer_number");
+            lblComputerName.Text = Localizer.T("lbl_computer_name", "ຊື່ເຄື່ອງ:");
+            btnRenameComputer.Text = Localizer.T("btn_rename_computer", "ປ່ຽນຊື່ເຄື່ອງ");
             lblBgImage.Text = Localizer.T("bg_image");
             btnBrowseBg.Text = Localizer.T("btn_browse");
             btnDefaultBg.Text = Localizer.T("btn_default_bg");
@@ -130,6 +144,7 @@ namespace ClassroomChecker.UI
             ConfigService.Instance.Current.selected.room = selectedRoom;
             ConfigService.Instance.Save();
 
+            UpdateSuggestedComputerName();
             UpdatePreview();
         }
 
@@ -141,7 +156,75 @@ namespace ClassroomChecker.UI
             ConfigService.Instance.Current.selected.number = selectedNum;
             ConfigService.Instance.Save();
 
+            UpdateSuggestedComputerName();
             UpdatePreview();
+        }
+
+        private void UpdateSuggestedComputerName()
+        {
+            if (cmbRooms.SelectedItem == null) return;
+            string room = cmbRooms.SelectedItem.ToString();
+            int number = (int)numComputerNumber.Value;
+            string autoName = ComputerNameService.GenerateDefaultName(room, number);
+
+            txtComputerName.Text = autoName;
+        }
+
+        private void btnRenameComputer_Click(object sender, EventArgs e)
+        {
+            string target = txtComputerName.Text.Trim().ToUpperInvariant();
+            string valErr;
+            if (!ComputerNameService.ValidateName(target, out valErr))
+            {
+                MessageBox.Show(valErr, Localizer.T("app_title"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string current = ComputerNameService.GetCurrentName();
+            if (current.Equals(target, StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show(
+                    string.Format("ຊື່ເຄື່ອງປັດຈຸບັນແມ່ນ {0} ຢູ່ແລ້ວ!", target),
+                    Localizer.T("app_title"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return;
+            }
+
+            var dr = MessageBox.Show(
+                string.Format("ທ່ານຕ້ອງການປ່ຽນຊື່ເຄື່ອງຈາກ '{0}' ເປັນ '{1}' ແທ້ບໍ່?\n\n(ໝາຍເຫດ: ຈະມີຜົນສົມບູນເມື່ອ Restart ເຄື່ອງ)", current, target),
+                "ຢືນຢັນການປ່ຽນຊື່ເຄື່ອງ",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (dr == DialogResult.Yes)
+            {
+                string msg;
+                bool ok = ComputerNameService.RenameComputer(target, out msg);
+                if (ok)
+                {
+                    if (ConfigService.Instance.Current.selected != null)
+                    {
+                        ConfigService.Instance.Current.selected.computerName = target;
+                        ConfigService.Instance.Save();
+                    }
+
+                    var askRestart = MessageBox.Show(
+                        msg + "\n\nທ່ານຕ້ອງການ Restart ເຄື່ອງດຽວນີ້ເລີຍບໍ່?",
+                        Localizer.T("app_title"),
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Information);
+
+                    if (askRestart == DialogResult.Yes)
+                    {
+                        ComputerNameService.RestartComputer(3);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(msg, Localizer.T("app_title"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
 
         private void btnAddRoom_Click(object sender, EventArgs e)
@@ -299,6 +382,12 @@ namespace ClassroomChecker.UI
 
                 if (ok)
                 {
+                    if (ConfigService.Instance.Current.selected != null)
+                    {
+                        ConfigService.Instance.Current.selected.computerName = txtComputerName.Text.Trim().ToUpperInvariant();
+                        ConfigService.Instance.Save();
+                    }
+
                     lblStatus.Text = "✓ " + Localizer.T("wallpaper_applied_success");
                     lblStatus.ForeColor = Color.FromArgb(46, 125, 50);
 

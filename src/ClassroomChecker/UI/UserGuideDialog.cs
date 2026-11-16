@@ -254,8 +254,12 @@ HOW TO USE QUICK SETUP:
    ✔ ຂັ້ນຕອນ 2: ຕັ້ງຄ່າ Power Scheme ເປັນ Never Sleep (ປ້ອງກັນຈໍດັບ/ເຄື່ອງຫຼັບຕອນຮຽນ)
    ✔ ຂັ້ນຕອນ 3: ກວດສອບ ແລະ ລົງທະບຽນ Font ພາສາລາວ (Phetsarath OT)
    ✔ ຂັ້ນຕອນ 4: ກວດສອບ ແລະ ລົງທະບຽນ ແປ້ນພິມພາສາລາວ (Lao Keyboard 0454)
-   ✔ ຂັ້ນຕອນ 5: ລ້າງໄຟລ໌ຂີ້ເຫຍື້ອ Temp/Cache ທີ່ປອດໄພ
-   ✔ ຂັ້ນຕອນ 6: Export ຂໍ້ມູນສະເປັກເຄື່ອງລະອຽດເປັນໄຟລ໌ Excel (.xlsx) ເກັບໄວ້ໃນ USB
+   ✔ ຂັ້ນຕອນ 5: ກຳນົດ Timezone (+7) ແລະ ຮູບແບບວັນທີ່ ວ/ດ/ປ (dd/MM/yyyy)
+   ✔ ຂັ້ນຕອນ 6: ສ້າງໄອຄອນໜ້າຈໍ This PC, Control Panel ແລະ MS Office
+   ✔ ຂັ້ນຕອນ 7: ລ້າງໄຟລ໌ຂີ້ເຫຍື້ອ Temp/Cache ທີ່ປອດໄພ
+   ✔ ຂັ້ນຕອນ 8: Export ຂໍ້ມູນສະເປັກເຄື່ອງລະອຽດເປັນໄຟລ໌ Excel (.xlsx) ເກັບໄວ້ໃນ USB
+   ✔ ຂັ້ນຕອນ 9: ປິດ Windows AutoRun & ສ້າງວັກຊີນປ້ອງກັນ USB Shortcut
+   ✔ ຂັ້ນຕອນ 10: ປ່ຽນຊື່ເຄື່ອງຄອມພິວເຕີຕາມຮູບແບບຫ້ອງຮຽນ (ເຊັ່ນ COM1-01 ພ້ອມຊ່ອງໃຫ້ພິມແກ້ໄຂຊື່ໄດ້ຕາມໃຈ)
 7. ຖອດ USB ໄປສຽບເຄື່ອງຕໍ່ໄປໄດ້ເລີຍ — ເລກເຄື່ອງຈະເພີ່ມຂຶ້ນໃຫ້ພ້ອມສຳລັບເຄື່ອງຕໍ່ໄປ!";
         }
 
@@ -353,8 +357,10 @@ THE 12 INSPECTION MODULES:
 8. Device Drivers: Scans for missing or malfunctioning hardware drivers with yellow exclamation marks.
 9. Disk Free Space: Evaluates system drive C: free space (<5% Fail, <10% Warn, >=10% Pass).
 10. Windows Defender: Checks antivirus protection and real-time scanning status.
-11. Security & App Lock: Checks whether student USB/Downloads/game restrictions are applied.
-12. Export Machine Spec: Generates a complete hardware/software audit report into a multi-sheet Excel (.xlsx) file.
+12. Security & App Lock: Checks whether student USB/Downloads/game restrictions are applied.
+13. USB Vaccine & AutoRun Protection: Checks AutoRun state and immunizes flash drives against shortcut malware.
+14. Computer Name (Hostname): Checks if computer hostname follows classroom standard (e.g. COM1-01) or is a generic default (DESKTOP-XXXX).
+15. Export Machine Spec: Generates a complete hardware/software audit report into a multi-sheet Excel (.xlsx) file.
 
 --------------------------------------------------------------------------------
 ACTION BUTTONS:
@@ -386,7 +392,9 @@ ACTION BUTTONS:
 9. Disk Free Space: ກວດເນື້ອທີ່ວ່າງ Drive C: (<5% Fail, <10% Warn, >=10% Pass)
 10. Windows Defender: ກວດສະຖານະ Antivirus ແລະ ການປ້ອງກັນ Real-time
 11. Security & App Lock: ກວດເບິ່ງວ່ານະໂຍບາຍບລັອກ USB/Downloads/ເກມ ເປີດຢູ່ຫຼືບໍ່
-12. Export Machine Spec: ກວດ ແລະ Export ສະເປັກເຄື່ອງ (CPU, RAM, Mainboard, Storage, GPU, IP, MAC) ເປັນ Excel (.xlsx)
+12. USB Vaccine & AutoRun: ກວດສະຖານະ Windows AutoRun ແລະ ວັກຊີນປ້ອງກັນ USB Shortcut
+13. Computer Name: ກວດຊື່ຄອມພິວເຕີວ່າເປັນຊື່ມາດຕະຖານຕາມຫ້ອງຮຽນ (COM1-01) ຫຼື ຍັງເປັນຊື່ເລີ່ມຕົ້ນ (DESKTOP-XXXX)
+14. Export Machine Spec: ກວດ ແລະ Export ສະເປັກເຄື່ອງ (CPU, RAM, Mainboard, Storage, GPU, IP, MAC) ເປັນ Excel (.xlsx)
 
 --------------------------------------------------------------------------------
 ປຸ່ມສັ່ງການ:
