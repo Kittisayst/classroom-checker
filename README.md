@@ -25,9 +25,10 @@
    - [🖼️ ຂັ້ນຕອນທີ່ 2: ກຳນົດພື້ນຫຼັງ & ເລກເຄື່ອງ (Wallpaper & Labeling)](#32-ກຳນົດພື້ນຫຼັງ--ເລກເຄື່ອງ-wallpaper--labeling)
    - [🔍 ຂັ້ນຕອນທີ່ 3: ກວດສອບລະບົບ 15 ລາຍການ (System Inspection & Auto-Fix)](#33-ກວດສອບລະບົບ-15-ລາຍການ-system-inspection--auto-fix)
    - [🛡️ ຂັ້ນຕອນທີ່ 4: ລະບົບປ້ອງກັນ & ລັອກເກມ/USB (Security Policies)](#34-ລະບົບປ້ອງກັນ--ລັອກເກມusb-security-policies)
-   - [🦠 ຂັ້ນຕອນທີ່ 5: ແທັບ Antivirus USB & ກູ້ໄຟລ໌ Flash Drive](#35-ແທັບ-antivirus-usb--ກູ້ໄຟລ໌-flash-drive)
-   - [⚙️ ຂັ້ນຕອນທີ່ 6: ຕັ້ງຄ່າເວລາ UTC+7, ວັນທີ່ ວ/ດ/ປ & ໄອຄອນໜ້າຈໍ](#36-ຕັ້ງຄ່າເວລາ-utc7-ວັນທີ່-ວ/ດ/ປ--ໄອຄອນໜ້າຈໍ)
-   - [📊 ຂັ້ນຕອນທີ່ 7: Export Spec & ລວມສະເປັກທຸກເຄື່ອງ (Master Summary)](#37-export-spec--ລວມສະເປັກທຸກເຄື່ອງ-master-summary)
+   - [📦 ຂັ້ນຕອນທີ່ 5: ຕິດຕັ້ງຊອບແວ Offline 11 ໂປຣແກຣມ (Software Installer)](#35-ຕິດຕັ້ງຊອບແວ-offline-11-ໂປຣແກຣມ-software-installer)
+   - [🦠 ຂັ້ນຕອນທີ່ 6: ແທັບ Antivirus USB & ກູ້ໄຟລ໌ Flash Drive](#36-ແທັບ-antivirus-usb--ກູ້ໄຟລ໌-flash-drive)
+   - [⚙️ ຂັ້ນຕອນທີ່ 7: ຕັ້ງຄ່າເວລາ UTC+7, ວັນທີ່ ວ/ດ/ປ & ໄອຄອນໜ້າຈໍ](#37-ຕັ້ງຄ່າເວລາ-utc7-ວັນທີ່-ວ/ດ/ປ--ໄອຄອນໜ້າຈໍ)
+   - [📊 ຂັ້ນຕອນທີ່ 8: Export Spec & ລວມສະເປັກທຸກເຄື່ອງ (Master Summary)](#38-export-spec--ລວມສະເປັກທຸກເຄື່ອງ-master-summary)
 4. [ລາຍການຊອບແວພື້ນຖານແນະນຳ 11 ໂປຣແກຣມ (Software Catalog)](#4-ລາຍການຊອບແວພື້ນຖານແນະນຳ-11-ໂປຣແກຣມ-software-catalog)
 5. [ຄວາມທົນທານ ແລະ ຄວາມປອດໄພ (Resilience & Security)](#5-ຄວາມທົນທານ-ແລະ-ຄວາມປອດໄພ-resilience--security)
 6. [ການ Compile & Run Unit Tests (Build from Source)](#6-ການ-compile--run-unit-tests-build-from-source)
@@ -156,7 +157,21 @@ USB_FLASH_DRIVE:\
 
 ---
 
-### 3.5 ແທັບ Antivirus USB & ກູ້ໄຟລ໌ Flash Drive
+### 3.5 ຕິດຕັ້ງຊອບແວ Offline 11 ໂປຣແກຣມ (Software Installer)
+ແທັບ **"ຕິດຕັ້ງຊອບແວ"** ອອກແບບມາເພື່ອໃຫ້ຄູ ແລະ ຜູ້ດູແລລະບົບເລືອກຕິດຕັ້ງຊອບແວພື້ນຖານ ແລະ Open Source ທີ່ຈຳເປັນໄດ້ຕາມໃຈ (ບໍ່ບັງຄັບຕິດຕັ້ງທັງໝົດໃນຄັ້ງດຽວ):
+1. **ໂຍນໄຟລ໌ Setup:** ດາວໂຫຼດໄຟລ໌ Setup (.exe/.msi) ມາໃສ່ໃນໂຟນເດີ `installers/` ໃນ USB Flash Drive.
+2. **ກວດສອບສະຖານະ:** ຕາຕະລາງຈະບອກສະຖານະວ່າໂປຣແກຣມໃດຕິດຕັ້ງແລ້ວ (`✓ ຕິດຕັ້ງແລ້ວ`) ຫຼື ຍັງຂາດ (`✗ ຍັງບໍ່ທັນຕິດຕັ້ງ`) ແລະ ພົບໄຟລ໌ Setup ໃນ USB ຫຼື ບໍ່.
+3. **ເລືອກຕິດຕັ້ງ:** 
+   * ກົດປຸ່ມ **`📥 ຕິດຕັ້ງ`** ໃນແຕ່ລະແຖວເພື່ອຕິດຕັ້ງສະເພາະໂປຣແກຣມທີ່ຕ້ອງການ (Silent Install: ບໍ່ຕ້ອງກົດ Next, Next).
+   * ຫຼື ກົດປຸ່ມ **`⚡ ຕິດຕັ້ງທີ່ຂາດທັງໝົດ`** ເພື່ອຕິດຕັ້ງທຸກໂປຣແກຣມທີ່ຍັງຂາດແບບອັດຕະໂນມັດ.
+4. **ພິເສດສຳລັບ RAMMap64 (Portable):**
+   * ລະບົບຈະຄັດລອກໄຟລ໌ລົງ `C:\Program Files\RAMMap\`
+   * ສ້າງ Shortcut ຊື່ **`RAMMap (Clear RAM).lnk`** ໄວ້ໜ້າຈໍ Desktop
+   * ລົງທະບຽນ App Paths (Win+R ພິມ `rammap64` ໄດ້ທັນທີ) ແລະ Auto-Accept EULA!
+
+---
+
+### 3.6 ແທັບ Antivirus USB & ກູ້ໄຟລ໌ Flash Drive
 ແທັບສະເພາະ **`Antivirus USB`** ອອກແບບມາເພື່ອແກ້ໄຂບັນຫາທີ່ພົບເລື້ອຍທີ່ສຸດໃນຫ້ອງຮຽນຄອມພິວເຕີ: Flash Drive ຕິດໄວຣັສ Shortcut (`*.lnk`), ໂຟນເດີຖືກເຊື່ອງຫາຍໝົດ, ຫຼື ໂຟນເດີກາຍເປັນໄຟລ໌ `.exe` (`<folder>.exe`):
 
 1. **ເລືອກ Flash Drive USB:** ເລືອກໄດຣຟ໌ຈາກລາຍຊື່ Dropdown ດ້ານຊ້າຍ (ລະບົບຈະກວດ Removable Drive ໃຫ້ອັດຕະໂນມັດ ພ້ອມປຸ່ມ `🔄 ກວດຫາ` ແລະ `📁 ເລືອກ...`).
@@ -172,14 +187,14 @@ USB_FLASH_DRIVE:\
 
 ---
 
-### 3.6 ຕັ້ງຄ່າເວລາ UTC+7, ວັນທີ່ ວ/ດ/ປ & ໄອຄອນໜ້າຈໍ
+### 3.7 ຕັ້ງຄ່າເວລາ UTC+7, ວັນທີ່ ວ/ດ/ປ & ໄອຄອນໜ້າຈໍ
 * **Timezone +7:** ຕັ້ງເຂດເວລາເປັນ `SE Asia Standard Time` (UTC+07:00: ບາງກອກ, ຮ່າໂນ້ຍ, ຈາກາຕາ).
 * **ຮູບແບບວັນທີ່ ວ/ດ/ປ:** ຕັ້ງ `ShortDate` ເປັນ `dd/MM/yyyy` ຕາມມາດຕະຖານທາງການຂອງລາວ ພ້ອມອັບເດດໂມງ Taskbar ແລະ Explorer ທັນທີ.
 * **ໄອຄອນໜ້າຈໍ:** ເປີດສະແດງໄອຄອນ **This PC**, **Control Panel** ແລະ ສ້າງ Shortcut **MS Office (Word, Excel, PowerPoint)** ໄວ້ໜ້າຈໍ Desktop.
 
 ---
 
-### 3.7 Export Spec & ລວມສະເປັກທຸກເຄື່ອງ (Master Summary)
+### 3.8 Export Spec & ລວມສະເປັກທຸກເຄື່ອງ (Master Summary)
 * **Export ແຕ່ລະເຄື່ອງ:** ເມື່ອກວດສອບ ຫຼື ກົດ Quick Setup, ລະບົບຈະສ້າງໄຟລ໌ Excel ຊື່ `<ຫ້ອງຮຽນ>-<ເລກເຄື່ອງ>.xlsx` ໄວ້ໃນໂຟນເດີ `specs/` ໃນ USB.
 * **ລວມສະເປັກທຸກເຄື່ອງ (Master Excel):**
   * ເມື່ອເອົາ USB ໄປສຽບ ແລະ Export ຄົບທຸກເຄື່ອງໃນຫ້ອງແລ້ວ:

@@ -48,12 +48,16 @@ namespace ClassroomChecker.UI
 
             ApplyLocalization();
 
-            // ເມື່ອຄລິກສະຫຼັບມາແທັບ ປ້ອງກັນ ຫຼື Antivirus USB ໃຫ້ກວດສອບສະຖານະລະບົບທັນທີ
+            // ເມື່ອຄລິກສະຫຼັບມາແທັບ ປ້ອງກັນ, ຕິດຕັ້ງຊອບແວ ຫຼື Antivirus USB ໃຫ້ກວດສອບສະຖານະລະບົບທັນທີ
             this.tabMain.SelectedIndexChanged += (s, args) =>
             {
                 if (tabMain.SelectedTab == tabSecurity && securityPanel != null)
                 {
                     securityPanel.RefreshPolicyStatus();
+                }
+                else if (tabMain.SelectedTab == tabInstall && softwareInstallPanel != null)
+                {
+                    var task = softwareInstallPanel.RefreshGridAsync();
                 }
                 else if (tabMain.SelectedTab == tabUsbAntivirus && usbAntivirusPanel != null)
                 {
@@ -74,6 +78,7 @@ namespace ClassroomChecker.UI
             tabWallpaper.Text = Localizer.T("tab_wallpaper");
             tabScan.Text = Localizer.T("tab_scan");
             tabSecurity.Text = Localizer.T("tab_security");
+            tabInstall.Text = Localizer.T("tab_install");
             tabUsbAntivirus.Text = Localizer.T("tab_usb_antivirus", "Antivirus USB");
             btnQuickSetup.Text = Localizer.T("btn_quick_setup");
             btnSettings.Text = Localizer.T("btn_settings");

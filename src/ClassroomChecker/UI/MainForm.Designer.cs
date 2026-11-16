@@ -29,16 +29,19 @@ namespace ClassroomChecker.UI
             this.tabWallpaper = new System.Windows.Forms.TabPage();
             this.tabScan = new System.Windows.Forms.TabPage();
             this.tabSecurity = new System.Windows.Forms.TabPage();
+            this.tabInstall = new System.Windows.Forms.TabPage();
             this.tabUsbAntivirus = new System.Windows.Forms.TabPage();
             this.scanPanel = new ClassroomChecker.UI.ScanPanel();
             this.wallpaperPanel = new ClassroomChecker.UI.WallpaperPanel();
             this.securityPanel = new ClassroomChecker.UI.SecurityPanel();
+            this.softwareInstallPanel = new ClassroomChecker.UI.SoftwareInstallPanel();
             this.usbAntivirusPanel = new ClassroomChecker.UI.UsbAntivirusPanel();
             this.pnlHeader.SuspendLayout();
             this.tabMain.SuspendLayout();
             this.tabWallpaper.SuspendLayout();
             this.tabScan.SuspendLayout();
             this.tabSecurity.SuspendLayout();
+            this.tabInstall.SuspendLayout();
             this.tabUsbAntivirus.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -168,6 +171,7 @@ namespace ClassroomChecker.UI
             this.tabMain.Controls.Add(this.tabWallpaper);
             this.tabMain.Controls.Add(this.tabScan);
             this.tabMain.Controls.Add(this.tabSecurity);
+            this.tabMain.Controls.Add(this.tabInstall);
             this.tabMain.Controls.Add(this.tabUsbAntivirus);
             this.tabMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabMain.Font = new System.Drawing.Font("Phetsarath OT", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -240,6 +244,26 @@ namespace ClassroomChecker.UI
             this.securityPanel.Size = new System.Drawing.Size(970, 543);
             this.securityPanel.TabIndex = 0;
             // 
+            // tabInstall
+            // 
+            this.tabInstall.Controls.Add(this.softwareInstallPanel);
+            this.tabInstall.Location = new System.Drawing.Point(4, 36);
+            this.tabInstall.Name = "tabInstall";
+            this.tabInstall.Padding = new System.Windows.Forms.Padding(3);
+            this.tabInstall.Size = new System.Drawing.Size(976, 549);
+            this.tabInstall.TabIndex = 3;
+            this.tabInstall.Text = "ຕິດຕັ້ງຊອບແວ";
+            this.tabInstall.UseVisualStyleBackColor = true;
+            // 
+            // softwareInstallPanel
+            // 
+            this.softwareInstallPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.softwareInstallPanel.Font = new System.Drawing.Font("Phetsarath OT", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.softwareInstallPanel.Location = new System.Drawing.Point(3, 3);
+            this.softwareInstallPanel.Name = "softwareInstallPanel";
+            this.softwareInstallPanel.Size = new System.Drawing.Size(970, 543);
+            this.softwareInstallPanel.TabIndex = 0;
+            // 
             // tabUsbAntivirus
             // 
             this.tabUsbAntivirus.Controls.Add(this.usbAntivirusPanel);
@@ -247,7 +271,7 @@ namespace ClassroomChecker.UI
             this.tabUsbAntivirus.Name = "tabUsbAntivirus";
             this.tabUsbAntivirus.Padding = new System.Windows.Forms.Padding(3);
             this.tabUsbAntivirus.Size = new System.Drawing.Size(976, 549);
-            this.tabUsbAntivirus.TabIndex = 3;
+            this.tabUsbAntivirus.TabIndex = 4;
             this.tabUsbAntivirus.Text = "Antivirus USB";
             this.tabUsbAntivirus.UseVisualStyleBackColor = true;
             // 
@@ -279,6 +303,7 @@ namespace ClassroomChecker.UI
             this.tabWallpaper.ResumeLayout(false);
             this.tabScan.ResumeLayout(false);
             this.tabSecurity.ResumeLayout(false);
+            this.tabInstall.ResumeLayout(false);
             this.tabUsbAntivirus.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -298,10 +323,12 @@ namespace ClassroomChecker.UI
         private System.Windows.Forms.TabPage tabWallpaper;
         private System.Windows.Forms.TabPage tabScan;
         private System.Windows.Forms.TabPage tabSecurity;
+        private System.Windows.Forms.TabPage tabInstall;
         private System.Windows.Forms.TabPage tabUsbAntivirus;
         private ClassroomChecker.UI.ScanPanel scanPanel;
         private ClassroomChecker.UI.WallpaperPanel wallpaperPanel;
         private ClassroomChecker.UI.SecurityPanel securityPanel;
+        private ClassroomChecker.UI.SoftwareInstallPanel softwareInstallPanel;
         private ClassroomChecker.UI.UsbAntivirusPanel usbAntivirusPanel;
     }
 }

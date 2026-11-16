@@ -17,6 +17,7 @@ namespace ClassroomChecker.UI
         private TabPage tabWallpaper;
         private TabPage tabScan;
         private TabPage tabSecurity;
+        private TabPage tabInstall;
         private TabPage tabUsbAntivirus;
         private TabPage tabDateTimeIcons;
         private TabPage tabStructure;
@@ -154,6 +155,7 @@ namespace ClassroomChecker.UI
             tabWallpaper = CreateGuideTab("🖼️ ພື້ນຫຼັງ & ເລກເຄື່ອງ", GetWallpaperContent());
             tabScan = CreateGuideTab("🔍 ກວດສອບລະບົບ", GetScanContent());
             tabSecurity = CreateGuideTab("🛡️ ປ້ອງກັນ & ລັອກ", GetSecurityContent());
+            tabInstall = CreateGuideTab("📦 ຕິດຕັ້ງຊອບແວ", GetInstallContent());
             tabUsbAntivirus = CreateGuideTab("🦠 Antivirus USB", GetUsbAntivirusContent());
             tabDateTimeIcons = CreateGuideTab("⚙️ ວັນທີ່ & ໄອຄອນໜ້າຈໍ", GetDateTimeIconsContent());
             tabStructure = CreateGuideTab("📁 ໂຄງສ້າງ USB", GetStructureContent());
@@ -163,6 +165,7 @@ namespace ClassroomChecker.UI
                 tabWallpaper,
                 tabScan,
                 tabSecurity,
+                tabInstall,
                 tabUsbAntivirus,
                 tabDateTimeIcons,
                 tabStructure
@@ -477,13 +480,84 @@ ACTION BUTTONS:
 • '💾 ບັນທຶກ': ບັນທຶກລາຍຊື່ເກມ ແລະ ນະໂຍບາຍລົງໄຟລ໌ config.json";
         }
 
+        private string GetInstallContent()
+        {
+            bool isLo = Localizer.CurrentLanguage == "lo";
+            if (!isLo)
+            {
+                return @"================================================================================
+📦 5. SOFTWARE INSTALLER TAB (OFFLINE FOSS SUITE)
+================================================================================
+
+This tab provides a 1-click silent offline installer catalog for 11 essential open-source and free educational tools.
+
+--------------------------------------------------------------------------------
+SOFTWARE CATALOG (11 PACKAGES):
+--------------------------------------------------------------------------------
+1. 7-Zip: 64-bit file archiver (Silent: /S)
+2. VLC Media Player: Multi-format multimedia player (Silent: /L=1033 /S)
+3. Google Chrome: Enterprise web browser (Silent: /silent /install)
+4. Brave Browser: Fast, private Chromium browser (Silent: --silent --install)
+5. LibreOffice: Complete office suite with Writer, Calc, Impress (Silent: /qn ALLUSERS=1)
+6. Sumatra PDF: Lightweight, lightning-fast PDF/ePub reader (Silent: -s)
+7. Notepad++: Source code & text editor (Silent: /S)
+8. VS Code: Modern code editor for programming classes (Silent: /VERYSILENT /NORESTART /MERGETASKS=!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath)
+9. GIMP: Advanced image manipulation and graphic design program (Silent: /VERYSILENT /NORESTART /ALLUSERS)
+10. Audacity: Audio recording and editing software (Silent: /VERYSILENT /NORESTART)
+11. RAMMap (Sysinternals): Portable tool to purge standby and working set RAM.
+    • Auto-copies to C:\Program Files\RAMMap\
+    • Creates Desktop shortcut 'RAMMap (Clear RAM).lnk'
+    • Registers 'rammap64' Run command & auto-accepts Sysinternals EULA in Registry!
+
+--------------------------------------------------------------------------------
+HOW TO USE:
+--------------------------------------------------------------------------------
+1. Copy installer files (.exe/.msi) into the 'installers\' folder on your USB drive.
+2. The table displays current local status ('✓ ຕິດຕັ້ງແລ້ວ' or '✗ ຍັງບໍ່ທັນຕິດຕັ້ງ') and whether the setup file is found in USB.
+3. Click '📥 ຕິດຕັ້ງ' on any individual software to install it silently.
+4. Or click '⚡ ຕິດຕັ້ງທີ່ຂາດທັງໝົດ' to install all missing programs sequentially.";
+            }
+
+            return @"================================================================================
+📦 5. ແທັບ 'ຕິດຕັ້ງຊອບແວ' (SOFTWARE INSTALLER)
+================================================================================
+
+ແທັບນີ້ໃຊ້ສຳລັບຕິດຕັ້ງຊອບແວພື້ນຖານ ແລະ Open Source ທັງ 11 ໂປຣແກຣມແບບ Offline ຈາກ USB Flash Drive ໂດຍກົງ ບໍ່ຕ້ອງຕໍ່ເນັດ ແລະ ບໍ່ຕ້ອງກົດ Next, Next (Silent Install).
+
+--------------------------------------------------------------------------------
+ລາຍການຊອບແວທັງ 11 ໂປຣແກຣມ:
+--------------------------------------------------------------------------------
+1. 7-Zip: ໂປຣແກຣມບີບອັດໄຟລ໌ 64-bit (Silent: /S)
+2. VLC Media Player: ໂປຣແກຣມເປີດວິດີໂອ ແລະ ສຽງທຸກນາມສະກຸນ (Silent: /L=1033 /S)
+3. Google Chrome: ເວັບບຣາວເຊີຍອດນິຍົມ (Silent: /silent /install)
+4. Brave Browser: ເວັບບຣາວເຊີປອດໄພ ບລັອກໂຄສະນາ (Silent: --silent --install)
+5. LibreOffice: ຊຸດໂປຣແກຣມຫ້ອງການຟຣີ Writer, Calc, Impress (Silent: /qn ALLUSERS=1)
+6. Sumatra PDF: ໂປຣແກຣມເປີດອ່ານ PDF ນ້ຳໜັກເບົາ ໂຫຼດໄວທີ່ສຸດ (Silent: -s)
+7. Notepad++: ໂປຣແກຣມຂຽນໂຄ້ດ ແລະ ແກ້ໄຂຂໍ້ຄວາມ (Silent: /S)
+8. VS Code: ໂປຣແກຣມ Code Editor ສຳລັບການຮຽນຂຽນໂປຣແກຣມ (Silent: /VERYSILENT /NORESTART ...)
+9. GIMP: ໂປຣແກຣມຕັດຕໍ່ແຕ່ງຮູບພາບ (Silent: /VERYSILENT /NORESTART /ALLUSERS)
+10. Audacity: ໂປຣແກຣມອັດສຽງ ແລະ ຕັດຕໍ່ສຽງ (Silent: /VERYSILENT /NORESTART)
+11. RAMMap64 (Sysinternals): ເຄື່ອງມື Portable ສຳລັບລ້າງ RAM ທີ່ຄ້າງ
+    • ຄັດລອກໄຟລ໌ລົງ C:\Program Files\RAMMap\ ອັດຕະໂນມັດ
+    • ສ້າງ Shortcut ຊື່ 'RAMMap (Clear RAM).lnk' ໄວ້ໜ້າຈໍ Desktop
+    • ລົງທະບຽນ App Paths (Win+R ພິມ rammap64 ໄດ້ທັນທີ) ແລະ ຕັ້ງຄ່າ Auto-Accept EULA!
+
+--------------------------------------------------------------------------------
+ຂັ້ນຕອນການນຳໃຊ້:
+--------------------------------------------------------------------------------
+1. ດາວໂຫຼດໄຟລ໌ Setup (.exe/.msi) ມາໄວ້ໃນໂຟນເດີ 'installers\' ໃນ USB Flash Drive.
+2. ຕາຕະລາງຈະບອກສະຖານະວ່າໂປຣແກຣມໃດຕິດຕັ້ງແລ້ວ ('✓ ຕິດຕັ້ງແລ້ວ') ຫຼື ຂາດ ('✗ ຍັງບໍ່ທັນຕິດຕັ້ງ') ແລະ ພົບໄຟລ໌ໃນ USB ຫຼື ບໍ່.
+3. ກົດປຸ່ມ '📥 ຕິດຕັ້ງ' ໃນແຕ່ລະແຖວເພື່ອເລືອກຕິດຕັ້ງສະເພາະໂປຣແກຣມທີ່ຕ້ອງການ (ບໍ່ບັງຄັບຕິດຕັ້ງທັງໝົດ).
+4. ຫຼື ກົດປຸ່ມ '⚡ ຕິດຕັ້ງທີ່ຂາດທັງໝົດ' ດ້ານເທິງ ເພື່ອໃຫ້ລະບົບຕິດຕັ້ງທຸກຕົວທີ່ຍັງຂາດໃຫ້ອັດຕະໂນມັດ.";
+        }
+
         private string GetUsbAntivirusContent()
         {
             bool isLo = Localizer.CurrentLanguage == "lo";
             if (!isLo)
             {
                 return @"================================================================================
-🦠 5. ANTIVIRUS USB TAB (RECOVERY & VACCINE)
+🦠 6. ANTIVIRUS USB TAB (RECOVERY & VACCINE)
 ================================================================================
 
 This dedicated tab provides full-screen offline disinfection, file recovery, and AutoRun immunization for USB flash drives and lab computers.
@@ -517,7 +591,7 @@ HOW TO USE:
             }
 
             return @"================================================================================
-🦠 5. ແທັບ 'ANTIVIRUS USB' (ກູ້ໄຟລ໌ & ຂ້າໄວຣັສ FLASH DRIVE)
+🦠 6. ແທັບ 'ANTIVIRUS USB' (ກູ້ໄຟລ໌ & ຂ້າໄວຣັສ FLASH DRIVE)
 ================================================================================
 
 ແທັບສະເພາະສຳລັບກູ້ໄຟລ໌, ຂ້າໄວຣັສ Shortcut, ລຶບໄຟລ໌ປອມ ແລະ ສ້າງວັກຊີນປ້ອງກັນ Flash Drive ພ້ອມປິດ Windows AutoRun ໃຫ້ຄອມພິວເຕີຫ້ອງຮຽນ.
@@ -557,7 +631,7 @@ HOW TO USE:
             if (!isLo)
             {
                 return @"================================================================================
-⚙️ 6. DATE/TIME FORMAT & DESKTOP ICONS
+⚙️ 7. DATE/TIME FORMAT & DESKTOP ICONS
 ================================================================================
 
 This section explains how Classroom Checker automatically configures international time/date standards and essential desktop icons for classroom computers.
@@ -593,7 +667,7 @@ This section explains how Classroom Checker automatically configures internation
             }
 
             return @"================================================================================
-⚙️ 6. ກຳນົດຮູບແບບວັນທີ່ & ໄອຄອນໜ້າຈໍ (DATE/TIME & DESKTOP ICONS)
+⚙️ 7. ກຳນົດຮູບແບບວັນທີ່ & ໄອຄອນໜ້າຈໍ (DATE/TIME & DESKTOP ICONS)
 ================================================================================
 
 ສ່ວນນີ້ອະທິບາຍລະບົບຕັ້ງຄ່າເວລາ, ວັນທີ່ ແລະ ໄອຄອນໜ້າຈໍທີ່ຈຳເປັນສຳລັບຄອມພິວເຕີຫ້ອງຮຽນ.
@@ -634,7 +708,7 @@ This section explains how Classroom Checker automatically configures internation
             if (!isLo)
             {
                 return @"================================================================================
-📁 7. USB DIRECTORY STRUCTURE & PERSISTENCE
+📁 8. USB DIRECTORY STRUCTURE & PERSISTENCE
 ================================================================================
 
 Classroom Checker is engineered as a true zero-installation portable tool. Everything it needs or generates lives directly in its directory on the USB Flash Drive.
@@ -674,7 +748,7 @@ ROBUSTNESS & RESILIENCE:
             }
 
             return @"================================================================================
-📁 7. ໂຄງສ້າງໂຟນເດີ USB (DIRECTORY STRUCTURE & PERSISTENCE)
+📁 8. ໂຄງສ້າງໂຟນເດີ USB (DIRECTORY STRUCTURE & PERSISTENCE)
 ================================================================================
 
 ໂປຣແກຣມ Classroom Checker ເປັນ Portable 100% ບໍ່ຕ້ອງຕິດຕັ້ງ ທຸກຢ່າງທີ່ໂປຣແກຣມຕ້ອງການ ຫຼື ສ້າງຂຶ້ນຈະຖືກເກັບໄວ້ໃນ USB Flash Drive ຢ່າງເປັນລະບຽບຮຽບຮ້ອຍ.
