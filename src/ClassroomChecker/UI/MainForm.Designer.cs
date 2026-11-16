@@ -29,14 +29,17 @@ namespace ClassroomChecker.UI
             this.tabWallpaper = new System.Windows.Forms.TabPage();
             this.tabScan = new System.Windows.Forms.TabPage();
             this.tabSecurity = new System.Windows.Forms.TabPage();
+            this.tabUsbAntivirus = new System.Windows.Forms.TabPage();
             this.scanPanel = new ClassroomChecker.UI.ScanPanel();
             this.wallpaperPanel = new ClassroomChecker.UI.WallpaperPanel();
             this.securityPanel = new ClassroomChecker.UI.SecurityPanel();
+            this.usbAntivirusPanel = new ClassroomChecker.UI.UsbAntivirusPanel();
             this.pnlHeader.SuspendLayout();
             this.tabMain.SuspendLayout();
             this.tabWallpaper.SuspendLayout();
             this.tabScan.SuspendLayout();
             this.tabSecurity.SuspendLayout();
+            this.tabUsbAntivirus.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlHeader
@@ -165,6 +168,7 @@ namespace ClassroomChecker.UI
             this.tabMain.Controls.Add(this.tabWallpaper);
             this.tabMain.Controls.Add(this.tabScan);
             this.tabMain.Controls.Add(this.tabSecurity);
+            this.tabMain.Controls.Add(this.tabUsbAntivirus);
             this.tabMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabMain.Font = new System.Drawing.Font("Phetsarath OT", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabMain.ItemSize = new System.Drawing.Size(140, 32);
@@ -236,6 +240,26 @@ namespace ClassroomChecker.UI
             this.securityPanel.Size = new System.Drawing.Size(970, 543);
             this.securityPanel.TabIndex = 0;
             // 
+            // tabUsbAntivirus
+            // 
+            this.tabUsbAntivirus.Controls.Add(this.usbAntivirusPanel);
+            this.tabUsbAntivirus.Location = new System.Drawing.Point(4, 36);
+            this.tabUsbAntivirus.Name = "tabUsbAntivirus";
+            this.tabUsbAntivirus.Padding = new System.Windows.Forms.Padding(3);
+            this.tabUsbAntivirus.Size = new System.Drawing.Size(976, 549);
+            this.tabUsbAntivirus.TabIndex = 3;
+            this.tabUsbAntivirus.Text = "Antivirus USB";
+            this.tabUsbAntivirus.UseVisualStyleBackColor = true;
+            // 
+            // usbAntivirusPanel
+            // 
+            this.usbAntivirusPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.usbAntivirusPanel.Font = new System.Drawing.Font("Phetsarath OT", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.usbAntivirusPanel.Location = new System.Drawing.Point(3, 3);
+            this.usbAntivirusPanel.Name = "usbAntivirusPanel";
+            this.usbAntivirusPanel.Size = new System.Drawing.Size(970, 543);
+            this.usbAntivirusPanel.TabIndex = 0;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -255,6 +279,7 @@ namespace ClassroomChecker.UI
             this.tabWallpaper.ResumeLayout(false);
             this.tabScan.ResumeLayout(false);
             this.tabSecurity.ResumeLayout(false);
+            this.tabUsbAntivirus.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -273,8 +298,10 @@ namespace ClassroomChecker.UI
         private System.Windows.Forms.TabPage tabWallpaper;
         private System.Windows.Forms.TabPage tabScan;
         private System.Windows.Forms.TabPage tabSecurity;
+        private System.Windows.Forms.TabPage tabUsbAntivirus;
         private ClassroomChecker.UI.ScanPanel scanPanel;
         private ClassroomChecker.UI.WallpaperPanel wallpaperPanel;
         private ClassroomChecker.UI.SecurityPanel securityPanel;
+        private ClassroomChecker.UI.UsbAntivirusPanel usbAntivirusPanel;
     }
 }

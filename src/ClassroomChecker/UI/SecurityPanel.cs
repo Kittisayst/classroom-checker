@@ -23,17 +23,11 @@ namespace ClassroomChecker.UI
         private Button btnRefresh;
         private Button btnLockNow;
         private Button btnUnlockNow;
-        private Button btnTopUsbCleaner;
 
         private GroupBox grpPolicies;
         private CheckBox chkBlockUsb;
         private CheckBox chkBlockDownloads;
         private CheckBox chkBlockPopularGames;
-
-        private GroupBox grpUsbRescue;
-        private Label lblUsbRescueDesc;
-        private Button btnOpenUsbCleaner;
-        private Button btnImmunizePc;
 
         private TableLayoutPanel tblLists;
         private GroupBox grpBlockedExes;
@@ -134,24 +128,9 @@ namespace ClassroomChecker.UI
             btnRefresh.FlatAppearance.BorderColor = Color.FromArgb(203, 213, 225);
             btnRefresh.Click += (s, e) => RefreshPolicyStatus();
 
-            btnTopUsbCleaner = new Button
-            {
-                Text = "🛡️ ກູ້ໄຟລ໌ USB",
-                BackColor = Color.FromArgb(14, 165, 233), // Sky 500
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
-                Font = new Font("Phetsarath OT", 9F, FontStyle.Bold),
-                Size = new Size(130, 38),
-                Margin = new Padding(4, 0, 4, 0),
-                Cursor = Cursors.Hand
-            };
-            btnTopUsbCleaner.FlatAppearance.BorderSize = 0;
-            btnTopUsbCleaner.Click += (s, e) => OpenUsbCleanerDialog();
-
             flpStatusActions.Controls.Add(btnUnlockNow);
             flpStatusActions.Controls.Add(btnLockNow);
             flpStatusActions.Controls.Add(btnRefresh);
-            flpStatusActions.Controls.Add(btnTopUsbCleaner);
 
             lblStatusIcon = new Label
             {
@@ -248,64 +227,6 @@ namespace ClassroomChecker.UI
             grpPolicies.Controls.AddRange(new Control[] {
                 chkBlockUsb, chkBlockDownloads, chkBlockPopularGames
             });
-
-            // -------------------------------------------------------------
-            // 2.5 USB Rescue & Vaccine Card
-            // -------------------------------------------------------------
-            grpUsbRescue = new GroupBox
-            {
-                Dock = DockStyle.Top,
-                Height = 72,
-                Text = Localizer.T("usb_rescue_title", "🛡️ ກູ້ໄຟລ໌ & ຂ້າໄວຣັສ USB Shortcut (USB Virus Cleaner & Vaccine)"),
-                Font = new Font("Phetsarath OT", 9.5F, FontStyle.Bold),
-                ForeColor = Color.FromArgb(30, 41, 59),
-                Padding = new Padding(14, 6, 14, 6)
-            };
-
-            lblUsbRescueDesc = new Label
-            {
-                Text = Localizer.T("usb_rescue_desc", "ແກ້ໄຂບັນຫາ Flash Drive ຕິດໄວຣັສ Shortcut, ໂຟນເດີຫາຍ, ໄຟລ໌ກາຍເປັນ .exe, ກູ້ໄຟລ໌ຄືນ ແລະ ສ້າງວັກຊີນປ້ອງກັນ"),
-                Font = new Font("Phetsarath OT", 8.8F, FontStyle.Regular),
-                ForeColor = Color.FromArgb(100, 116, 139),
-                Location = new Point(14, 25),
-                Size = new Size(500, 36),
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
-                AutoEllipsis = true
-            };
-
-            btnOpenUsbCleaner = new Button
-            {
-                Text = Localizer.T("usb_rescue_btn_open", "🚀 ເປີດເຄື່ອງມືກູ້ໄຟລ໌ USB..."),
-                Font = new Font("Phetsarath OT", 9F, FontStyle.Bold),
-                BackColor = Color.FromArgb(14, 165, 233), // Sky 500
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
-                Location = new Point(520, 24),
-                Size = new Size(210, 34),
-                Anchor = AnchorStyles.Top | AnchorStyles.Right,
-                Cursor = Cursors.Hand
-            };
-            btnOpenUsbCleaner.FlatAppearance.BorderSize = 0;
-            btnOpenUsbCleaner.Click += (s, e) => OpenUsbCleanerDialog();
-
-            btnImmunizePc = new Button
-            {
-                Text = Localizer.T("usb_rescue_btn_immunize", "💉 ປິດ Windows AutoRun"),
-                Font = new Font("Phetsarath OT", 8.8F, FontStyle.Regular),
-                BackColor = Color.White,
-                ForeColor = Color.FromArgb(15, 23, 42),
-                FlatStyle = FlatStyle.Flat,
-                Location = new Point(738, 24),
-                Size = new Size(190, 34),
-                Anchor = AnchorStyles.Top | AnchorStyles.Right,
-                Cursor = Cursors.Hand
-            };
-            btnImmunizePc.FlatAppearance.BorderColor = Color.FromArgb(203, 213, 225);
-            btnImmunizePc.Click += btnImmunizePc_Click;
-
-            grpUsbRescue.Controls.Add(lblUsbRescueDesc);
-            grpUsbRescue.Controls.Add(btnOpenUsbCleaner);
-            grpUsbRescue.Controls.Add(btnImmunizePc);
 
             // -------------------------------------------------------------
             // 3. Side-by-Side Lists (Exes & Folders)
@@ -462,7 +383,6 @@ namespace ClassroomChecker.UI
             // -------------------------------------------------------------
             this.Controls.Add(tblLists);
             this.Controls.Add(pnlBottom);
-            this.Controls.Add(grpUsbRescue);
             this.Controls.Add(grpPolicies);
             this.Controls.Add(pnlStatus);
 
@@ -507,18 +427,6 @@ namespace ClassroomChecker.UI
 
             btnSaveConfig.Text = Localizer.T("btn_save");
             lblNote.Text = Localizer.T("security_panel_note", "💡 ໝາຍເຫດ: ການລັອກຈະມີຜົນທັນທີກັບທຸກ User ໃນເຄື່ອງ. ສາມາດປິດການລັອກຄືນໄດ້ທຸກເວລາດ້ວຍປຸ່ມ 'ປິດການລັອກ'.");
-
-            if (grpUsbRescue != null)
-            {
-                grpUsbRescue.Text = Localizer.T("usb_rescue_title", "🛡️ ກູ້ໄຟລ໌ & ຂ້າໄວຣັສ USB Shortcut (USB Virus Cleaner & Vaccine)");
-                lblUsbRescueDesc.Text = Localizer.T("usb_rescue_desc");
-                btnOpenUsbCleaner.Text = Localizer.T("usb_rescue_btn_open");
-                btnImmunizePc.Text = Localizer.T("usb_rescue_btn_immunize");
-                if (btnTopUsbCleaner != null)
-                {
-                    btnTopUsbCleaner.Text = Localizer.T("usb_rescue_btn_top", "🛡️ ກູ້ໄຟລ໌ USB");
-                }
-            }
         }
 
         public void LoadFromConfig()
@@ -853,35 +761,6 @@ namespace ClassroomChecker.UI
                 "Success",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
-        }
-
-        private void OpenUsbCleanerDialog()
-        {
-            using (var dlg = new UsbCleanerDialog())
-            {
-                dlg.ShowDialog(this.FindForm());
-            }
-        }
-
-        private void btnImmunizePc_Click(object sender, EventArgs e)
-        {
-            bool ok = UsbVirusCleanerService.ImmunizeHostMachine();
-            if (ok)
-            {
-                MessageBox.Show(
-                    Localizer.T("usb_immunize_success"),
-                    Localizer.T("app_title"),
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-            }
-            else
-            {
-                MessageBox.Show(
-                    "ບໍ່ສາມາດປິດ AutoRun ໄດ້ (ກະລຸນາກວດສອບສິດ Administrator)",
-                    "ຂໍ້ຜິດພາດ",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
-            }
         }
     }
 }

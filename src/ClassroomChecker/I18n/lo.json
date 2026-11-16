@@ -3,6 +3,7 @@
   "tab_wallpaper": "ພື້ນຫຼັງ",
   "tab_scan": "ກວດສອບລະບົບ",
   "tab_security": "ປ້ອງກັນ",
+  "tab_usb_antivirus": "Antivirus USB",
   "tab_install": "ຕິດຕັ້ງຊອບແວ",
   "room": "ຫ້ອງຮຽນ:",
   "btn_add_room": "+ ເພີ່ມຫ້ອງ",
@@ -193,5 +194,10 @@
   "usb_cleaner_btn_open_drive": "📂 ເປີດເບິ່ງໄຟລ໌ໃນ USB (Open Drive)",
   "usb_no_drive_found": "--- ບໍ່ພົບ Flash Drive (ກະລຸນາສຽບ USB ຫຼື ກົດ 'ເລືອກໂຟນເດີ...') ---",
   "usb_cleaner_browse_desc": "ເລືອກ Flash Drive ຫຼື ໂຟນເດີທີ່ຕ້ອງການກູ້ໄຟລ໌ ແລະ ຂ້າໄວຣັສ",
-  "usb_cleaner_err_no_drive": "ກະລຸນາສຽບ Flash Drive USB ຫຼື ເລືອກໂຟນເດີທີ່ຕ້ອງການກູ້ໄຟລ໌ກ່ອນ!"
+  "usb_cleaner_err_no_drive": "ກະລຸນາສຽບ Flash Drive USB ຫຼື ເລືອກໂຟນເດີທີ່ຕ້ອງການກູ້ໄຟລ໌ກ່ອນ!",
+  "usb_anti_header_title": "Antivirus USB & ກູ້ໄຟລ໌ Flash Drive (USB Shortcut Virus Cleaner & Vaccine)",
+  "usb_anti_header_desc": "ແກ້ໄຂບັນຫາ Flash Drive ຕິດໄວຣັສ Shortcut, ໂຟນເດີຫາຍ, ໄຟລ໌ກາຍເປັນ .exe, ກູ້ໄຟລ໌ຄືນ, ສ້າງວັກຊີນປ້ອງກັນ ແລະ ປິດ AutoRun",
+  "usb_badge_autorun_safe": "AutoRun: ປິດແລ້ວ (ປອດໄພ ✓)",
+  "usb_badge_autorun_risk": "AutoRun: ເປີດຢູ່ (ສ່ຽງ ⚠️)",
+  "usb_drive_hint": "💡 ຄຳແນະນຳ: ລະບົບຈະກວດຫາ Removable Drive (Flash Drive) ອັດຕະໂນມັດ"
 }

@@ -119,6 +119,9 @@
     <Compile Include="UI\SecurityPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="UI\UsbAntivirusPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="UI\SoftwareInstallPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>

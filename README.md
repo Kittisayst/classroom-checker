@@ -23,11 +23,12 @@
 3. [ຄູ່ມືການນຳໃຊ້ລະບົບລະອຽດແຕ່ລະສ່ວນ (User Manual)](#3-ຄູ່ມືການນຳໃຊ້ລະບົບລະອຽດແຕ່ລະສ່ວນ-user-manual)
    - [⚡ ຂັ້ນຕອນທີ່ 1: ຕັ້ງຄ່າດ່ວນ (Quick Setup)](#31-ຕັ້ງຄ່າດ່ວນ-quick-setup-ໃນຄລິກດຽວ)
    - [🖼️ ຂັ້ນຕອນທີ່ 2: ກຳນົດພື້ນຫຼັງ & ເລກເຄື່ອງ (Wallpaper & Labeling)](#32-ກຳນົດພື້ນຫຼັງ--ເລກເຄື່ອງ-wallpaper--labeling)
-   - [🔍 ຂັ້ນຕອນທີ່ 3: ກວດສອບລະບົບ 12 ລາຍການ (System Inspection & Auto-Fix)](#33-ກວດສອບລະບົບ-12-ລາຍການ-system-inspection--auto-fix)
+   - [🔍 ຂັ້ນຕອນທີ່ 3: ກວດສອບລະບົບ 15 ລາຍການ (System Inspection & Auto-Fix)](#33-ກວດສອບລະບົບ-15-ລາຍການ-system-inspection--auto-fix)
    - [🛡️ ຂັ້ນຕອນທີ່ 4: ລະບົບປ້ອງກັນ & ລັອກເກມ/USB (Security Policies)](#34-ລະບົບປ້ອງກັນ--ລັອກເກມusb-security-policies)
-   - [📦 ຂັ້ນຕອນທີ່ 5: ຕິດຕັ້ງຊອບແວ Offline 11 ໂປຣແກຣມ (Software Installer)](#35-ຕິດຕັ້ງຊອບແວ-offline-11-ໂປຣແກຣມ-software-installer)
-   - [📊 ຂັ້ນຕອນທີ່ 6: Export Spec & ລວມສະເປັກທຸກເຄື່ອງ (Master Summary)](#36-export-spec--ລວມສະເປັກທຸກເຄື່ອງ-master-summary)
-4. [ລາຍການຊອບແວພື້ນຖານ 11 ໂປຣແກຣມ (Software Catalog)](#4-ລາຍການຊອບແວພື້ນຖານ-11-ໂປຣແກຣມ-software-catalog)
+   - [🦠 ຂັ້ນຕອນທີ່ 5: ແທັບ Antivirus USB & ກູ້ໄຟລ໌ Flash Drive](#35-ແທັບ-antivirus-usb--ກູ້ໄຟລ໌-flash-drive)
+   - [⚙️ ຂັ້ນຕອນທີ່ 6: ຕັ້ງຄ່າເວລາ UTC+7, ວັນທີ່ ວ/ດ/ປ & ໄອຄອນໜ້າຈໍ](#36-ຕັ້ງຄ່າເວລາ-utc7-ວັນທີ່-ວ/ດ/ປ--ໄອຄອນໜ້າຈໍ)
+   - [📊 ຂັ້ນຕອນທີ່ 7: Export Spec & ລວມສະເປັກທຸກເຄື່ອງ (Master Summary)](#37-export-spec--ລວມສະເປັກທຸກເຄື່ອງ-master-summary)
+4. [ລາຍການຊອບແວພື້ນຖານແນະນຳ 11 ໂປຣແກຣມ (Software Catalog)](#4-ລາຍການຊອບແວພື້ນຖານແນະນຳ-11-ໂປຣແກຣມ-software-catalog)
 5. [ຄວາມທົນທານ ແລະ ຄວາມປອດໄພ (Resilience & Security)](#5-ຄວາມທົນທານ-ແລະ-ຄວາມປອດໄພ-resilience--security)
 6. [ການ Compile & Run Unit Tests (Build from Source)](#6-ການ-compile--run-unit-tests-build-from-source)
 
@@ -153,32 +154,32 @@ USB_FLASH_DRIVE:\
   * **`🔄 ກວດສອບ`:** ກວດສອບສະຖານະການລັອກຄືນໃໝ່
   * **`💾 ບັນທຶກ`:** ບັນທຶກການຕັ້ງຄ່າລົງ `config.json`
 
-#### 🛡️ ເຄື່ອງມືກູ້ໄຟລ໌ & ຂ້າໄວຣັສ USB Shortcut (USB Virus Cleaner & Vaccine)
-ໃນຫ້ອງຮຽນຄອມພິວເຕີ ບັນຫາທີ່ພົບຫຼາຍທີ່ສຸດແມ່ນນັກຮຽນສຽບ Flash Drive ແລ້ວຕິດໄວຣັສ Shortcut (`*.lnk`), ໂຟນເດີຖືກເຊື່ອງຫາຍໝົດ, ຫຼື ໂຟນເດີກາຍເປັນໄຟລ໌ `.exe` (`<folder>.exe`):
-* **ກົດປຸ່ມ `🚀 ເປີດເຄື່ອງມືກູ້ໄຟລ໌ USB...` ຫຼື `🛡️ ກູ້ໄຟລ໌ USB`:**
-  * **ປິດ Process ໄວຣັສໃນ RAM:** ປິດ `wscript.exe` ແລະ `cscript.exe` ທີ່ກຳລັງແລ່ນແອບແຝງໃນ Windows ບໍ່ໃຫ້ມັນແຜ່ກະຈາຍໄປຫາ USB ອື່ນ.
-  * **ລຶບໄຟລ໌ Shortcut ປອມ (.lnk):** ກວດຈັບ ແລະ ລຶບ Shortcuts ທີ່ຖືກສ້າງຂຶ້ນມາຫຼອກລວງ.
-  * **ລຶບ Script ໄວຣັສ:** ລຶບໄຟລ໌ `.vbs`, `.js`, `.wsf`, ແລະ `autorun.inf` ທີ່ແອບແຝງໃນ USB.
-  * **ລຶບ Fake Folder .exe:** ກວດຈັບ ແລະ ລຶບໄຟລ໌ `.exe` ທີ່ປອມເປັນໂຟນເດີ.
-  * **ກູ້ຄືນໄຟລ໌ທັງໝົດ (Unhide):** ປົດລັອກຄຸນສົມບັດ `Hidden`, `System`, `ReadOnly` (`attrib -s -h -r /s /d`) ເຮັດໃຫ້ໄຟລ໌ເອກະສານ, ວຽກບ້ານ ແລະ ໂຟນເດີທັງໝົດຂອງນັກຮຽນປະກົດຂຶ້ນມາໃຊ້ງານໄດ້ຕາມປົກກະຕິ!
-  * **ສ້າງວັກຊີນປ້ອງກັນ USB:** ສ້າງໂຟນເດີ `autorun.inf` ແບບພິເສດ (Protected Folder) ເພື່ອປ້ອງກັນບໍ່ໃຫ້ໄວຣັສສາມາດສ້າງໄຟລ໌ `autorun.inf` ລົງ USB ໄດ້ອີກ.
-  * **ປິດ AutoRun ໃນເຄື່ອງຫ້ອງຮຽນ:** ຕັ້ງຄ່າ Registry `NoDriveTypeAutoRun = 0xFF` ເພື່ອປິດ AutoRun/AutoPlay ຢ່າງສົມບູນ ບໍ່ໃຫ້ໄວຣັສ USB ທຸກຊະນິດສາມາດ Run ເອງໄດ້ເມື່ອສຽບ Flash Drive!
+---
+
+### 3.5 ແທັບ Antivirus USB & ກູ້ໄຟລ໌ Flash Drive
+ແທັບສະເພາະ **`Antivirus USB`** ອອກແບບມາເພື່ອແກ້ໄຂບັນຫາທີ່ພົບເລື້ອຍທີ່ສຸດໃນຫ້ອງຮຽນຄອມພິວເຕີ: Flash Drive ຕິດໄວຣັສ Shortcut (`*.lnk`), ໂຟນເດີຖືກເຊື່ອງຫາຍໝົດ, ຫຼື ໂຟນເດີກາຍເປັນໄຟລ໌ `.exe` (`<folder>.exe`):
+
+1. **ເລືອກ Flash Drive USB:** ເລືອກໄດຣຟ໌ຈາກລາຍຊື່ Dropdown ດ້ານຊ້າຍ (ລະບົບຈະກວດ Removable Drive ໃຫ້ອັດຕະໂນມັດ ພ້ອມປຸ່ມ `🔄 ກວດຫາ` ແລະ `📁 ເລືອກ...`).
+2. **ຕົວເລືອກການກູ້ໄຟລ໌ ແລະ ຂ້າໄວຣັສ (Options):**
+   * **ປິດ Process ໄວຣັສໃນ RAM:** ປິດ `wscript.exe` ແລະ `cscript.exe` ທີ່ກຳລັງແລ່ນແອບແຝງໃນ Windows ບໍ່ໃຫ້ມັນແຜ່ກະຈາຍໄປຫາ USB ອື່ນ.
+   * **ລຶບໄຟລ໌ Shortcut ປອມ (.lnk):** ກວດຈັບ ແລະ ລຶບ Shortcuts ທີ່ຖືກສ້າງຂຶ້ນມາຫຼອກລວງ.
+   * **ລຶບ Script ໄວຣັສ:** ລຶບໄຟລ໌ `.vbs`, `.js`, `.wsf`, ແລະ `autorun.inf` ທີ່ແອບແຝງໃນ USB.
+   * **ລຶບ Fake Folder .exe:** ກວດຈັບ ແລະ ລຶບໄຟລ໌ `.exe` ທີ່ປອມເປັນໂຟນເດີ.
+   * **ກູ້ຄືນໄຟລ໌ທັງໝົດ (Unhide):** ປົດລັອກຄຸນສົມບັດ `Hidden`, `System`, `ReadOnly` (`attrib -s -h -r /s /d`) ເຮັດໃຫ້ໄຟລ໌ເອກະສານ, ວຽກບ້ານ ແລະ ໂຟນເດີທັງໝົດຂອງນັກຮຽນປະກົດຂຶ້ນມາໃຊ້ງານໄດ້ຕາມປົກກະຕິ 100%!
+   * **ສ້າງວັກຊີນປ້ອງກັນ USB:** ສ້າງໂຟນເດີ `autorun.inf` ແບບພິເສດ (Protected Folder) ເພື່ອປ້ອງກັນບໍ່ໃຫ້ໄວຣັສສາມາດສ້າງໄຟລ໌ `autorun.inf` ລົງ USB ໄດ້ອີກ.
+   * **ປິດ AutoRun ໃນເຄື່ອງຫ້ອງຮຽນ:** ຕັ້ງຄ່າ Registry `NoDriveTypeAutoRun = 0xFF` ເພື່ອປິດ AutoRun/AutoPlay ຢ່າງສົມບູນ.
+3. **ກົດປຸ່ມ `🚀 ເລີ່ມຕົ້ນກູ້ໄຟລ໌ & ຂ້າໄວຣັສ`:** ເບິ່ງບັນທຶກການເຮັດວຽກແບບ Real-Time ໃນ Terminal ດ້ານຂວາ, ແລະ ກົດ `📂 ເປີດເບິ່ງໄຟລ໌ໃນ USB` ເມື່ອກູ້ສຳເລັດ.
 
 ---
 
-### 3.5 ຕິດຕັ້ງຊອບແວ Offline 11 ໂປຣແກຣມ (Software Installer)
-1. ດາວໂຫຼດໄຟລ໌ Setup ມາໄວ້ໃນໂຟນເດີ `installers/` ໃນ USB.
-2. ເຂົ້າແທັບ **"ຕິດຕັ້ງຊອບແວ"**: ຕາຕະລາງຈະບອກສະຖານະວ່າໂປຣແກຣມໃດຕິດຕັ້ງແລ້ວ (`✓ ຕິດຕັ້ງແລ້ວ`) ຫຼື ຍັງຂາດ (`✗ ຍັງບໍ່ທັນຕິດຕັ້ງ`) ແລະ ພົບໄຟລ໌ໃນ USB ຫຼື ບໍ່.
-3. ກົດ **`📥 ຕິດຕັ້ງ`** ເທື່ອລະຕົວ ຫຼື ກົດ **`⚡ ຕິດຕັ້ງທີ່ຂາດທັງໝົດ`** ເພື່ອຕິດຕັ້ງທຸກໂປຣແກຣມທີ່ຍັງຂາດແບບ Silent (ບໍ່ຕ້ອງກົດ Next, Next).
-4. **ພິເສດສຳລັບ RAMMap64 (Portable):**
-   * ລະບົບຈະຄັດລອກໄຟລ໌ລົງ `C:\Program Files\RAMMap\`
-   * ສ້າງ Desktop Shortcut ຊື່ **`RAMMap (Clear RAM).lnk`** ໄວ້ໜ້າຈໍ Desktop
-   * ລົງທະບຽນ App Paths (ກົດ Win+R ແລ້ວພິມ `rammap64` ໄດ້ທັນທີ)
-   * ຕັ້ງຄ່າ Auto-Accept EULA ໃນ Registry ໃຫ້ພ້ອມໃຊ້ງານທັນທີ!
+### 3.6 ຕັ້ງຄ່າເວລາ UTC+7, ວັນທີ່ ວ/ດ/ປ & ໄອຄອນໜ້າຈໍ
+* **Timezone +7:** ຕັ້ງເຂດເວລາເປັນ `SE Asia Standard Time` (UTC+07:00: ບາງກອກ, ຮ່າໂນ້ຍ, ຈາກາຕາ).
+* **ຮູບແບບວັນທີ່ ວ/ດ/ປ:** ຕັ້ງ `ShortDate` ເປັນ `dd/MM/yyyy` ຕາມມາດຕະຖານທາງການຂອງລາວ ພ້ອມອັບເດດໂມງ Taskbar ແລະ Explorer ທັນທີ.
+* **ໄອຄອນໜ້າຈໍ:** ເປີດສະແດງໄອຄອນ **This PC**, **Control Panel** ແລະ ສ້າງ Shortcut **MS Office (Word, Excel, PowerPoint)** ໄວ້ໜ້າຈໍ Desktop.
 
 ---
 
-### 3.6 Export Spec & ລວມສະເປັກທຸກເຄື່ອງ (Master Summary)
+### 3.7 Export Spec & ລວມສະເປັກທຸກເຄື່ອງ (Master Summary)
 * **Export ແຕ່ລະເຄື່ອງ:** ເມື່ອກວດສອບ ຫຼື ກົດ Quick Setup, ລະບົບຈະສ້າງໄຟລ໌ Excel ຊື່ `<ຫ້ອງຮຽນ>-<ເລກເຄື່ອງ>.xlsx` ໄວ້ໃນໂຟນເດີ `specs/` ໃນ USB.
 * **ລວມສະເປັກທຸກເຄື່ອງ (Master Excel):**
   * ເມື່ອເອົາ USB ໄປສຽບ ແລະ Export ຄົບທຸກເຄື່ອງໃນຫ້ອງແລ້ວ:

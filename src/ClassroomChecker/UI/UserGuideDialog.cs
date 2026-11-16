@@ -17,6 +17,7 @@ namespace ClassroomChecker.UI
         private TabPage tabWallpaper;
         private TabPage tabScan;
         private TabPage tabSecurity;
+        private TabPage tabUsbAntivirus;
         private TabPage tabDateTimeIcons;
         private TabPage tabStructure;
 
@@ -153,6 +154,7 @@ namespace ClassroomChecker.UI
             tabWallpaper = CreateGuideTab("🖼️ ພື້ນຫຼັງ & ເລກເຄື່ອງ", GetWallpaperContent());
             tabScan = CreateGuideTab("🔍 ກວດສອບລະບົບ", GetScanContent());
             tabSecurity = CreateGuideTab("🛡️ ປ້ອງກັນ & ລັອກ", GetSecurityContent());
+            tabUsbAntivirus = CreateGuideTab("🦠 Antivirus USB", GetUsbAntivirusContent());
             tabDateTimeIcons = CreateGuideTab("⚙️ ວັນທີ່ & ໄອຄອນໜ້າຈໍ", GetDateTimeIconsContent());
             tabStructure = CreateGuideTab("📁 ໂຄງສ້າງ USB", GetStructureContent());
 
@@ -161,6 +163,7 @@ namespace ClassroomChecker.UI
                 tabWallpaper,
                 tabScan,
                 tabSecurity,
+                tabUsbAntivirus,
                 tabDateTimeIcons,
                 tabStructure
             });
@@ -470,9 +473,81 @@ ACTION BUTTONS:
 --------------------------------------------------------------------------------
 • '🔒 ເປີດການລັອກ': ເປີດໃຊ້ງານນະໂຍບາຍບລັອກທັນທີ ມີຜົນກັບທຸກ User ໃນເຄື່ອງ
 • '🔓 ປິດການລັອກ': ປົດລັອກນະໂຍບາຍທັງໝົດກັບຄືນເປັນປົກກະຕິ
-• '🛡️ ກູ້ໄຟລ໌ USB': ເປີດໜ້າຕ່າງກູ້ໄຟລ໌ ແລະ ຂ້າໄວຣັສ USB ທັນທີ
 • '🔄 ກວດສອບ': ກວດສອບສະຖານະການລັອກປັດຈຸບັນຂອງເຄື່ອງ
 • '💾 ບັນທຶກ': ບັນທຶກລາຍຊື່ເກມ ແລະ ນະໂຍບາຍລົງໄຟລ໌ config.json";
+        }
+
+        private string GetUsbAntivirusContent()
+        {
+            bool isLo = Localizer.CurrentLanguage == "lo";
+            if (!isLo)
+            {
+                return @"================================================================================
+🦠 5. ANTIVIRUS USB TAB (RECOVERY & VACCINE)
+================================================================================
+
+This dedicated tab provides full-screen offline disinfection, file recovery, and AutoRun immunization for USB flash drives and lab computers.
+
+--------------------------------------------------------------------------------
+KEY CAPABILITIES:
+--------------------------------------------------------------------------------
+1. 📂 Recover Hidden Files & Folders (Unhide):
+   • Shortcut worms hide genuine folders by setting Hidden, System, and Read-Only flags.
+   • Automatically strips these flags recursively from all files and folders, immediately restoring student assignments and documents.
+2. 🚫 Remove Fake Shortcuts (.lnk):
+   • Detects and removes rogue .lnk shortcuts that mimic folders while executing cmd, wscript, or powershell.
+3. 🗑️ Delete Rogue Scripts:
+   • Removes malicious .vbs, .js, .wsf, and fake autorun.inf files disguised on the drive.
+4. 🛑 Terminate Active Malware Memory Processes:
+   • Kills rogue wscript.exe and cscript.exe processes actively running in RAM to prevent reinfection.
+5. 💉 Create USB Vaccine:
+   • Creates a protected, read-only dummy autorun.inf directory structure that blocks viruses from writing an autorun.inf file.
+6. 🔒 Immunize Lab PC:
+   • Sets NoDriveTypeAutoRun = 0xFF in Windows policies to completely disable AutoRun/AutoPlay on this PC.
+
+--------------------------------------------------------------------------------
+HOW TO USE:
+--------------------------------------------------------------------------------
+1. Plug in the USB Flash Drive.
+2. Select the drive from the dropdown list on the left (or click 'Refresh Drives').
+3. Keep the recommended options checked.
+4. Click '🚀 Start Scan & Recovery'.
+5. Watch live progress in the execution terminal on the right.
+6. When finished, click '📂 Open USB Drive' to inspect your recovered files!";
+            }
+
+            return @"================================================================================
+🦠 5. ແທັບ 'ANTIVIRUS USB' (ກູ້ໄຟລ໌ & ຂ້າໄວຣັສ FLASH DRIVE)
+================================================================================
+
+ແທັບສະເພາະສຳລັບກູ້ໄຟລ໌, ຂ້າໄວຣັສ Shortcut, ລຶບໄຟລ໌ປອມ ແລະ ສ້າງວັກຊີນປ້ອງກັນ Flash Drive ພ້ອມປິດ Windows AutoRun ໃຫ້ຄອມພິວເຕີຫ້ອງຮຽນ.
+
+--------------------------------------------------------------------------------
+ຄວາມສາມາດຫຼັກຂອງລະບົບ:
+--------------------------------------------------------------------------------
+1. 📂 ປົດລັອກ ແລະ ກູ້ໄຟລ໌/ໂຟນເດີທີ່ຖືກເຊື່ອງຄືນມາ (Unhide):
+   • ໄວຣັສ Shortcut ມັກເຊື່ອງໂຟນເດີແທ້ໄວ້ດ້ວຍຄຸນສົມບັດ Hidden + System + ReadOnly
+   • ລະບົບຈະປົດລັອກຄືນທຸກໄຟລ໌ ແລະ ໂຟນເດີຢ່າງປອດໄພ ເຮັດໃຫ້ເອກະສານ ແລະ ວຽກບ້ານປະກົດຂຶ້ນມາທັນທີ
+2. 🚫 ລຶບໄຟລ໌ Shortcut (.lnk) ປອມ:
+   • ກວດຈັບ ແລະ ລຶບໄຟລ໌ Shortcut ທີ່ປອມຊື່ຄືກັບໂຟນເດີ ແຕ່ແອບແຝງແລ່ນ Script/CMD
+3. 🗑️ ລຶບໄຟລ໌ Script ໄວຣັສ:
+   • ລຶບໄຟລ໌ .vbs, .js, .wsf ແລະ autorun.inf ປອມທີ່ຢູ່ໃນ Flash Drive
+4. 🛑 ປິດ Process ໄວຣັສໃນ Memory:
+   • ປິດ wscript.exe ແລະ cscript.exe ທີ່ກຳລັງແລ່ນແອບແຝງໃນ Windows ທັນທີ ບໍ່ໃຫ້ແຜ່ເຊື້ອຊ້ຳ
+5. 💉 ສ້າງວັກຊີນປ້ອງກັນ USB (USB Vaccine):
+   • ສ້າງໂຟນເດີປ້ອງກັນ autorun.inf ແບບພິເສດ (Protected Folder) ປ້ອງກັນບໍ່ໃຫ້ໄວຣັສຂຽນ autorun.inf ໄດ້ອີກ
+6. 🔒 ປິດ Windows AutoRun/AutoPlay ໃນເຄື່ອງ:
+   • ຕັ້ງຄ່າ NoDriveTypeAutoRun = 0xFF ເພື່ອປິດ AutoRun ຢ່າງຖາວອນ ປ້ອງກັນເຄື່ອງຫ້ອງຮຽນບໍ່ໃຫ້ຕິດໄວຣັສ USB ອີກ
+
+--------------------------------------------------------------------------------
+ຂັ້ນຕອນການນຳໃຊ້ງ່າຍໆ:
+--------------------------------------------------------------------------------
+1. ສຽບ Flash Drive USB ເຂົ້າເຄື່ອງ.
+2. ເລືອກໄດຣຟ໌ USB ຈາກລາຍຊື່ Dropdown ດ້ານຊ້າຍ (ຫຼື ກົດ 'ກວດຫາ').
+3. ຕົວເລືອກທັງ 7 ລາຍການຖືກເລືອກໄວ້ເປັນຄ່າແນະນຳແລ້ວ.
+4. ກົດປຸ່ມໃຫຍ່ '🚀 ເລີ່ມຕົ້ນກູ້ໄຟລ໌ & ຂ້າໄວຣັສ'.
+5. ເບິ່ງຜົນການເຮັດວຽກແບບ Real-Time ໃນໜ້າຈໍ Terminal ດ້ານຂວາ.
+6. ເມື່ອສຳເລັດ ກົດປຸ່ມ '📂 ເປີດເບິ່ງໄຟລ໌ໃນ USB' ເພື່ອກວດເບິ່ງເອກະສານທີ່ກູ້ຄືນມາໄດ້ທັນທີ!";
         }
 
         private string GetDateTimeIconsContent()
@@ -482,7 +557,7 @@ ACTION BUTTONS:
             if (!isLo)
             {
                 return @"================================================================================
-⚙️ 5. DATE/TIME FORMAT & DESKTOP ICONS
+⚙️ 6. DATE/TIME FORMAT & DESKTOP ICONS
 ================================================================================
 
 This section explains how Classroom Checker automatically configures international time/date standards and essential desktop icons for classroom computers.
@@ -518,7 +593,7 @@ This section explains how Classroom Checker automatically configures internation
             }
 
             return @"================================================================================
-⚙️ 5. ກຳນົດຮູບແບບວັນທີ່ & ໄອຄອນໜ້າຈໍ (DATE/TIME & DESKTOP ICONS)
+⚙️ 6. ກຳນົດຮູບແບບວັນທີ່ & ໄອຄອນໜ້າຈໍ (DATE/TIME & DESKTOP ICONS)
 ================================================================================
 
 ສ່ວນນີ້ອະທິບາຍລະບົບຕັ້ງຄ່າເວລາ, ວັນທີ່ ແລະ ໄອຄອນໜ້າຈໍທີ່ຈຳເປັນສຳລັບຄອມພິວເຕີຫ້ອງຮຽນ.
@@ -559,7 +634,7 @@ This section explains how Classroom Checker automatically configures internation
             if (!isLo)
             {
                 return @"================================================================================
-📁 6. USB DIRECTORY STRUCTURE & PERSISTENCE
+📁 7. USB DIRECTORY STRUCTURE & PERSISTENCE
 ================================================================================
 
 Classroom Checker is engineered as a true zero-installation portable tool. Everything it needs or generates lives directly in its directory on the USB Flash Drive.
@@ -599,7 +674,7 @@ ROBUSTNESS & RESILIENCE:
             }
 
             return @"================================================================================
-📁 6. ໂຄງສ້າງໂຟນເດີ USB (DIRECTORY STRUCTURE & PERSISTENCE)
+📁 7. ໂຄງສ້າງໂຟນເດີ USB (DIRECTORY STRUCTURE & PERSISTENCE)
 ================================================================================
 
 ໂປຣແກຣມ Classroom Checker ເປັນ Portable 100% ບໍ່ຕ້ອງຕິດຕັ້ງ ທຸກຢ່າງທີ່ໂປຣແກຣມຕ້ອງການ ຫຼື ສ້າງຂຶ້ນຈະຖືກເກັບໄວ້ໃນ USB Flash Drive ຢ່າງເປັນລະບຽບຮຽບຮ້ອຍ.

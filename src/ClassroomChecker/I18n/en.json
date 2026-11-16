@@ -3,6 +3,7 @@
   "tab_wallpaper": "Wallpaper",
   "tab_scan": "System Check",
   "tab_security": "Protection & Lock",
+  "tab_usb_antivirus": "Antivirus USB",
   "tab_install": "Software Installer",
   "room": "Room:",
   "btn_add_room": "+ Add Room",
@@ -193,5 +194,10 @@
   "usb_cleaner_btn_open_drive": "📂 Open USB Drive in Explorer",
   "usb_no_drive_found": "--- No USB Removable Drive detected (plug in a USB or click 'Browse Folder...') ---",
   "usb_cleaner_browse_desc": "Select a USB Drive or folder to scan, clean, and restore",
-  "usb_cleaner_err_no_drive": "Please insert a USB Flash Drive or select a folder to clean!"
+  "usb_cleaner_err_no_drive": "Please insert a USB Flash Drive or select a folder to clean!",
+  "usb_anti_header_title": "USB Antivirus & Flash Drive Recovery (USB Shortcut Cleaner & Vaccine)",
+  "usb_anti_header_desc": "Recover shortcut-infected USB drives, restore hidden files, remove rogue .vbs/.exe scripts, create vaccine, and disable AutoRun",
+  "usb_badge_autorun_safe": "AutoRun: Disabled (Safe ✓)",
+  "usb_badge_autorun_risk": "AutoRun: Enabled (Risk ⚠️)",
+  "usb_drive_hint": "💡 Tip: Removable USB flash drives are detected automatically"
 }
