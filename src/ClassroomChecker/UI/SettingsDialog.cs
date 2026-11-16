@@ -60,6 +60,7 @@ namespace ClassroomChecker.UI
         private Button btnDeleteBlockedPath;
         private Button btnApplyLockNow;
         private Button btnUnlockNow;
+        private bool _isLoadingConfig = false;
 
         // Bottom
         private Button btnSave;
@@ -504,6 +505,10 @@ namespace ClassroomChecker.UI
             btnUnlockNow.FlatAppearance.BorderSize = 0;
             btnUnlockNow.Click += btnUnlockNow_Click;
 
+            chkBlockUsb.CheckedChanged += (s, e) => { if (!_isLoadingConfig) UpdateSecurityButtonStates(); };
+            chkBlockDownloads.CheckedChanged += (s, e) => { if (!_isLoadingConfig) UpdateSecurityButtonStates(); };
+            chkBlockPopularGames.CheckedChanged += (s, e) => { if (!_isLoadingConfig) UpdateSecurityButtonStates(); };
+
             grpActions.Controls.AddRange(new Control[] { btnApplyLockNow, btnUnlockNow });
 
             tabSecurity.Controls.AddRange(new Control[] { grpSec, grpExes, grpPaths, grpActions });
@@ -563,6 +568,10 @@ namespace ClassroomChecker.UI
         private void LoadFromConfig(AppConfig cfg)
         {
             if (cfg == null) return;
+
+            _isLoadingConfig = true;
+            try
+            {
 
             // Range
             int min = cfg.computerNumberRange != null ? cfg.computerNumberRange.min : 1;
@@ -656,6 +665,12 @@ namespace ClassroomChecker.UI
                         lstBlockedPaths.Items.Add(path);
                     }
                 }
+            }
+            }
+            finally
+            {
+                _isLoadingConfig = false;
+                UpdateSecurityButtonStates();
             }
         }
 
@@ -914,12 +929,14 @@ namespace ClassroomChecker.UI
             }
 
             lstBlockedExes.Items.Add(exe);
+            UpdateSecurityButtonStates();
         }
 
         private void btnDeleteBlockedExe_Click(object sender, EventArgs e)
         {
             if (lstBlockedExes.SelectedItem == null) return;
             lstBlockedExes.Items.Remove(lstBlockedExes.SelectedItem);
+            UpdateSecurityButtonStates();
         }
 
         private void btnBrowseBlockedFolder_Click(object sender, EventArgs e)
@@ -937,6 +954,7 @@ namespace ClassroomChecker.UI
                             if (string.Equals(item.ToString(), selected, StringComparison.OrdinalIgnoreCase)) return;
                         }
                         lstBlockedPaths.Items.Add(selected);
+                        UpdateSecurityButtonStates();
                     }
                 }
             }
@@ -946,6 +964,7 @@ namespace ClassroomChecker.UI
         {
             if (lstBlockedPaths.SelectedItem == null) return;
             lstBlockedPaths.Items.Remove(lstBlockedPaths.SelectedItem);
+            UpdateSecurityButtonStates();
         }
 
         private void btnApplyLockNow_Click(object sender, EventArgs e)
@@ -970,6 +989,8 @@ namespace ClassroomChecker.UI
             List<string> details;
             bool ok = SecurityPolicyManager.ApplyFullLock(sec, out details);
 
+            UpdateSecurityButtonStates();
+
             if (ok)
             {
                 MessageBox.Show(Localizer.T("settings_lock_applied_success"), Localizer.T("app_title"), MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -987,8 +1008,76 @@ namespace ClassroomChecker.UI
             {
                 List<string> details;
                 SecurityPolicyManager.UnlockAll(out details);
+
+                UpdateSecurityButtonStates();
+
                 MessageBox.Show(Localizer.T("settings_unlock_applied_success"), Localizer.T("app_title"), MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        private void UpdateSecurityButtonStates()
+        {
+            try
+            {
+                var status = SecurityPolicyManager.GetCurrentStatus();
+                var sec = new SecurityConfig
+                {
+                    blockUsbExecution = chkBlockUsb.Checked,
+                    blockDownloadsExecution = chkBlockDownloads.Checked,
+                    blockPopularGames = chkBlockPopularGames.Checked,
+                    blockedExes = new List<string>(),
+                    blockedPaths = new List<string>()
+                };
+                foreach (var item in lstBlockedExes.Items) sec.blockedExes.Add(item.ToString());
+                foreach (var item in lstBlockedPaths.Items) sec.blockedPaths.Add(item.ToString());
+
+                bool isFullyLocked = status.IsFullyLockedForConfig(sec) || status.IsFullyLockedStandard;
+                bool anyLocked = status.HasAnyLockActive;
+
+                if (isFullyLocked && anyLocked)
+                {
+                    btnApplyLockNow.Enabled = false;
+                    btnApplyLockNow.Text = Localizer.T("security_btn_locked", "✓ ລັອກຮຽບຮ້ອຍ");
+                    btnApplyLockNow.BackColor = Color.FromArgb(226, 232, 240);
+                    btnApplyLockNow.ForeColor = Color.FromArgb(100, 116, 139);
+                    btnApplyLockNow.Cursor = Cursors.Default;
+
+                    btnUnlockNow.Enabled = true;
+                    btnUnlockNow.Text = Localizer.T("settings_btn_unlock_now", "🔓 ປິດການລັອກ");
+                    btnUnlockNow.BackColor = Color.FromArgb(234, 88, 12);
+                    btnUnlockNow.ForeColor = Color.White;
+                    btnUnlockNow.Cursor = Cursors.Hand;
+                }
+                else if (anyLocked)
+                {
+                    btnApplyLockNow.Enabled = true;
+                    btnApplyLockNow.Text = Localizer.T("settings_btn_lock_now", "🔒 ເປີດການລັອກ");
+                    btnApplyLockNow.BackColor = Color.FromArgb(239, 68, 68);
+                    btnApplyLockNow.ForeColor = Color.White;
+                    btnApplyLockNow.Cursor = Cursors.Hand;
+
+                    btnUnlockNow.Enabled = true;
+                    btnUnlockNow.Text = Localizer.T("settings_btn_unlock_now", "🔓 ປິດການລັອກ");
+                    btnUnlockNow.BackColor = Color.FromArgb(71, 85, 105);
+                    btnUnlockNow.ForeColor = Color.White;
+                    btnUnlockNow.Cursor = Cursors.Hand;
+                }
+                else
+                {
+                    btnApplyLockNow.Enabled = true;
+                    btnApplyLockNow.Text = Localizer.T("settings_btn_lock_now", "🔒 ເປີດການລັອກ");
+                    btnApplyLockNow.BackColor = Color.FromArgb(239, 68, 68);
+                    btnApplyLockNow.ForeColor = Color.White;
+                    btnApplyLockNow.Cursor = Cursors.Hand;
+
+                    btnUnlockNow.Enabled = false;
+                    btnUnlockNow.Text = Localizer.T("security_btn_unlocked", "✓ ບໍ່ໄດ້ລັອກ");
+                    btnUnlockNow.BackColor = Color.FromArgb(226, 232, 240);
+                    btnUnlockNow.ForeColor = Color.FromArgb(148, 163, 184);
+                    btnUnlockNow.Cursor = Cursors.Default;
+                }
+            }
+            catch { }
         }
     }
 }

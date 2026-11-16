@@ -47,6 +47,15 @@ namespace ClassroomChecker.UI
             _isChangingLanguage = false;
 
             ApplyLocalization();
+
+            // ເມື່ອຄລິກສະຫຼັບມາແທັບ ປ້ອງກັນ ໃຫ້ກວດສອບສະຖານະການລັອກລະບົບ Windows ແທ້ທັນທີ
+            this.tabMain.SelectedIndexChanged += (s, args) =>
+            {
+                if (tabMain.SelectedTab == tabSecurity && securityPanel != null)
+                {
+                    securityPanel.RefreshPolicyStatus();
+                }
+            };
         }
 
         private void OnLanguageChanged()

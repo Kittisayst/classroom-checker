@@ -54,6 +54,8 @@ namespace ClassroomChecker.Tests
             Run("SoftwareInstaller: catalog contains 11 FOSS/essential packages", SoftwareInstaller_Catalog_PopulatedAndValid);
             Run("SoftwareInstaller: CreateShortcut generates valid .lnk via COM", SoftwareInstaller_CreateShortcut);
             Run("SoftwareInstaller: RAMMap64 is flagged as portable", SoftwareInstaller_RamMapIsPortable);
+            Run("SecurityStatusInfo: lock state evaluation and config matching", SecurityStatusInfo_LockStateEvaluation);
+            Run("I18n: security button states localized in lo and en", I18n_SecurityLockButtons_Localized);
 
             Cleanup();
 
@@ -553,6 +555,59 @@ namespace ClassroomChecker.Tests
             Assert(rammap.IsPortable, "rammap is marked IsPortable");
             AreEqual("RAMMap", rammap.PortableTargetSubDir, "PortableTargetSubDir is RAMMap");
             Assert(!string.IsNullOrEmpty(rammap.ShortcutName), "ShortcutName is specified");
+        }
+
+        private static void SecurityStatusInfo_LockStateEvaluation()
+        {
+            var status = new SecurityStatusInfo();
+            Assert(!status.HasAnyLockActive, "fresh status has no locks");
+            Assert(!status.IsFullyLockedStandard, "fresh status is not fully locked standard");
+
+            var cfg = new SecurityConfig
+            {
+                blockUsbExecution = true,
+                blockDownloadsExecution = true,
+                blockPopularGames = true,
+                blockedExes = new List<string> { "game.exe" }
+            };
+
+            Assert(!status.IsFullyLockedForConfig(cfg), "unlocked status does not match full config");
+
+            // Partially locked: USB only
+            status.UsbBlocked = true;
+            Assert(status.HasAnyLockActive, "USB only is recognized as any lock active");
+            Assert(!status.IsFullyLockedForConfig(cfg), "USB only does not satisfy full config");
+
+            // Partially locked: USB + Downloads
+            status.DownloadsBlocked = true;
+            Assert(!status.IsFullyLockedForConfig(cfg), "USB + Downloads does not satisfy full config");
+
+            // Fully locked: USB + Downloads + Games with > 0 exes
+            status.DisallowRunActive = true;
+            status.DisallowedExesCount = 1;
+            Assert(status.HasAnyLockActive, "all active is any active");
+            Assert(status.IsFullyLockedStandard, "standard full lock satisfied");
+            Assert(status.IsFullyLockedForConfig(cfg), "full config satisfied");
+
+            // If config only wants USB, USB alone satisfies it
+            var usbOnlyCfg = new SecurityConfig { blockUsbExecution = true, blockDownloadsExecution = false, blockPopularGames = false };
+            var usbOnlyStatus = new SecurityStatusInfo { UsbBlocked = true };
+            Assert(usbOnlyStatus.IsFullyLockedForConfig(usbOnlyCfg), "USB only status satisfies USB only config");
+
+            // If config wants nothing, IsFullyLockedForConfig returns false
+            var emptyCfg = new SecurityConfig { blockUsbExecution = false, blockDownloadsExecution = false, blockPopularGames = false };
+            Assert(!usbOnlyStatus.IsFullyLockedForConfig(emptyCfg), "Empty config cannot be considered locked");
+        }
+
+        private static void I18n_SecurityLockButtons_Localized()
+        {
+            Localizer.SetLanguage("lo");
+            AreEqual("✓ ລັອກຮຽບຮ້ອຍ", Localizer.T("security_btn_locked"), "security_btn_locked in lo");
+            AreEqual("✓ ບໍ່ໄດ້ລັອກ", Localizer.T("security_btn_unlocked"), "security_btn_unlocked in lo");
+
+            Localizer.SetLanguage("en");
+            AreEqual("✓ Already Locked", Localizer.T("security_btn_locked"), "security_btn_locked in en");
+            AreEqual("✓ Unlocked", Localizer.T("security_btn_unlocked"), "security_btn_unlocked in en");
         }
     }
 }

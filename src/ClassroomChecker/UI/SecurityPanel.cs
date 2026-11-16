@@ -43,6 +43,7 @@ namespace ClassroomChecker.UI
         private Panel pnlBottom;
         private Label lblNote;
         private Button btnSaveConfig;
+        private bool _isLoadingConfig = false;
 
         public SecurityPanel()
         {
@@ -218,6 +219,10 @@ namespace ClassroomChecker.UI
                 AutoSize = true,
                 Cursor = Cursors.Hand
             };
+
+            chkBlockUsb.CheckedChanged += (s, e) => { if (!_isLoadingConfig) RefreshPolicyStatus(); };
+            chkBlockDownloads.CheckedChanged += (s, e) => { if (!_isLoadingConfig) RefreshPolicyStatus(); };
+            chkBlockPopularGames.CheckedChanged += (s, e) => { if (!_isLoadingConfig) RefreshPolicyStatus(); };
 
             grpPolicies.Controls.AddRange(new Control[] {
                 chkBlockUsb, chkBlockDownloads, chkBlockPopularGames
@@ -426,29 +431,37 @@ namespace ClassroomChecker.UI
 
         public void LoadFromConfig()
         {
-            var cfg = ConfigService.Instance.Current.security;
-            if (cfg == null) cfg = new SecurityConfig();
-
-            chkBlockUsb.Checked = cfg.blockUsbExecution;
-            chkBlockDownloads.Checked = cfg.blockDownloadsExecution;
-            chkBlockPopularGames.Checked = cfg.blockPopularGames;
-
-            lstBlockedExes.Items.Clear();
-            if (cfg.blockedExes != null)
+            _isLoadingConfig = true;
+            try
             {
-                foreach (var exe in cfg.blockedExes)
+                var cfg = ConfigService.Instance.Current.security;
+                if (cfg == null) cfg = new SecurityConfig();
+
+                chkBlockUsb.Checked = cfg.blockUsbExecution;
+                chkBlockDownloads.Checked = cfg.blockDownloadsExecution;
+                chkBlockPopularGames.Checked = cfg.blockPopularGames;
+
+                lstBlockedExes.Items.Clear();
+                if (cfg.blockedExes != null)
                 {
-                    if (!string.IsNullOrEmpty(exe)) lstBlockedExes.Items.Add(exe);
+                    foreach (var exe in cfg.blockedExes)
+                    {
+                        if (!string.IsNullOrEmpty(exe)) lstBlockedExes.Items.Add(exe);
+                    }
+                }
+
+                lstBlockedPaths.Items.Clear();
+                if (cfg.blockedPaths != null)
+                {
+                    foreach (var p in cfg.blockedPaths)
+                    {
+                        if (!string.IsNullOrEmpty(p)) lstBlockedPaths.Items.Add(p);
+                    }
                 }
             }
-
-            lstBlockedPaths.Items.Clear();
-            if (cfg.blockedPaths != null)
+            finally
             {
-                foreach (var p in cfg.blockedPaths)
-                {
-                    if (!string.IsNullOrEmpty(p)) lstBlockedPaths.Items.Add(p);
-                }
+                _isLoadingConfig = false;
             }
         }
 
@@ -480,33 +493,73 @@ namespace ClassroomChecker.UI
         {
             try
             {
-                bool usbBlocked = SecurityPolicyManager.IsUsbExecutionBlocked();
-                bool dlBlocked = SecurityPolicyManager.IsDownloadsExecutionBlocked();
-                bool disallowActive = SecurityPolicyManager.IsDisallowRunActive();
-                int disallowCount = SecurityPolicyManager.GetDisallowedExesCount();
+                var status = SecurityPolicyManager.GetCurrentStatus();
+                var currentSec = BuildCurrentConfigFromUi();
 
-                bool anyLocked = usbBlocked || dlBlocked || disallowActive;
-                bool fullLocked = usbBlocked && dlBlocked && disallowActive;
+                bool isFullyLocked = status.IsFullyLockedForConfig(currentSec) || status.IsFullyLockedStandard;
+                bool anyLocked = status.HasAnyLockActive;
 
-                if (fullLocked)
+                if (isFullyLocked && anyLocked)
                 {
                     pnlStatus.BackColor = Color.FromArgb(236, 253, 245);
                     lblStatusIcon.Text = "🛡️";
                     lblStatusDesc.ForeColor = Color.FromArgb(4, 120, 87);
                     lblStatusDesc.Text = Localizer.T("security_status_full_locked",
                         "🔒 ລະບົບປ້ອງກັນກຳລັງເຮັດວຽກ: USB, Downloads/Temp ແລະ ເກມຖືກບລັອກຮຽບຮ້ອຍແລ້ວ (Whitelisted ClassroomChecker)");
+
+                    // ປຸ່ມ 'ເປີດການລັອກ' ຈະປິດ (Disabled) ເພາະລັອກຄົບຖ້ວນແລ້ວ
+                    btnLockNow.Enabled = false;
+                    btnLockNow.Text = Localizer.T("security_btn_locked", "✓ ລັອກຮຽບຮ້ອຍ");
+                    btnLockNow.BackColor = Color.FromArgb(226, 232, 240);
+                    btnLockNow.ForeColor = Color.FromArgb(100, 116, 139);
+                    btnLockNow.Cursor = Cursors.Default;
+
+                    // ປຸ່ມ 'ປິດການລັອກ' ຈະເປີດ (Enabled) ພ້ອມໃຫ້ປົດລັອກ
+                    btnUnlockNow.Enabled = true;
+                    btnUnlockNow.Text = Localizer.T("settings_btn_unlock_now", "🔓 ປິດການລັອກ");
+                    btnUnlockNow.BackColor = Color.FromArgb(234, 88, 12);
+                    btnUnlockNow.ForeColor = Color.White;
+                    btnUnlockNow.Cursor = Cursors.Hand;
                 }
                 else if (anyLocked)
                 {
                     pnlStatus.BackColor = Color.FromArgb(254, 249, 195);
                     lblStatusIcon.Text = "⚠️";
                     lblStatusDesc.ForeColor = Color.FromArgb(161, 98, 7);
-                    lblStatusDesc.Text = string.Format(
-                        Localizer.T("security_status_partial", "⚠️ ເປີດລັອກບາງສ່ວນ: USB={0}, Downloads={1}, ເກມ={2} ({3} exes)"),
-                        usbBlocked ? "✓" : "✗",
-                        dlBlocked ? "✓" : "✗",
-                        disallowActive ? "✓" : "✗",
-                        disallowCount);
+
+                    if (status.CustomPathsCount > 0)
+                    {
+                        lblStatusDesc.Text = string.Format(
+                            Localizer.T("security_status_partial_folders", "⚠️ ເປີດລັອກບາງສ່ວນ: USB={0}, Downloads={1}, ເກມ={2} ({3} exes), ໂຟນເດີ={4}"),
+                            status.UsbBlocked ? "✓" : "✗",
+                            status.DownloadsBlocked ? "✓" : "✗",
+                            (status.DisallowRunActive && status.DisallowedExesCount > 0) ? "✓" : "✗",
+                            status.DisallowedExesCount,
+                            status.CustomPathsCount);
+                    }
+                    else
+                    {
+                        lblStatusDesc.Text = string.Format(
+                            Localizer.T("security_status_partial", "⚠️ ເປີດລັອກບາງສ່ວນ: USB={0}, Downloads={1}, ເກມ={2} ({3} exes)"),
+                            status.UsbBlocked ? "✓" : "✗",
+                            status.DownloadsBlocked ? "✓" : "✗",
+                            (status.DisallowRunActive && status.DisallowedExesCount > 0) ? "✓" : "✗",
+                            status.DisallowedExesCount);
+                    }
+
+                    // ປຸ່ມ 'ເປີດການລັອກ' ເປີດ (Enabled) ເພື່ອໃຫ້ລັອກສ່ວນທີ່ເຫຼືອ
+                    btnLockNow.Enabled = true;
+                    btnLockNow.Text = Localizer.T("settings_btn_lock_now", "🔒 ເປີດການລັອກ");
+                    btnLockNow.BackColor = Color.FromArgb(239, 68, 68);
+                    btnLockNow.ForeColor = Color.White;
+                    btnLockNow.Cursor = Cursors.Hand;
+
+                    // ປຸ່ມ 'ປິດການລັອກ' ເປີດ (Enabled) ເພື່ອໃຫ້ປົດລັອກໄດ້
+                    btnUnlockNow.Enabled = true;
+                    btnUnlockNow.Text = Localizer.T("settings_btn_unlock_now", "🔓 ປິດການລັອກ");
+                    btnUnlockNow.BackColor = Color.FromArgb(71, 85, 105);
+                    btnUnlockNow.ForeColor = Color.White;
+                    btnUnlockNow.Cursor = Cursors.Hand;
                 }
                 else
                 {
@@ -515,6 +568,20 @@ namespace ClassroomChecker.UI
                     lblStatusDesc.ForeColor = Color.FromArgb(185, 28, 28);
                     lblStatusDesc.Text = Localizer.T("security_status_unlocked",
                         "⚠️ ຍັງບໍ່ໄດ້ເປີດການລັອກ: ນັກຮຽນຍັງສາມາດ Run ເກມ ຫຼື ໂປຣແກຣມຈາກ USB ແລະ Downloads ໄດ້");
+
+                    // ປຸ່ມ 'ເປີດການລັອກ' ເປີດ (Enabled) ພ້ອມໃຫ້ກົດລັອກ
+                    btnLockNow.Enabled = true;
+                    btnLockNow.Text = Localizer.T("settings_btn_lock_now", "🔒 ເປີດການລັອກ");
+                    btnLockNow.BackColor = Color.FromArgb(239, 68, 68);
+                    btnLockNow.ForeColor = Color.White;
+                    btnLockNow.Cursor = Cursors.Hand;
+
+                    // ປຸ່ມ 'ປິດການລັອກ' ປິດ (Disabled) ເພາະຍັງບໍ່ມີຫຍັງຖືກລັອກ
+                    btnUnlockNow.Enabled = false;
+                    btnUnlockNow.Text = Localizer.T("security_btn_unlocked", "✓ ບໍ່ໄດ້ລັອກ");
+                    btnUnlockNow.BackColor = Color.FromArgb(226, 232, 240);
+                    btnUnlockNow.ForeColor = Color.FromArgb(148, 163, 184);
+                    btnUnlockNow.Cursor = Cursors.Default;
                 }
 
                 pnlStatus.Invalidate();
@@ -523,6 +590,30 @@ namespace ClassroomChecker.UI
             {
                 lblStatusDesc.Text = "Error: " + ex.Message;
             }
+        }
+
+        private SecurityConfig BuildCurrentConfigFromUi()
+        {
+            var cfg = new SecurityConfig
+            {
+                blockUsbExecution = chkBlockUsb.Checked,
+                blockDownloadsExecution = chkBlockDownloads.Checked,
+                blockPopularGames = chkBlockPopularGames.Checked,
+                blockedExes = new List<string>(),
+                blockedPaths = new List<string>()
+            };
+
+            foreach (var item in lstBlockedExes.Items)
+            {
+                cfg.blockedExes.Add(item.ToString());
+            }
+
+            foreach (var item in lstBlockedPaths.Items)
+            {
+                cfg.blockedPaths.Add(item.ToString());
+            }
+
+            return cfg;
         }
 
         private void btnAddExe_Click(object sender, EventArgs e)
@@ -555,6 +646,7 @@ namespace ClassroomChecker.UI
 
             lstBlockedExes.Items.Add(exeName);
             lstBlockedExes.SelectedItem = exeName;
+            RefreshPolicyStatus();
         }
 
         private void btnDeleteExe_Click(object sender, EventArgs e)
@@ -566,6 +658,7 @@ namespace ClassroomChecker.UI
             {
                 lstBlockedExes.SelectedIndex = Math.Min(idx, lstBlockedExes.Items.Count - 1);
             }
+            RefreshPolicyStatus();
         }
 
         private void btnBrowseFolder_Click(object sender, EventArgs e)
@@ -590,6 +683,7 @@ namespace ClassroomChecker.UI
 
                     lstBlockedPaths.Items.Add(path);
                     lstBlockedPaths.SelectedItem = path;
+                    RefreshPolicyStatus();
                 }
             }
         }
@@ -603,6 +697,7 @@ namespace ClassroomChecker.UI
             {
                 lstBlockedPaths.SelectedIndex = Math.Min(idx, lstBlockedPaths.Items.Count - 1);
             }
+            RefreshPolicyStatus();
         }
 
         private void btnLockNow_Click(object sender, EventArgs e)

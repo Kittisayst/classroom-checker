@@ -8,6 +8,66 @@ using ClassroomChecker.Config;
 namespace ClassroomChecker.Core
 {
     /// <summary>
+    /// ຂໍ້ມູນສະຖານະການລັອກລະບົບໃນປະຈຸບັນ ທີ່ກວດສອບຈາກ Windows Registry ໂດຍກົງ
+    /// </summary>
+    public class SecurityStatusInfo
+    {
+        public bool UsbBlocked { get; set; }
+        public bool DownloadsBlocked { get; set; }
+        public bool DisallowRunActive { get; set; }
+        public int DisallowedExesCount { get; set; }
+        public int CustomPathsCount { get; set; }
+
+        /// <summary>
+        /// ມີນະໂຍບາຍລັອກໃດໜຶ່ງເປີດເຮັດວຽກຢູ່ແລ້ວໃນ Windows ຫຼື ບໍ່
+        /// </summary>
+        public bool HasAnyLockActive
+        {
+            get
+            {
+                return UsbBlocked || DownloadsBlocked || (DisallowRunActive && DisallowedExesCount > 0) || CustomPathsCount > 0;
+            }
+        }
+
+        /// <summary>
+        /// ທຸກນະໂຍບາຍຫຼັກ (USB, Downloads, Games) ຖືກລັອກຄົບຖ້ວນທັງໝົດແລ້ວ ຫຼື ບໍ່
+        /// </summary>
+        public bool IsFullyLockedStandard
+        {
+            get
+            {
+                return UsbBlocked && DownloadsBlocked && DisallowRunActive && DisallowedExesCount > 0;
+            }
+        }
+
+        /// <summary>
+        /// ທຸກນະໂຍບາຍທີ່ເລືອກໄວ້ໃນ SecurityConfig ໄດ້ຖືກນຳໃຊ້ລັອກຄົບຖ້ວນແລ້ວ ຫຼື ບໍ່
+        /// </summary>
+        public bool IsFullyLockedForConfig(SecurityConfig config)
+        {
+            if (config == null) return false;
+
+            bool wantUsb = config.blockUsbExecution;
+            bool wantDownloads = config.blockDownloadsExecution;
+            bool wantGames = config.blockPopularGames && config.blockedExes != null && config.blockedExes.Count > 0;
+            bool wantPaths = config.blockedPaths != null && config.blockedPaths.Count > 0;
+
+            // ຖ້າບໍ່ມີການເລືອກນະໂຍບາຍໃດເລີຍໃນ config
+            if (!wantUsb && !wantDownloads && !wantGames && !wantPaths)
+            {
+                return false;
+            }
+
+            if (wantUsb && !UsbBlocked) return false;
+            if (wantDownloads && !DownloadsBlocked) return false;
+            if (wantGames && (!DisallowRunActive || DisallowedExesCount == 0)) return false;
+            if (wantPaths && CustomPathsCount == 0) return false;
+
+            return true;
+        }
+    }
+
+    /// <summary>
     /// ຈັດການນະໂຍບາຍຄວາມປອດໄພຂອງ Windows (Security Policies) ຜ່ານ Registry
     /// - ຫ້າມ Run exe ຈາກ USB Flash Drive ໂດຍຍົກເວັ້ນ (Whitelist) ClassroomChecker.exe
     /// - ຫ້າມ Run exe ຈາກ Downloads ແລະ Temp ແລະ Folders ທີ່ກຳນົດ (Safer Path Rules)
@@ -299,6 +359,47 @@ namespace ClassroomChecker.Core
             catch { }
 
             return false;
+        }
+
+        public static int GetCustomBlockedPathsCount()
+        {
+            int count = 0;
+            try
+            {
+                using (var pathsKey = Registry.LocalMachine.OpenSubKey(REG_PATH_SAFER_PATHS, false))
+                {
+                    if (pathsKey != null)
+                    {
+                        foreach (var sk in pathsKey.GetSubKeyNames())
+                        {
+                            if (sk.StartsWith(SAFER_GUID_PATH_PREFIX, StringComparison.OrdinalIgnoreCase)
+                                && !sk.Equals(SAFER_GUID_DOWNLOADS, StringComparison.OrdinalIgnoreCase)
+                                && !sk.Equals(SAFER_GUID_TEMP, StringComparison.OrdinalIgnoreCase)
+                                && !sk.Equals(SAFER_GUID_LOCAL_TEMP, StringComparison.OrdinalIgnoreCase))
+                            {
+                                count++;
+                            }
+                        }
+                    }
+                }
+            }
+            catch { }
+            return count;
+        }
+
+        /// <summary>
+        /// ກວດສອບສະຖານະການລັອກຂອງລະບົບໃນປະຈຸບັນ ຈາກ Registry ທັງໝົດ
+        /// </summary>
+        public static SecurityStatusInfo GetCurrentStatus()
+        {
+            return new SecurityStatusInfo
+            {
+                UsbBlocked = IsUsbExecutionBlocked(),
+                DownloadsBlocked = IsDownloadsExecutionBlocked(),
+                DisallowRunActive = IsDisallowRunActive(),
+                DisallowedExesCount = GetDisallowedExesCount(),
+                CustomPathsCount = GetCustomBlockedPathsCount()
+            };
         }
 
         public static bool SetDownloadsExecutionBlocked(bool block, IEnumerable<string> additionalPaths = null)
@@ -623,6 +724,10 @@ namespace ClassroomChecker.Core
             bool r1 = SetUsbExecutionBlocked(false);
             bool r2 = SetDownloadsExecutionBlocked(false, null);
             bool r3 = SetDisallowedExes(false, null);
+
+            // ລຶບ ClassroomChecker Safer rules ແລະ Whitelist ທັງໝົດອອກໃຫ້ສະອາດ 100%
+            DeleteAllClassroomCheckerSaferRules();
+            ClearLegacyRemovableStorageDeny();
 
             logDetails.Add("USB Execution Lock & Whitelist: REMOVED");
             logDetails.Add("Downloads/Temp & Folder Safer Rules: REMOVED");

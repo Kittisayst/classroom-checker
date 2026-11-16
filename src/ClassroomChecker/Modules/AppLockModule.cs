@@ -34,26 +34,31 @@ namespace ClassroomChecker.Modules
 
             try
             {
-                bool usbBlocked = SecurityPolicyManager.IsUsbExecutionBlocked();
-                bool dlBlocked = SecurityPolicyManager.IsDownloadsExecutionBlocked();
-                bool disallowActive = SecurityPolicyManager.IsDisallowRunActive();
-                int disallowCount = SecurityPolicyManager.GetDisallowedExesCount();
+                var status = SecurityPolicyManager.GetCurrentStatus();
 
-                details.Add("USB Execution Lock (ClassroomChecker Whitelisted): " + (usbBlocked ? "LOCKED (✓)" : "UNLOCKED (✗)"));
-                details.Add("Downloads & Temp Safer: " + (dlBlocked ? "LOCKED (✓)" : "UNLOCKED (✗)"));
-                details.Add(string.Format("DisallowRun App Lock: {0} ({1} exes)", disallowActive ? "LOCKED (✓)" : "UNLOCKED (✗)", disallowCount));
+                details.Add("USB Execution Lock (ClassroomChecker Whitelisted): " + (status.UsbBlocked ? "LOCKED (✓)" : "UNLOCKED (✗)"));
+                details.Add("Downloads & Temp Safer: " + (status.DownloadsBlocked ? "LOCKED (✓)" : "UNLOCKED (✗)"));
+                details.Add(string.Format("DisallowRun App Lock: {0} ({1} exes)", (status.DisallowRunActive && status.DisallowedExesCount > 0) ? "LOCKED (✓)" : "UNLOCKED (✗)", status.DisallowedExesCount));
+                if (status.CustomPathsCount > 0)
+                {
+                    details.Add(string.Format("Custom Blocked Folders: LOCKED ({0} folders)", status.CustomPathsCount));
+                }
 
-                // ກວດທຽບກັບ Config ທີ່ຜູ້ໃຊ້ຕັ້ງໄວ້
-                bool allPass = true;
-                if (cfg.blockUsbExecution && !usbBlocked) allPass = false;
-                if (cfg.blockDownloadsExecution && !dlBlocked) allPass = false;
-                if (cfg.blockPopularGames && (!disallowActive || disallowCount == 0)) allPass = false;
+                bool isFullyLocked = status.IsFullyLockedForConfig(cfg) || status.IsFullyLockedStandard;
+                bool anyLocked = status.HasAnyLockActive;
 
-                if (allPass)
+                if (isFullyLocked && anyLocked)
                 {
                     return new CheckResult(
                         CheckStatus.Pass,
                         "ເປີດລະບົບລັອກໂປຣແກຣມ, USB ແລະ ເກມແລ້ວ (Protected)",
+                        details);
+                }
+                else if (anyLocked)
+                {
+                    return new CheckResult(
+                        CheckStatus.Warning,
+                        "ເປີດລະບົບລັອກບາງສ່ວນ (ຍັງລັອກບໍ່ຄົບຕາມການຕັ້ງຄ່າ)",
                         details);
                 }
                 else
