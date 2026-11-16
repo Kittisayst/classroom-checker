@@ -47,6 +47,36 @@ namespace ClassroomChecker.Config
         }
     }
 
+    /// <summary>
+    /// ຕັ້ງຄ່າໜ້າ Lock Screen / Welcome (Sign-in) ແລະ ນະໂຍບາຍທີ່ນຳໃຊ້ພ້ອມກັບປຸ່ມ "ກຳນົດພື້ນຫຼັງ"
+    /// </summary>
+    public class LogonScreenConfig
+    {
+        /// <summary>ໃຊ້ຮູບ wallpaper ດຽວກັນເປັນໜ້າ Lock Screen ແລະ ໜ້າ Welcome</summary>
+        public bool setLockScreen { get; set; }
+
+        /// <summary>ປິດການເຮັດຮູບມົວ (blur) ໃນໜ້າ Welcome ຂອງ Windows 10/11</summary>
+        public bool disableLogonBlur { get; set; }
+
+        /// <summary>ຫ້າມນັກຮຽນປ່ຽນຮູບພື້ນຫຼັງ Desktop</summary>
+        public bool preventWallpaperChange { get; set; }
+
+        /// <summary>ສະແດງຂໍ້ຄວາມກ່ອນ Login (Legal Notice) ທີ່ຕ້ອງກົດ OK ກ່ອນເຂົ້າລະບົບ</summary>
+        public bool showLogonNotice { get; set; }
+        public string noticeTitle { get; set; }
+        public string noticeText { get; set; }
+
+        public LogonScreenConfig()
+        {
+            setLockScreen = true;
+            disableLogonBlur = true;
+            preventWallpaperChange = true;
+            showLogonNotice = false;
+            noticeTitle = "ກົດລະບຽບຫ້ອງຄອມພິວເຕີ";
+            noticeText = "1. ຫ້າມຫຼິ້ນເກມ ແລະ ຫ້າມຕິດຕັ້ງໂປຣແກຣມ\n2. ຫ້າມປ່ຽນການຕັ້ງຄ່າເຄື່ອງ\n3. ບັນທຶກວຽກໄວ້ໃນ USB ຂອງຕົນເອງ\n4. Log off ທຸກຄັ້ງຫຼັງໃຊ້ງານ";
+        }
+    }
+
     public class LabelConfig
     {
         public string template { get; set; }
@@ -126,6 +156,7 @@ namespace ClassroomChecker.Config
         public RangeConfig computerNumberRange { get; set; }
         public SelectedConfig selected { get; set; }
         public BackgroundConfig background { get; set; }
+        public LogonScreenConfig logonScreen { get; set; }
         public LabelConfig label { get; set; }
         public List<string> requiredFonts { get; set; }
         public CleanupConfig cleanup { get; set; }
@@ -149,6 +180,7 @@ namespace ClassroomChecker.Config
             computerNumberRange = new RangeConfig();
             selected = new SelectedConfig();
             background = new BackgroundConfig();
+            logonScreen = new LogonScreenConfig();
             label = new LabelConfig();
             requiredFonts = new List<string> { "Phetsarath OT" };
             cleanup = new CleanupConfig();

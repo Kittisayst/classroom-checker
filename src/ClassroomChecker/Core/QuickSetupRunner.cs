@@ -66,7 +66,8 @@ namespace ClassroomChecker.Core
                     bool wpOk = WallpaperModule.Instance.ApplyWallpaper(room, number, out appliedPath, out errMsg);
                     if (wpOk)
                     {
-                        Notify(1, totalSteps, step1Name, true, true, "Wallpaper applied: " + Path.GetFileName(appliedPath));
+                        Notify(1, totalSteps, step1Name, true, true, "Wallpaper applied: " + Path.GetFileName(appliedPath)
+                            + WallpaperModule.Instance.LastAllUsersNote);
                     }
                     else
                     {

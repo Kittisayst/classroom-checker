@@ -15,6 +15,7 @@ namespace ClassroomChecker.UI
         private TabControl tabControl;
         private TabPage tabGeneral;
         private TabPage tabWallpaper;
+        private TabPage tabLogon;
         private TabPage tabCleanup;
         private TabPage tabSecurity;
 
@@ -38,6 +39,14 @@ namespace ClassroomChecker.UI
         private NumericUpDown numMargin;
         private ComboBox cmbStyle;
         private CheckBox chkApplyAllUsers;
+
+        // Lock / Welcome screen
+        private CheckBox chkSetLockScreen;
+        private CheckBox chkDisableLogonBlur;
+        private CheckBox chkPreventWallpaperChange;
+        private CheckBox chkShowLogonNotice;
+        private TextBox txtNoticeTitle;
+        private TextBox txtNoticeText;
 
         // Cleanup
         private CheckBox chkUserTemp;
@@ -298,6 +307,65 @@ namespace ClassroomChecker.UI
             tabWallpaper.Controls.AddRange(new Control[] { grpLabel, grpWp });
 
             // -----------------------------------------------------------------
+            // Tab 2b: Lock / Welcome Screen & Logon Notice
+            // -----------------------------------------------------------------
+            tabLogon = new TabPage(Localizer.T("settings_tab_logon"))
+            {
+                BackColor = Color.White,
+                Padding = new Padding(16)
+            };
+
+            GroupBox grpScreen = new GroupBox
+            {
+                Text = Localizer.T("settings_grp_logon_screen"),
+                Location = new Point(16, 12),
+                Size = new Size(640, 128)
+            };
+            chkSetLockScreen = new CheckBox { Text = Localizer.T("settings_set_lock_screen"), Location = new Point(20, 28), AutoSize = true };
+            chkDisableLogonBlur = new CheckBox { Text = Localizer.T("settings_disable_logon_blur"), Location = new Point(20, 58), AutoSize = true };
+            chkPreventWallpaperChange = new CheckBox { Text = Localizer.T("settings_prevent_wallpaper_change"), Location = new Point(20, 88), AutoSize = true };
+            grpScreen.Controls.AddRange(new Control[] { chkSetLockScreen, chkDisableLogonBlur, chkPreventWallpaperChange });
+
+            GroupBox grpNotice = new GroupBox
+            {
+                Text = Localizer.T("settings_grp_logon_notice"),
+                Location = new Point(16, 150),
+                Size = new Size(640, 222)
+            };
+            chkShowLogonNotice = new CheckBox { Text = Localizer.T("settings_show_logon_notice"), Location = new Point(20, 26), AutoSize = true };
+            Label lblNoticeTitle = new Label { Text = Localizer.T("settings_notice_title"), Location = new Point(20, 60), AutoSize = true };
+            txtNoticeTitle = new TextBox
+            {
+                Location = new Point(150, 57),
+                Size = new Size(470, 25)
+            };
+            Label lblNoticeText = new Label { Text = Localizer.T("settings_notice_text"), Location = new Point(20, 94), AutoSize = true };
+            txtNoticeText = new TextBox
+            {
+                Location = new Point(150, 91),
+                Size = new Size(470, 118),
+                Multiline = true,
+                AcceptsReturn = true,
+                ScrollBars = ScrollBars.Vertical
+            };
+            chkShowLogonNotice.CheckedChanged += (s, e) =>
+            {
+                txtNoticeTitle.Enabled = chkShowLogonNotice.Checked;
+                txtNoticeText.Enabled = chkShowLogonNotice.Checked;
+            };
+            grpNotice.Controls.AddRange(new Control[] { chkShowLogonNotice, lblNoticeTitle, txtNoticeTitle, lblNoticeText, txtNoticeText });
+
+            Label lblLogonHint = new Label
+            {
+                Text = Localizer.T("settings_logon_hint"),
+                Location = new Point(16, 378),
+                Size = new Size(640, 36),
+                ForeColor = Color.FromArgb(100, 116, 139)
+            };
+
+            tabLogon.Controls.AddRange(new Control[] { grpScreen, grpNotice, lblLogonHint });
+
+            // -----------------------------------------------------------------
             // Tab 3: Cleanup & System
             // -----------------------------------------------------------------
             tabCleanup = new TabPage(Localizer.T("settings_tab_cleanup"))
@@ -514,7 +582,7 @@ namespace ClassroomChecker.UI
             tabSecurity.Controls.AddRange(new Control[] { grpSec, grpExes, grpPaths, grpActions });
 
             // Add Tabs
-            tabControl.TabPages.AddRange(new TabPage[] { tabGeneral, tabWallpaper, tabCleanup, tabSecurity });
+            tabControl.TabPages.AddRange(new TabPage[] { tabGeneral, tabWallpaper, tabLogon, tabCleanup, tabSecurity });
 
             // -----------------------------------------------------------------
             // Bottom Panel: Save & Cancel
@@ -633,6 +701,17 @@ namespace ClassroomChecker.UI
             cmbStyle.SelectedIndex = styleIdx >= 0 ? styleIdx : 0;
 
             chkApplyAllUsers.Checked = cfg.background != null && cfg.background.applyToAllUsers;
+
+            // Lock / Welcome screen
+            var logon = cfg.logonScreen ?? new LogonScreenConfig();
+            chkSetLockScreen.Checked = logon.setLockScreen;
+            chkDisableLogonBlur.Checked = logon.disableLogonBlur;
+            chkPreventWallpaperChange.Checked = logon.preventWallpaperChange;
+            chkShowLogonNotice.Checked = logon.showLogonNotice;
+            txtNoticeTitle.Text = logon.noticeTitle ?? string.Empty;
+            txtNoticeText.Text = (logon.noticeText ?? string.Empty).Replace("\r\n", "\n").Replace("\n", "\r\n");
+            txtNoticeTitle.Enabled = logon.showLogonNotice;
+            txtNoticeText.Enabled = logon.showLogonNotice;
 
             // Cleanup
             if (cfg.cleanup != null)
@@ -840,6 +919,12 @@ namespace ClassroomChecker.UI
                 return;
             }
 
+            if (chkShowLogonNotice.Checked && string.IsNullOrWhiteSpace(txtNoticeText.Text))
+            {
+                MessageBox.Show(Localizer.T("settings_validation_notice_empty"), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             if (lstRooms.Items.Count == 0)
             {
                 MessageBox.Show(Localizer.T("settings_validation_rooms_empty"), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -879,6 +964,14 @@ namespace ClassroomChecker.UI
                 : "fill";
 
             cfg.background.applyToAllUsers = chkApplyAllUsers.Checked;
+
+            if (cfg.logonScreen == null) cfg.logonScreen = new LogonScreenConfig();
+            cfg.logonScreen.setLockScreen = chkSetLockScreen.Checked;
+            cfg.logonScreen.disableLogonBlur = chkDisableLogonBlur.Checked;
+            cfg.logonScreen.preventWallpaperChange = chkPreventWallpaperChange.Checked;
+            cfg.logonScreen.showLogonNotice = chkShowLogonNotice.Checked;
+            cfg.logonScreen.noticeTitle = txtNoticeTitle.Text.Trim();
+            cfg.logonScreen.noticeText = txtNoticeText.Text.Replace("\r\n", "\n").Trim();
 
             cfg.cleanup.userTemp = chkUserTemp.Checked;
             cfg.cleanup.windowsTemp = chkWindowsTemp.Checked;

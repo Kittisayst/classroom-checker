@@ -63,6 +63,9 @@ namespace ClassroomChecker.Tests
             Run("ComputerNameService: name generation, sanitization and validation contract", ComputerNameService_Contract);
             Run("ComputerNameModule: metadata and check result contract", ComputerNameModule_MetadataAndContract);
             Run("EssentialSoftware: required list is PDF, LaoScript 8, VLC, 7-Zip", EssentialSoftware_RequiredList);
+            Run("LogonScreen: config defaults and notice text normalization", LogonScreen_ConfigAndNotice);
+            Run("LogonScreen: lock screen file naming and cleanup of old files", LogonScreen_LockScreenFiles);
+            Run("I18n: logon screen keys localized in lo and en", I18n_LogonScreen_Localized);
 
             Cleanup();
 
@@ -826,6 +829,63 @@ namespace ClassroomChecker.Tests
             Assert(res != null, "CheckResult non-null");
             Assert(res.Status == CheckStatus.Pass || res.Status == CheckStatus.Warning, "Valid status");
             Assert(res.Details != null && res.Details.Count >= 2, "Details contains hostname info");
+        }
+
+        private static void LogonScreen_ConfigAndNotice()
+        {
+            var cfg = new AppConfig();
+            Assert(cfg.logonScreen != null, "logonScreen section exists by default");
+            Assert(cfg.logonScreen.setLockScreen && cfg.logonScreen.disableLogonBlur && cfg.logonScreen.preventWallpaperChange,
+                "Lock screen, no-blur and wallpaper lock on by default");
+            Assert(!cfg.logonScreen.showLogonNotice, "Logon notice off by default (needs teacher's text)");
+            Assert(!string.IsNullOrEmpty(cfg.logonScreen.noticeText), "Default notice text provided");
+
+            Assert(LogonScreenService.NormalizeNoticeText("a\nb\r\nc\rd") == "a\r\nb\r\nc\r\nd", "Line breaks normalized to CRLF");
+            Assert(LogonScreenService.NormalizeNoticeText(null) == "", "Null text -> empty");
+            Assert(LogonScreenService.NormalizeNoticeText("  ກົດລະບຽບ \n") == "ກົດລະບຽບ", "Lao text kept and trimmed");
+        }
+
+        private static void LogonScreen_LockScreenFiles()
+        {
+            string name = LogonScreenService.BuildLockScreenFileName(new DateTime(2026, 11, 16, 9, 5, 7));
+            Assert(name == "lockscreen_20261116_090507.png", "File name contains timestamp: " + name);
+
+            string dir = Path.Combine(Path.GetTempPath(), "cc_lock_test_" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(dir);
+            try
+            {
+                string oldFile = Path.Combine(dir, "lockscreen_20200101_000000.png");
+                string keep = Path.Combine(dir, name);
+                string wallpaper = Path.Combine(dir, "wallpaper.png");
+                File.WriteAllText(oldFile, "x");
+                File.WriteAllText(keep, "x");
+                File.WriteAllText(wallpaper, "x");
+
+                LogonScreenService.DeleteOldLockScreenFiles(dir, keep);
+
+                Assert(!File.Exists(oldFile), "Old lock screen file deleted");
+                Assert(File.Exists(keep), "Current lock screen file kept");
+                Assert(File.Exists(wallpaper), "Wallpaper file untouched");
+            }
+            finally
+            {
+                try { Directory.Delete(dir, true); } catch { }
+            }
+        }
+
+        private static void I18n_LogonScreen_Localized()
+        {
+            string[] keys = { "settings_tab_logon", "settings_set_lock_screen", "settings_disable_logon_blur",
+                "settings_prevent_wallpaper_change", "settings_show_logon_notice", "settings_validation_notice_empty" };
+            foreach (string lang in new[] { "lo", "en" })
+            {
+                Localizer.SetLanguage(lang);
+                foreach (string k in keys)
+                {
+                    Assert(Localizer.T(k) != k, lang + " has " + k);
+                }
+            }
+            Localizer.SetLanguage("lo");
         }
 
         private static void EssentialSoftware_RequiredList()

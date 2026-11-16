@@ -242,6 +242,10 @@ namespace ClassroomChecker.Config
             {
                 cfg.label = new LabelConfig();
             }
+            if (cfg.logonScreen == null)
+            {
+                cfg.logonScreen = new LogonScreenConfig();
+            }
             if (cfg.cleanup == null)
             {
                 cfg.cleanup = new CleanupConfig();

@@ -156,6 +156,13 @@ namespace ClassroomChecker.Modules
                         foreach (string d in allUsersDetails) ClassroomChecker.Core.ReportService.Log("  " + d);
                     }
 
+                    // ໜ້າ Lock / Welcome, ລັອກການປ່ຽນພື້ນຫຼັງ ແລະ ຂໍ້ຄວາມກ່ອນ Login (config logonScreen)
+                    foreach (string note in ClassroomChecker.Core.LogonScreenService.Apply(appliedPath, ConfigService.Instance.Current.logonScreen))
+                    {
+                        LastAllUsersNote += "\n" + note;
+                        ClassroomChecker.Core.ReportService.Log(note);
+                    }
+
                     // ອັບເດດ selected ລົງ config
                     ConfigService.Instance.Current.selected.room = room;
                     ConfigService.Instance.Current.selected.number = number;

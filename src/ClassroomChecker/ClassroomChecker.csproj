@@ -64,6 +64,7 @@
     <Compile Include="Core\SecurityPolicyManager.cs" />
     <Compile Include="Core\DateTimeService.cs" />
     <Compile Include="Core\DesktopIconService.cs" />
+    <Compile Include="Core\LogonScreenService.cs" />
     <Compile Include="Core\ComputerNameService.cs" />
     <Compile Include="Core\UsbVirusCleanerService.cs" />
     <Compile Include="Core\SoftwarePackage.cs" />
