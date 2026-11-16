@@ -51,7 +51,7 @@ namespace ClassroomChecker.Core
         {
             return await Task.Run(() =>
             {
-                int totalSteps = 10;
+                int totalSteps = 11;
                 bool allSuccessful = true;
 
                 // -----------------------------------------------------------------
@@ -254,14 +254,33 @@ namespace ClassroomChecker.Core
                 }
 
                 // -----------------------------------------------------------------
-                // ຂັ້ນຕອນທີ 10: ປ່ຽນຊື່ຄອມພິວເຕີ (Computer Name / Hostname)
+                // ຂັ້ນຕອນທີ 10: ໂໝດເຄື່ອງສະເປັກຕ່ຳ (ສະເພາະເຄື່ອງ RAM ນ້ອຍ ຕາມຕັ້ງຄ່າ)
+                // -----------------------------------------------------------------
+                string stepPerfName = Localizer.T("quick_setup_step_performance");
+                Notify(10, totalSteps, stepPerfName, false, false);
+
+                try
+                {
+                    var perfRes = new PerformanceModule().Fix();
+                    bool perfOk = perfRes != null && perfRes.Status == CheckStatus.Pass;
+                    Notify(10, totalSteps, stepPerfName, true, perfOk, perfRes != null ? perfRes.Summary : "");
+                    if (!perfOk) allSuccessful = false;
+                }
+                catch (Exception ex)
+                {
+                    allSuccessful = false;
+                    Notify(10, totalSteps, stepPerfName, true, false, ex.Message);
+                }
+
+                // -----------------------------------------------------------------
+                // ຂັ້ນຕອນທີ 11: ປ່ຽນຊື່ຄອມພິວເຕີ (Computer Name / Hostname)
                 // -----------------------------------------------------------------
                 string targetHost = !string.IsNullOrEmpty(computerName)
                     ? computerName.Trim().ToUpperInvariant()
                     : ComputerNameService.GenerateDefaultName(room, number);
 
                 string step10Name = Localizer.T("quick_setup_step_rename", targetHost);
-                Notify(10, totalSteps, step10Name, false, false);
+                Notify(11, totalSteps, step10Name, false, false);
 
                 try
                 {
@@ -282,18 +301,18 @@ namespace ClassroomChecker.Core
                             renameOk = userOk;
                         }
 
-                        Notify(10, totalSteps, step10Name, true, renameOk, renameMsg);
+                        Notify(11, totalSteps, step10Name, true, renameOk, renameMsg);
                         if (!renameOk) allSuccessful = false;
                     }
                     else
                     {
-                        Notify(10, totalSteps, step10Name, true, true, "ຂ້າມການປ່ຽນຊື່ເຄື່ອງ (Skipped)");
+                        Notify(11, totalSteps, step10Name, true, true, "ຂ້າມການປ່ຽນຊື່ເຄື່ອງ (Skipped)");
                     }
                 }
                 catch (Exception ex)
                 {
                     allSuccessful = false;
-                    Notify(10, totalSteps, step10Name, true, false, ex.Message);
+                    Notify(11, totalSteps, step10Name, true, false, ex.Message);
                 }
 
                 // -----------------------------------------------------------------

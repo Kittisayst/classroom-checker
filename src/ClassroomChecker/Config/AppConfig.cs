@@ -93,6 +93,20 @@ namespace ClassroomChecker.Config
         }
     }
 
+    /// <summary>ໂໝດເຄື່ອງສະເປັກຕ່ຳ (ປິດສ່ວນທີ່ບໍ່ຈຳເປັນຂອງ Windows)</summary>
+    public class PerformanceConfig
+    {
+        /// <summary>"auto" = ສະເພາະເຄື່ອງ RAM ≤ autoMaxRamGb, "on" = ທຸກເຄື່ອງ, "off" = ບໍ່ໃຊ້</summary>
+        public string mode { get; set; }
+        public int autoMaxRamGb { get; set; }
+
+        public PerformanceConfig()
+        {
+            mode = "auto";
+            autoMaxRamGb = 4;
+        }
+    }
+
     public class LabelConfig
     {
         public string template { get; set; }
@@ -174,6 +188,7 @@ namespace ClassroomChecker.Config
         public BackgroundConfig background { get; set; }
         public LogonScreenConfig logonScreen { get; set; }
         public DateTimeConfig dateTime { get; set; }
+        public PerformanceConfig performance { get; set; }
         public LabelConfig label { get; set; }
         public List<string> requiredFonts { get; set; }
         public CleanupConfig cleanup { get; set; }
@@ -205,6 +220,7 @@ namespace ClassroomChecker.Config
             background = new BackgroundConfig();
             logonScreen = new LogonScreenConfig();
             dateTime = new DateTimeConfig();
+            performance = new PerformanceConfig();
             label = new LabelConfig();
             requiredFonts = new List<string> { "Phetsarath OT" };
             cleanup = new CleanupConfig();

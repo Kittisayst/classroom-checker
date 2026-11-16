@@ -45,6 +45,11 @@ namespace ClassroomChecker.UI
         private TextBox txtUserPrefix;
         private Label lblUserPreview;
 
+        // Low-spec performance mode
+        private ComboBox cmbPerfMode;
+        private Button btnPerfRestore;
+        private static readonly string[] PerfModes = { "auto", "on", "off" };
+
         // Date & Time
         private ComboBox cmbDateFormat;
         private RadioButton rbTime24;
@@ -550,7 +555,37 @@ namespace ClassroomChecker.UI
 
             grpConfigMgmt.Controls.AddRange(new Control[] { btnOpenConfig, btnResetDefaults });
 
-            tabCleanup.Controls.AddRange(new Control[] { grpCleanup, grpConfigMgmt });
+            // Group: ໂໝດເຄື່ອງສະເປັກຕ່ຳ
+            GroupBox grpPerf = new GroupBox
+            {
+                Text = Localizer.T("settings_grp_performance"),
+                Location = new Point(16, 338),
+                Size = new Size(655, 92)
+            };
+            Label lblPerfMode = new Label { Text = Localizer.T("settings_performance_mode"), Location = new Point(20, 28), AutoSize = true };
+            cmbPerfMode = new ComboBox
+            {
+                Location = new Point(190, 25),
+                Size = new Size(440, 25),
+                DropDownStyle = ComboBoxStyle.DropDownList
+            };
+            cmbPerfMode.Items.AddRange(new object[]
+            {
+                Localizer.T("settings_performance_auto"),
+                Localizer.T("settings_performance_on"),
+                Localizer.T("settings_performance_off")
+            });
+            btnPerfRestore = new Button
+            {
+                Text = Localizer.T("settings_performance_restore"),
+                Location = new Point(190, 58),
+                Size = new Size(250, 28),
+                Cursor = Cursors.Hand
+            };
+            btnPerfRestore.Click += btnPerfRestore_Click;
+            grpPerf.Controls.AddRange(new Control[] { lblPerfMode, cmbPerfMode, btnPerfRestore });
+
+            tabCleanup.Controls.AddRange(new Control[] { grpCleanup, grpConfigMgmt, grpPerf });
 
             // -----------------------------------------------------------------
             // Tab 4: Security & App/Game Lock
@@ -838,6 +873,12 @@ namespace ClassroomChecker.UI
 
             chkApplyAllUsers.Checked = cfg.background != null && cfg.background.applyToAllUsers;
 
+            // Low-spec performance mode
+            var perf = cfg.performance ?? new PerformanceConfig();
+            int perfIdx = Array.IndexOf(PerfModes, (perf.mode ?? "auto").ToLowerInvariant());
+            cmbPerfMode.SelectedIndex = perfIdx >= 0 ? perfIdx : 0;
+            btnPerfRestore.Enabled = PerformanceTuningService.HasBackup();
+
             // Date & Time
             var dt = cfg.dateTime ?? new DateTimeConfig();
             int dfIdx = cmbDateFormat.Items.IndexOf(dt.dateFormat);
@@ -1054,6 +1095,20 @@ namespace ClassroomChecker.UI
             }
         }
 
+        /// <summary>ຄືນທຸກຄ່າທີ່ໂໝດເຄື່ອງສະເປັກຕ່ຳເຄີຍປ່ຽນ (ຈາກໄຟລ໌ backup)</summary>
+        private void btnPerfRestore_Click(object sender, EventArgs e)
+        {
+            var confirm = MessageBox.Show(Localizer.T("settings_performance_restore_confirm"), Localizer.T("app_title"),
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm != DialogResult.Yes) return;
+
+            var logs = new List<string>();
+            bool ok = PerformanceTuningService.RestoreAll(logs);
+            btnPerfRestore.Enabled = PerformanceTuningService.HasBackup();
+            MessageBox.Show(string.Join("\n", logs.ToArray()), Localizer.T("app_title"), MessageBoxButtons.OK,
+                ok ? MessageBoxIcon.Information : MessageBoxIcon.Warning);
+        }
+
         /// <summary>ສະແດງວັນທີ/ເວລາປັດຈຸບັນ ຕາມຮູບແບບທີ່ເລືອກ (ອັບເດດທຸກວິນາທີ)</summary>
         private void UpdateDateTimePreview()
         {
@@ -1157,6 +1212,9 @@ namespace ClassroomChecker.UI
                 : "fill";
 
             cfg.background.applyToAllUsers = chkApplyAllUsers.Checked;
+
+            if (cfg.performance == null) cfg.performance = new PerformanceConfig();
+            cfg.performance.mode = PerfModes[Math.Max(0, cmbPerfMode.SelectedIndex)];
 
             if (cfg.dateTime == null) cfg.dateTime = new DateTimeConfig();
             cfg.dateTime.dateFormat = cmbDateFormat.SelectedItem != null

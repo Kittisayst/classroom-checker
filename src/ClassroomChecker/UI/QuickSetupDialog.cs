@@ -49,7 +49,7 @@ namespace ClassroomChecker.UI
         private void InitializeComponent()
         {
             this.Text = Localizer.T("quick_setup_title");
-            this.Size = new Size(580, 670);
+            this.Size = new Size(580, 704);
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.StartPosition = FormStartPosition.CenterParent;
             this.MaximizeBox = false;
@@ -156,7 +156,7 @@ namespace ClassroomChecker.UI
             pnlSteps = new Panel
             {
                 Location = new Point(20, 150),
-                Size = new Size(525, 345),
+                Size = new Size(525, 379),
                 BackColor = Color.White,
                 BorderStyle = BorderStyle.FixedSingle,
                 Padding = new Padding(16, 6, 16, 6)
@@ -173,13 +173,14 @@ namespace ClassroomChecker.UI
                 "7. ລ້າງໄຟລ໌ຂີ້ເຫຍື້ອ Temp/Cache ປອດໄພ",
                 string.Format("8. Export Spec ເຄື່ອງເປັນ Excel (.xlsx) ລົງໂຟນເດີ specs/"),
                 "9. ປິດ AutoRun & ວັກຊີນປ້ອງກັນ USB Shortcut",
-                string.Format("10. ປ່ຽນຊື່ເຄື່ອງຄອມພິວເຕີເປັນ {0}", txtComputerName.Text)
+                "10. ໂໝດເຄື່ອງສະເປັກຕ່ຳ (ສະເພາະເຄື່ອງ RAM ນ້ອຍ)",
+                string.Format("11. ປ່ຽນຊື່ເຄື່ອງຄອມພິວເຕີເປັນ {0}", txtComputerName.Text)
             };
 
-            lblStepItems = new Label[10];
-            lblStepIcons = new Label[10];
+            lblStepItems = new Label[11];
+            lblStepIcons = new Label[11];
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 11; i++)
             {
                 int y = 6 + (i * 34);
 
@@ -208,19 +209,19 @@ namespace ClassroomChecker.UI
 
             txtComputerName.TextChanged += (s, e) =>
             {
-                if (lblStepItems != null && lblStepItems.Length >= 10 && lblStepItems[9] != null)
+                if (lblStepItems != null && lblStepItems.Length >= 11 && lblStepItems[10] != null)
                 {
-                    lblStepItems[9].Text = string.Format("10. ປ່ຽນຊື່ເຄື່ອງຄອມພິວເຕີເປັນ {0}", txtComputerName.Text.Trim().ToUpperInvariant());
+                    lblStepItems[10].Text = string.Format("11. ປ່ຽນຊື່ເຄື່ອງຄອມພິວເຕີເປັນ {0}", txtComputerName.Text.Trim().ToUpperInvariant());
                 }
             };
 
             // 4. Progress Bar & Status Message
             prgSetup = new ProgressBar
             {
-                Location = new Point(20, 502),
+                Location = new Point(20, 536),
                 Size = new Size(525, 20),
                 Minimum = 0,
-                Maximum = 10,
+                Maximum = 11,
                 Value = 0
             };
 
@@ -229,7 +230,7 @@ namespace ClassroomChecker.UI
                 Text = "ກົດ \"ເລີ່ມຕົ້ນຕັ້ງຄ່າ\" ເພື່ອດຳເນີນການທຸກຂັ້ນຕອນອັດຕະໂນມັດ",
                 Font = UiFontManager.GetFont(9F, FontStyle.Regular),
                 ForeColor = Color.FromArgb(100, 116, 139),
-                Location = new Point(20, 528),
+                Location = new Point(20, 562),
                 Size = new Size(525, 22),
                 TextAlign = ContentAlignment.MiddleLeft
             };

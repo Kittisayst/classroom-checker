@@ -67,6 +67,7 @@
     <Compile Include="Core\DesktopIconService.cs" />
     <Compile Include="Core\LogonScreenService.cs" />
     <Compile Include="Core\UserAccountService.cs" />
+    <Compile Include="Core\PerformanceTuningService.cs" />
     <Compile Include="Core\ComputerNameService.cs" />
     <Compile Include="Core\UsbVirusCleanerService.cs" />
     <Compile Include="Core\SoftwarePackage.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Modules\ComputerNameModule.cs" />
     <Compile Include="Modules\PowerModule.cs" />
     <Compile Include="Modules\CleanupModule.cs" />
+    <Compile Include="Modules\PerformanceModule.cs" />
     <Compile Include="Modules\DriverCheckModule.cs" />
     <Compile Include="Modules\DiskSpaceCheckModule.cs" />
     <Compile Include="Modules\DefenderCheckModule.cs" />

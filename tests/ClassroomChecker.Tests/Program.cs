@@ -69,6 +69,7 @@ namespace ClassroomChecker.Tests
             Run("UserAccount: user name validation, account parsing and defaults", UserAccount_ValidationAndDefaults);
             Run("DateTime: date formats, 12/24-hour patterns and preview", DateTime_FormatsAndPreview);
             Run("DesktopIcons: Office shortcut detection (no duplicates)", DesktopIcons_OfficeShortcutDetection);
+            Run("Performance: low-spec rules, safe service list and defaults", Performance_RulesAndDefaults);
 
             Cleanup();
 
@@ -930,6 +931,45 @@ namespace ClassroomChecker.Tests
             {
                 try { Directory.Delete(dir, true); } catch { }
             }
+        }
+
+        private static void Performance_RulesAndDefaults()
+        {
+            var cfg = new AppConfig();
+            Assert(cfg.performance != null && cfg.performance.mode == "auto" && cfg.performance.autoMaxRamGb == 4,
+                "Default: auto for RAM <= 4GB");
+
+            Assert(PerformanceTuningService.IsApplicable("auto", 4, 3.9), "auto: 3.9 GB applies");
+            Assert(PerformanceTuningService.IsApplicable("auto", 4, 4.4), "auto: 4.4 GB applies (reported RAM varies)");
+            Assert(!PerformanceTuningService.IsApplicable("auto", 4, 7.9), "auto: 8 GB does not apply");
+            Assert(PerformanceTuningService.IsApplicable("on", 4, 16), "on: always");
+            Assert(!PerformanceTuningService.IsApplicable("off", 4, 2), "off: never");
+
+            Assert(PerformanceTuningService.GetServicesToDisable(SystemDiskType.Hdd).Contains("SysMain"), "HDD disables SysMain");
+            Assert(!PerformanceTuningService.GetServicesToDisable(SystemDiskType.Ssd).Contains("SysMain"), "SSD keeps SysMain");
+            var svcs = PerformanceTuningService.GetServicesToDisable(SystemDiskType.Hdd);
+            foreach (string keep in new[] { "wuauserv", "WinDefend", "Spooler", "AudioSrv", "Dhcp" })
+            {
+                Assert(!svcs.Contains(keep), "Never disables " + keep);
+            }
+
+            Assert(PerformanceTuningService.IsUnwantedStartup("OneDrive", @"C:\x\OneDrive.exe /background"), "OneDrive is unwanted");
+            Assert(PerformanceTuningService.IsUnwantedStartup("MicrosoftEdgeAutoLaunch_ABC", "msedge.exe"), "Edge autolaunch is unwanted");
+            Assert(!PerformanceTuningService.IsUnwantedStartup("SecurityHealth", @"%windir%\system32\SecurityHealthSystray.exe"), "Defender tray kept");
+            Assert(!PerformanceTuningService.IsUnwantedStartup("TeamViewer", "TeamViewer.exe"), "TeamViewer kept");
+
+            Assert(PerformanceTuningService.IsStartupApprovedEnabled(null), "No StartupApproved value = enabled");
+            Assert(PerformanceTuningService.IsStartupApprovedEnabled(new byte[] { 0x02, 0, 0 }), "02 = enabled");
+            Assert(!PerformanceTuningService.IsStartupApprovedEnabled(new byte[] { 0x03, 0, 0 }), "03 = disabled");
+
+            AreEqual("kBIDgA==", PerformanceTuningService.EncodeValue(new byte[] { 0x90, 0x12, 0x03, 0x80 }), "Binary backup is base64");
+
+            var mod = new PerformanceModule();
+            AreEqual("low_spec_performance", mod.Id, "PerformanceModule Id");
+            Localizer.SetLanguage("en");
+            Assert(Localizer.T(mod.DisplayNameKey) != mod.DisplayNameKey, "en module name exists");
+            Localizer.SetLanguage("lo");
+            Assert(Localizer.T(mod.DisplayNameKey) != mod.DisplayNameKey, "lo module name exists");
         }
 
         private static void LogonScreen_LockScreenFiles()

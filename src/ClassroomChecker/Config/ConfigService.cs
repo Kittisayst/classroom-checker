@@ -250,6 +250,10 @@ namespace ClassroomChecker.Config
             {
                 cfg.dateTime = new DateTimeConfig();
             }
+            if (cfg.performance == null)
+            {
+                cfg.performance = new PerformanceConfig();
+            }
             if (!Core.DateTimeService.IsSupportedDateFormat(cfg.dateTime.dateFormat))
             {
                 cfg.dateTime.dateFormat = Core.DateTimeService.TARGET_DATE_FORMAT;

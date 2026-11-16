@@ -38,6 +38,7 @@ namespace ClassroomChecker.UI
             _modules.Add(new ComputerNameModule());
             _modules.Add(new PowerModule());
             _modules.Add(new CleanupModule());
+            _modules.Add(new PerformanceModule());
             _modules.Add(new DriverCheckModule());
             _modules.Add(new DiskSpaceCheckModule());
             _modules.Add(new DefenderCheckModule());
