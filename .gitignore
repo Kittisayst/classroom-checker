@@ -10,6 +10,7 @@ obj/
 specs/*.xlsx
 dist/ScanReport_*.txt
 dist/config.json
+dist/ClassroomChecker.exe
 dist/*.old*
 dist/logs/
 dist/reports/
