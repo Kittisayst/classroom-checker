@@ -58,7 +58,7 @@ namespace ClassroomChecker.UI
             pnlHeader = new Panel
             {
                 Dock = DockStyle.Top,
-                Height = 76,
+                Height = 88,
                 BackColor = Color.FromArgb(238, 242, 255), // Light Indigo
                 Padding = new Padding(12, 10, 12, 10)
             };
@@ -172,8 +172,10 @@ namespace ClassroomChecker.UI
                 MultiSelect = false,
                 AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None,
                 RowTemplate = { Height = 44 },
-                ColumnHeadersHeight = 36,
+                ColumnHeadersHeight = 44,
                 ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing,
+                // ຂະຫຍາຍຖັນໃຫ້ພໍດີຄວາມກວ້າງ ບໍ່ໃຫ້ມີ scrollbar ແນວນອນ (Width ດ້ານລຸ່ມໃຊ້ເປັນສັດສ່ວນ)
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 EnableHeadersVisualStyles = false
             };
             dgvSoftware.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(241, 245, 249);
@@ -183,35 +185,40 @@ namespace ClassroomChecker.UI
             colName = new DataGridViewTextBoxColumn
             {
                 HeaderText = "ຊື່ໂປຣແກຣມ (Software)",
-                Width = 260,
+                FillWeight = 260,
+                MinimumWidth = 160,
                 ReadOnly = true
             };
 
             colCategory = new DataGridViewTextBoxColumn
             {
                 HeaderText = "ໝວດໝູ່ (Category)",
-                Width = 160,
+                FillWeight = 150,
+                MinimumWidth = 100,
                 ReadOnly = true
             };
 
             colLocalStatus = new DataGridViewTextBoxColumn
             {
                 HeaderText = "ສະຖານະໃນເຄື່ອງ (Installed)",
-                Width = 190,
+                FillWeight = 190,
+                MinimumWidth = 120,
                 ReadOnly = true
             };
 
             colUsbStatus = new DataGridViewTextBoxColumn
             {
                 HeaderText = "ໄຟລ໌ໃນ USB (installers/)",
-                Width = 210,
+                FillWeight = 190,
+                MinimumWidth = 120,
                 ReadOnly = true
             };
 
             colAction = new DataGridViewButtonColumn
             {
                 HeaderText = "ດຳເນີນການ (Action)",
-                Width = 120,
+                FillWeight = 130,
+                MinimumWidth = 110,
                 FlatStyle = FlatStyle.Flat
             };
 
@@ -246,7 +253,9 @@ namespace ClassroomChecker.UI
                 Font = new Font("Phetsarath OT", 9F, FontStyle.Bold),
                 ForeColor = Color.FromArgb(30, 41, 59),
                 Location = new Point(4, 14),
-                Size = new Size(500, 20),
+                Size = new Size(940, 20),
+                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
+                AutoEllipsis = true,
                 Text = "ກຳລັງໂຫຼດຂໍ້ມູນ..."
             };
 
@@ -256,6 +265,8 @@ namespace ClassroomChecker.UI
                 ForeColor = Color.FromArgb(100, 116, 139),
                 Location = new Point(4, 38),
                 Size = new Size(940, 20),
+                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
+                AutoEllipsis = true,
                 Text = "💡 ຄຳແນະນຳ: ພຽງແຕ່ດາວໂຫຼດໄຟລ໌ Setup (.exe/.msi) ມາໂຍນໃສ່ໂຟນເດີ installers/ ໃນ USB ລະບົບຈະກວດພົບ ແລະ ຕິດຕັ້ງງຽບໆໃຫ້ທັນທີ."
             };
 
@@ -299,28 +310,59 @@ namespace ClassroomChecker.UI
             lblTip.Text = Localizer.T("installer_tip", "💡 ຄຳແນະນຳ: ພຽງແຕ່ດາວໂຫຼດໄຟລ໌ Setup (.exe/.msi) ມາໂຍນໃສ່ໂຟນເດີ installers/ ໃນ USB ລະບົບຈະກວດພົບ ແລະ ຕິດຕັ້ງງຽບໆໃຫ້ທັນທີ.");
         }
 
-        public async Task RefreshGridAsync()
-        {
-            if (_isBusy) return;
+        // ຖ້າມີການ refresh ກຳລັງແລ່ນຢູ່ ໃຫ້ຄືນ Task ເດີມ (ກັນ Load + ສະຫຼັບແທັບ ເອີ້ນພ້ອມກັນ ແລ້ວແຖວຂຶ້ນຊ້ຳ)
+        private Task _refreshTask;
 
-            dgvSoftware.Rows.Clear();
+        private class PackageScanInfo
+        {
+            public SoftwarePackage Package;
+            public bool IsInstalled;
+            public string Version;
+            public string UsbFile;
+        }
+
+        public Task RefreshGridAsync()
+        {
+            if (_isBusy) return Task.FromResult(0);
+            if (_refreshTask != null && !_refreshTask.IsCompleted) return _refreshTask;
+
+            _refreshTask = RefreshGridCoreAsync();
+            return _refreshTask;
+        }
+
+        private async Task RefreshGridCoreAsync()
+        {
             var catalog = SoftwareInstallerService.GetCatalog();
+
+            // ກວດ registry ແລະ USB ໃນ background thread ເພື່ອບໍ່ໃຫ້ UI ຄ້າງ ເມື່ອ USB ຊ້າ
+            var infos = await Task.Run(() =>
+            {
+                var list = new List<PackageScanInfo>();
+                foreach (var pkg in catalog)
+                {
+                    string ver;
+                    string path;
+                    var info = new PackageScanInfo { Package = pkg };
+                    info.IsInstalled = SoftwareInstallerService.IsInstalled(pkg, out ver, out path);
+                    info.Version = ver;
+                    info.UsbFile = SoftwareInstallerService.FindInstallerFile(pkg);
+                    list.Add(info);
+                }
+                return list;
+            });
 
             int installedCount = 0;
             int availableInUsbCount = 0;
 
-            await Task.Run(() =>
-            {
-                // Background inspect
-            });
+            // ລ້າງ ແລະ ເພີ່ມແຖວໃໝ່ໃນຂັ້ນດຽວ (ບໍ່ມີ await ລະຫວ່າງກາງ)
+            dgvSoftware.Rows.Clear();
 
-            foreach (var pkg in catalog)
+            foreach (var info in infos)
             {
-                string ver;
-                string path;
-                bool isInst = SoftwareInstallerService.IsInstalled(pkg, out ver, out path);
-
-                string usbFile = SoftwareInstallerService.FindInstallerFile(pkg);
+                var pkg = info.Package;
+                string ver = info.Version;
+                bool isInst = info.IsInstalled;
+                string usbFile = info.UsbFile;
                 bool hasUsb = !string.IsNullOrEmpty(usbFile);
 
                 if (isInst) installedCount++;

@@ -66,7 +66,7 @@ namespace ClassroomChecker.UI
             pnlStatus = new Panel
             {
                 Dock = DockStyle.Top,
-                Height = 76,
+                Height = 92,
                 BackColor = Color.FromArgb(236, 253, 245),
                 Padding = new Padding(12, 10, 12, 10)
             };
@@ -83,7 +83,7 @@ namespace ClassroomChecker.UI
                 WrapContents = false,
                 AutoSize = true,
                 BackColor = Color.Transparent,
-                Padding = new Padding(0, 8, 0, 0)
+                Padding = new Padding(0, 16, 0, 0)
             };
 
             btnUnlockNow = new Button

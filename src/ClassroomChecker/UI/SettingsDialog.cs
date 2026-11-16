@@ -523,6 +523,9 @@ namespace ClassroomChecker.UI
             {
                 Dock = DockStyle.Bottom,
                 Height = 58,
+                // ຕັ້ງຄວາມກວ້າງຈິງກ່ອນເພີ່ມປຸ່ມ: ຖ້າ Panel ຍັງກວ້າງ 200px (ຄ່າເລີ່ມຕົ້ນ) ປຸ່ມທີ່ Anchor Right
+                // ຈະຖືກເລື່ອນອອກນອກໜ້າຈໍ ເມື່ອ Panel ຂະຫຍາຍ (ປຸ່ມ ບັນທຶກ/ຍົກເລີກ ຫາຍ)
+                Width = this.ClientSize.Width,
                 BackColor = Color.FromArgb(241, 245, 249),
                 Padding = new Padding(16, 10, 16, 10)
             };

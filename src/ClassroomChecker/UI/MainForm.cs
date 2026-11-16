@@ -9,10 +9,13 @@ namespace ClassroomChecker.UI
     public partial class MainForm : Form
     {
         private bool _isChangingLanguage = false;
+        private FlowLayoutPanel _headerActions;
+        private readonly ToolTip _headerToolTip = new ToolTip();
 
         public MainForm()
         {
             InitializeComponent();
+            BuildHeaderLayout();
             try
             {
                 using (var stream = typeof(MainForm).Assembly.GetManifestResourceStream("ClassroomChecker.app.ico"))
@@ -66,6 +69,74 @@ namespace ClassroomChecker.UI
             };
         }
 
+        /// <summary>
+        /// ຈັດ header ໃໝ່: ປຸ່ມດ້ານຂວາຢູ່ໃນ FlowLayoutPanel ທີ່ຂະຫຍາຍຕາມຂໍ້ຄວາມ (ບໍ່ໃຫ້ຂໍ້ຄວາມແຕກແຖວ)
+        /// ແລະ ຈຳກັດຄວາມກວ້າງ subtitle ບໍ່ໃຫ້ທັບປຸ່ມ (ຕັດເປັນ ... ແລະ ສະແດງເຕັມໃນ tooltip)
+        /// </summary>
+        private void BuildHeaderLayout()
+        {
+            pnlHeader.SuspendLayout();
+
+            _headerActions = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Right,
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                FlowDirection = FlowDirection.LeftToRight,
+                WrapContents = false,
+                BackColor = Color.Transparent,
+                Padding = new Padding(0, 6, 0, 0),
+                Margin = new Padding(0)
+            };
+
+            foreach (var btn in new[] { btnQuickSetup, btnSettings, btnHelp })
+            {
+                pnlHeader.Controls.Remove(btn);
+                btn.Anchor = AnchorStyles.None;
+                btn.AutoSize = true;
+                btn.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+                btn.MinimumSize = new Size(90, 36);
+                btn.MaximumSize = new Size(0, 36);
+                btn.Padding = new Padding(8, 0, 8, 0);
+                btn.Margin = new Padding(4, 0, 4, 0);
+                _headerActions.Controls.Add(btn);
+            }
+
+            pnlHeader.Controls.Remove(lblLanguage);
+            lblLanguage.Anchor = AnchorStyles.None;
+            lblLanguage.Margin = new Padding(12, 9, 4, 0);
+            _headerActions.Controls.Add(lblLanguage);
+
+            pnlHeader.Controls.Remove(cmbLanguage);
+            cmbLanguage.Anchor = AnchorStyles.None;
+            cmbLanguage.Width = 150;
+            cmbLanguage.Margin = new Padding(0, 5, 0, 0);
+            _headerActions.Controls.Add(cmbLanguage);
+
+            pnlHeader.Controls.Add(_headerActions);
+
+            lblSubtitle.AutoSize = false;
+            lblSubtitle.AutoEllipsis = true;
+            lblSubtitle.UseMnemonic = false; // ໃຫ້ "&" ສະແດງເປັນຕົວອັກສອນ ບໍ່ແມ່ນ shortcut
+            lblSubtitle.Height = 22;
+
+            pnlHeader.Resize += (s, e) => LayoutHeaderText();
+            _headerActions.SizeChanged += (s, e) => LayoutHeaderText();
+
+            pnlHeader.ResumeLayout(true);
+            LayoutHeaderText();
+
+            // ແທັບກວ້າງ 140px ບໍ່ພໍສຳລັບຊື່ພາສາອັງກິດ (ເຊັ່ນ "Protection & Lock")
+            tabMain.ItemSize = new Size(170, tabMain.ItemSize.Height);
+        }
+
+        private void LayoutHeaderText()
+        {
+            if (_headerActions == null) return;
+            int available = _headerActions.Left - lblSubtitle.Left - 12;
+            lblSubtitle.Width = Math.Max(60, available);
+        }
+
         private void OnLanguageChanged()
         {
             ApplyLocalization();
@@ -80,7 +151,8 @@ namespace ClassroomChecker.UI
             tabSecurity.Text = Localizer.T("tab_security");
             tabInstall.Text = Localizer.T("tab_install");
             tabUsbAntivirus.Text = Localizer.T("tab_usb_antivirus", "Antivirus USB");
-            btnQuickSetup.Text = Localizer.T("btn_quick_setup");
+            // header ໃຊ້ຂໍ້ຄວາມສັ້ນ ເພື່ອບໍ່ໃຫ້ກິນພື້ນທີ່ subtitle
+            btnQuickSetup.Text = Localizer.T("btn_quick_setup_short");
             btnSettings.Text = Localizer.T("btn_settings");
             btnHelp.Text = Localizer.T("btn_help", "📖 ຄູ່ມື");
 
@@ -92,6 +164,8 @@ namespace ClassroomChecker.UI
             {
                 lblSubtitle.Text = "ເຄື່ອງມືກວດສອບ, ຕັ້ງ Wallpaper ແລະ ບຳລຸງຮັກສາຄອມພິວເຕີຫ້ອງຮຽນ (Portable)";
             }
+            _headerToolTip.SetToolTip(lblSubtitle, lblSubtitle.Text);
+            LayoutHeaderText();
         }
 
         private void btnQuickSetup_Click(object sender, EventArgs e)

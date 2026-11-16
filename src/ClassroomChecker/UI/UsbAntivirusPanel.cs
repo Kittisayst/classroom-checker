@@ -80,7 +80,7 @@ namespace ClassroomChecker.UI
             pnlHeader = new Panel
             {
                 Dock = DockStyle.Top,
-                Height = 72,
+                Height = 84,
                 BackColor = Color.FromArgb(15, 23, 42), // Slate 900
                 Padding = new Padding(14, 10, 14, 10)
             };
@@ -176,8 +176,8 @@ namespace ClassroomChecker.UI
                 RowCount = 1,
                 Padding = new Padding(0, 10, 0, 0)
             };
-            tblContent.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 48F));
-            tblContent.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 52F));
+            tblContent.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 56F));
+            tblContent.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 44F));
             tblContent.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
 
             // =================================================================
@@ -198,6 +198,9 @@ namespace ClassroomChecker.UI
                 ForeColor = Color.FromArgb(30, 41, 59),
                 Dock = DockStyle.Top,
                 Height = 84,
+                // ຕັ້ງຄວາມກວ້າງເລີ່ມຕົ້ນໃຫ້ກົງກັບ Location ຂອງ control ລູກ ກ່ອນເພີ່ມ control
+                // (ຖ້າບໍ່ຕັ້ງ GroupBox ຈະກວ້າງ 200px ແລ້ວ Anchor Right ຄິດໄລຍະຜິດ ເຮັດໃຫ້ control ລົ້ນ)
+                Width = 456,
                 Padding = new Padding(10, 8, 10, 8)
             };
 
@@ -206,7 +209,7 @@ namespace ClassroomChecker.UI
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Font = UiFontManager.GetFont(9.5F, FontStyle.Regular),
                 Location = new Point(10, 24),
-                Size = new Size(250, 28),
+                Size = new Size(206, 28),
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
             };
 
@@ -214,8 +217,8 @@ namespace ClassroomChecker.UI
             {
                 Text = Localizer.T("usb_cleaner_btn_refresh_drives", "🔄 ກວດຫາ"),
                 Font = UiFontManager.GetFont(8.5F, FontStyle.Regular),
-                Location = new Point(266, 23),
-                Size = new Size(88, 30),
+                Location = new Point(222, 23),
+                Size = new Size(110, 30),
                 Anchor = AnchorStyles.Top | AnchorStyles.Right,
                 BackColor = Color.White,
                 Cursor = Cursors.Hand
@@ -226,8 +229,8 @@ namespace ClassroomChecker.UI
             {
                 Text = Localizer.T("usb_cleaner_btn_browse_drive", "📁 ເລືອກ..."),
                 Font = UiFontManager.GetFont(8.5F, FontStyle.Regular),
-                Location = new Point(358, 23),
-                Size = new Size(88, 30),
+                Location = new Point(336, 23),
+                Size = new Size(110, 30),
                 Anchor = AnchorStyles.Top | AnchorStyles.Right,
                 BackColor = Color.White,
                 Cursor = Cursors.Hand
@@ -258,6 +261,7 @@ namespace ClassroomChecker.UI
                 ForeColor = Color.FromArgb(30, 41, 59),
                 Dock = DockStyle.Top,
                 Height = 224,
+                Width = 452,
                 Padding = new Padding(12, 6, 12, 6)
             };
 
@@ -494,7 +498,7 @@ namespace ClassroomChecker.UI
 
         public void ApplyLocalization()
         {
-            lblHeaderTitle.Text = Localizer.T("usb_anti_header_title", "Antivirus USB & ກູ້ໄຟລ໌ Flash Drive (USB Shortcut Virus Cleaner & Vaccine)");
+            lblHeaderTitle.Text = Localizer.T("usb_anti_header_title", "Antivirus USB & ກູ້ໄຟລ໌ Flash Drive");
             lblHeaderSubtitle.Text = Localizer.T("usb_anti_header_desc", "ແກ້ໄຂບັນຫາ Flash Drive ຕິດໄວຣັສ Shortcut, ໂຟນເດີຫາຍ, ໄຟລ໌ກາຍເປັນ .exe, ກູ້ໄຟລ໌ຄືນ, ສ້າງວັກຊີນປ້ອງກັນ ແລະ ປິດ AutoRun");
             btnImmunizeHost.Text = Localizer.T("usb_rescue_btn_immunize", "💉 ປິດ AutoRun ໃນເຄື່ອງ");
 

@@ -93,6 +93,49 @@ namespace ClassroomChecker.UI
                 lblStatus.Text = Localizer.T("status_ready");
                 lblStatus.ForeColor = Color.FromArgb(46, 125, 50); // Green
             }
+
+            LayoutSettingsRows();
+        }
+
+        /// <summary>
+        /// ຈັດຕຳແໜ່ງ control ໃນກ່ອງຕັ້ງຄ່າຕາມຄວາມຍາວຂໍ້ຄວາມຈິງ (ພາສາອັງກິດຍາວກວ່າລາວ
+        /// ເຮັດໃຫ້ປຸ່ມ/label ທີ່ວາງແບບ fix pixel ຖືກຕັດ ຫຼື ທັບກັນ)
+        /// </summary>
+        private void LayoutSettingsRows()
+        {
+            const int gap = 6;
+            const int groupGap = 16;
+
+            int labelCol = lblRoom.Left + Math.Max(lblRoom.PreferredWidth, lblBgImage.PreferredWidth) + 8;
+            cmbRooms.Left = labelCol;
+            txtBgPath.Left = labelCol;
+
+            // ແຖວ 1: ຫ້ອງ | ເພີ່ມ | ລຶບ | ເລກເຄື່ອງ | ຊື່ເຄື່ອງ | ປ່ຽນຊື່
+            int x = cmbRooms.Right + gap;
+            x = PlaceButton(btnAddRoom, x, 75) + gap;
+            x = PlaceButton(btnDeleteRoom, x, 70) + groupGap;
+            lblNumber.Left = x;
+            x += lblNumber.PreferredWidth + gap;
+            numComputerNumber.Left = x;
+            x = numComputerNumber.Right + groupGap;
+            lblComputerName.Left = x;
+            x += lblComputerName.PreferredWidth + gap;
+            txtComputerName.Left = x;
+            x = txtComputerName.Right + gap;
+            PlaceButton(btnRenameComputer, x, 85);
+
+            // ແຖວ 2: ຮູບພື້ນຫຼັງ | ເລືອກຮູບ | ໃຊ້ຄ່າເລີ່ມຕົ້ນ
+            x = txtBgPath.Right + 10;
+            x = PlaceButton(btnBrowseBg, x, 90) + gap;
+            PlaceButton(btnDefaultBg, x, 105);
+        }
+
+        private static int PlaceButton(Button btn, int x, int minWidth)
+        {
+            int textWidth = TextRenderer.MeasureText(btn.Text ?? string.Empty, btn.Font).Width + 18;
+            btn.Width = Math.Max(minWidth, textWidth);
+            btn.Left = x;
+            return btn.Right;
         }
 
         private void OnLanguageChanged()

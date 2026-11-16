@@ -88,8 +88,8 @@ namespace ClassroomChecker.Core
         private const string SAFER_GUID_LOCAL_TEMP = "{D1A10001-B10C-4001-A001-000000000003}";
 
         private const string SAFER_GUID_USB_PREFIX = "{D1A10001-B10C-4001-B001-";
-        private const string SAFER_GUID_WHITELIST_EXE = "{D1A10001-B10C-4001-W001-000000000001}";
-        private const string SAFER_GUID_WHITELIST_APPNAME = "{D1A10001-B10C-4001-W001-000000000002}";
+        private const string SAFER_GUID_WHITELIST_EXE = "{D1A10001-B10C-4001-C001-000000000001}";
+        private const string SAFER_GUID_WHITELIST_APPNAME = "{D1A10001-B10C-4001-C001-000000000002}";
 
         // -----------------------------------------------------------------
         // 1. USB Execution Lock (with ClassroomChecker Whitelist)
@@ -496,6 +496,9 @@ namespace ClassroomChecker.Core
         {
             try
             {
+                // ລຶບ whitelist ເກົ່າກ່ອນ (ລວມທັງ key ຮຸ່ນເກົ່າທີ່ໃຊ້ GUID ບໍ່ຖືກຕ້ອງ "W001" ເຊິ່ງ Windows ບໍ່ຮັບ)
+                DeleteAllClassroomCheckerWhitelistRules();
+
                 CreateSaferWhitelistRule(SAFER_GUID_WHITELIST_EXE, @"*\ClassroomChecker.exe", "ClassroomChecker: Whitelisted Admin Tool");
 
                 string currentExeName = Path.GetFileName(AppDomain.CurrentDomain.FriendlyName);
