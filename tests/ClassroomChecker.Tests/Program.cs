@@ -62,6 +62,7 @@ namespace ClassroomChecker.Tests
             Run("I18n: UsbCleaner and Vaccine keys localized in lo and en", I18n_UsbCleaner_Localized);
             Run("ComputerNameService: name generation, sanitization and validation contract", ComputerNameService_Contract);
             Run("ComputerNameModule: metadata and check result contract", ComputerNameModule_MetadataAndContract);
+            Run("EssentialSoftware: required list is PDF, LaoScript 8, VLC, 7-Zip", EssentialSoftware_RequiredList);
 
             Cleanup();
 
@@ -825,6 +826,22 @@ namespace ClassroomChecker.Tests
             Assert(res != null, "CheckResult non-null");
             Assert(res.Status == CheckStatus.Pass || res.Status == CheckStatus.Warning, "Valid status");
             Assert(res.Details != null && res.Details.Count >= 2, "Details contains hostname info");
+        }
+
+        private static void EssentialSoftware_RequiredList()
+        {
+            var ids = SoftwareInstallerService.GetEssentialPackages().Select(p => p.Id).ToList();
+            Assert(ids.SequenceEqual(new[] { "sumatrapdf", "laoscript8", "vlc", "7zip" }),
+                "Essential packages resolve to catalog entries: " + string.Join(",", ids));
+
+            var mod = new EssentialSoftwareCheckModule();
+            Assert(mod.Id == "essential_software", "Id unchanged (used by Master Summary)");
+            var res = mod.Check();
+            Assert(res.Status == CheckStatus.Pass || res.Status == CheckStatus.Fail, "Pass when all present, Fail when any missing");
+            foreach (string name in new[] { "SumatraPDF", "LaoScript 8", "VLC", "7-Zip" })
+            {
+                Assert(res.Details.Any(d => d.Contains(name)), "Details mention " + name);
+            }
         }
     }
 }

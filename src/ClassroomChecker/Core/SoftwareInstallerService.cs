@@ -258,6 +258,28 @@ namespace ClassroomChecker.Core
             return new List<SoftwarePackage>(_catalog);
         }
 
+        /// <summary>
+        /// Id ຂອງໂປຣແກຣມພື້ນຖານທີ່ທຸກເຄື່ອງຕ້ອງມີ (ກວດ ແລະ ຕິດຕັ້ງອັດຕະໂນມັດໃນແທັບ "ກວດສອບລະບົບ").
+        /// ໂປຣແກຣມອື່ນໃນ catalog ໃຫ້ຕິດຕັ້ງດ້ວຍມືຈາກແທັບ "ຕິດຕັ້ງຊອບແວ".
+        /// </summary>
+        public static readonly string[] EssentialPackageIds = { "sumatrapdf", "laoscript8", "vlc", "7zip" };
+
+        public static List<SoftwarePackage> GetEssentialPackages()
+        {
+            var list = new List<SoftwarePackage>();
+            foreach (string id in EssentialPackageIds)
+            {
+                var pkg = _catalog.Find(p => p.Id == id);
+                if (pkg != null) list.Add(pkg);
+            }
+            return list;
+        }
+
+        public static bool IsEssential(SoftwarePackage pkg)
+        {
+            return pkg != null && Array.IndexOf(EssentialPackageIds, pkg.Id) >= 0;
+        }
+
         public static string GetInstallersDirectory()
         {
             string baseDir = AppDomain.CurrentDomain.BaseDirectory;
