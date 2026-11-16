@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
 using Microsoft.Win32;
 
 namespace ClassroomChecker.Core
@@ -14,8 +15,10 @@ namespace ClassroomChecker.Core
     public static class DesktopIconService
     {
         public const string GUID_THIS_PC = "{20D04FE0-3AEA-1069-A2D8-08002B30309D}";
-        public const string GUID_CONTROL_PANEL_1 = "{5399E694-6CE5-4D6C-AC35-41A4388A305A}";
-        public const string GUID_CONTROL_PANEL_2 = "{5399E694-6CE5-4D6C-8FCE-1D8870FDCBA0}";
+        // CLSID ທີ່ໜ້າ "Desktop icon settings" ຂອງ Windows ໃຊ້ສຳລັບ Control Panel
+        public const string GUID_CONTROL_PANEL = "{5399E694-6CE5-4D6C-8FCE-1D8870FDCBA0}";
+        // CLSID ທີ່ບໍ່ມີຢູ່ຈິງ ເຊິ່ງຮຸ່ນເກົ່າເຄີຍຂຽນໄວ້ → ລຶບອອກ
+        private const string GUID_CONTROL_PANEL_INVALID = "{5399E694-6CE5-4D6C-AC35-41A4388A305A}";
 
         private const string REG_PATH_HIDE_ICONS_NEW = @"Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel";
         private const string REG_PATH_HIDE_ICONS_CLASSIC = @"Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\ClassicStartMenu";
@@ -43,12 +46,8 @@ namespace ClassroomChecker.Core
                         object pcVal = key.GetValue(GUID_THIS_PC);
                         if (pcVal is int && (int)pcVal == 0) thisPc = true;
 
-                        object cp1 = key.GetValue(GUID_CONTROL_PANEL_1);
-                        object cp2 = key.GetValue(GUID_CONTROL_PANEL_2);
-                        if ((cp1 is int && (int)cp1 == 0) || (cp2 is int && (int)cp2 == 0))
-                        {
-                            controlPanel = true;
-                        }
+                        object cp = key.GetValue(GUID_CONTROL_PANEL);
+                        if (cp is int && (int)cp == 0) controlPanel = true;
                     }
                 }
             }
@@ -73,8 +72,8 @@ namespace ClassroomChecker.Core
                     if (key != null)
                     {
                         key.SetValue(GUID_THIS_PC, 0, RegistryValueKind.DWord);
-                        key.SetValue(GUID_CONTROL_PANEL_1, 0, RegistryValueKind.DWord);
-                        key.SetValue(GUID_CONTROL_PANEL_2, 0, RegistryValueKind.DWord);
+                        key.DeleteValue(GUID_CONTROL_PANEL_INVALID, false);
+                        key.SetValue(GUID_CONTROL_PANEL, 0, RegistryValueKind.DWord);
                         logs.Add("Enabled This PC & Control Panel in NewStartPanel");
                     }
                     else success = false;
@@ -88,8 +87,8 @@ namespace ClassroomChecker.Core
                         if (key != null)
                         {
                             key.SetValue(GUID_THIS_PC, 0, RegistryValueKind.DWord);
-                            key.SetValue(GUID_CONTROL_PANEL_1, 0, RegistryValueKind.DWord);
-                            key.SetValue(GUID_CONTROL_PANEL_2, 0, RegistryValueKind.DWord);
+                            key.DeleteValue(GUID_CONTROL_PANEL_INVALID, false);
+                            key.SetValue(GUID_CONTROL_PANEL, 0, RegistryValueKind.DWord);
                         }
                     }
                 }
@@ -112,44 +111,127 @@ namespace ClassroomChecker.Core
             return success;
         }
 
+        // =====================================================================
+        // MS Office shortcuts
+        // =====================================================================
+
+        internal class OfficeApp
+        {
+            public string Exe;
+            public string Lnk;
+            public string Desc;
+            public string[] NamePrefixes;
+        }
+
+        internal static readonly OfficeApp[] OfficeApps =
+        {
+            new OfficeApp { Exe = "WINWORD.EXE", Lnk = "Word.lnk", Desc = "Microsoft Word", NamePrefixes = new[] { "word", "microsoft word", "microsoft office word" } },
+            new OfficeApp { Exe = "EXCEL.EXE", Lnk = "Excel.lnk", Desc = "Microsoft Excel", NamePrefixes = new[] { "excel", "microsoft excel", "microsoft office excel" } },
+            new OfficeApp { Exe = "POWERPNT.EXE", Lnk = "PowerPoint.lnk", Desc = "Microsoft PowerPoint", NamePrefixes = new[] { "powerpoint", "microsoft powerpoint", "microsoft office powerpoint" } }
+        };
+
         /// <summary>
-        /// ກວດສອບວ່າ ມີ Shortcut ຂອງ Word, Excel, PowerPoint ຢູ່ໜ້າຈໍແລ້ວ ຫຼື ບໍ່
+        /// ໂຟນເດີ Desktop ທີ່ຕ້ອງກວດ: Public Desktop, Desktop ຂອງ user ທີ່ເປີດໂປຣແກຣມ
+        /// ແລະ Desktop ຂອງ user ທີ່ login ຢູ່ໜ້າຈໍ (ອາດຕ່າງກັນເມື່ອຍົກສິດ UAC ດ້ວຍບັນຊີ Admin ອື່ນ)
+        /// </summary>
+        internal static List<string> GetDesktopDirectories()
+        {
+            var dirs = new List<string>();
+            Action<string> add = d =>
+            {
+                if (string.IsNullOrEmpty(d) || !Directory.Exists(d)) return;
+                foreach (var x in dirs)
+                {
+                    if (string.Equals(x.TrimEnd('\\'), d.TrimEnd('\\'), StringComparison.OrdinalIgnoreCase)) return;
+                }
+                dirs.Add(d);
+            };
+
+            try { add(Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory)); } catch { }
+            try { add(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)); } catch { }
+            try { add(GetInteractiveUserDesktop()); } catch { }
+            return dirs;
+        }
+
+        private static string GetInteractiveUserDesktop()
+        {
+            string user = UserAccountService.GetInteractiveLocalUserName();
+            if (string.IsNullOrEmpty(user)) return null;
+
+            var sid = (SecurityIdentifier)new NTAccount(Environment.MachineName, user).Translate(typeof(SecurityIdentifier));
+            using (var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\" + sid.Value, false))
+            {
+                string profile = key != null ? key.GetValue("ProfileImagePath") as string : null;
+                if (string.IsNullOrEmpty(profile)) return null;
+                profile = Environment.ExpandEnvironmentVariables(profile);
+
+                string oneDriveDesktop = Path.Combine(profile, "OneDrive", "Desktop");
+                return Directory.Exists(oneDriveDesktop) ? oneDriveDesktop : Path.Combine(profile, "Desktop");
+            }
+        }
+
+        /// <summary>
+        /// ຊອກ shortcut ຂອງໂປຣແກຣມນີ້ທີ່ມີຢູ່ແລ້ວ: ກວດຈາກໄຟລ໌ປາຍທາງ (.exe) ຂອງ shortcut ກ່ອນ,
+        /// ຖ້າອ່ານປາຍທາງບໍ່ໄດ້ (ເຊັ່ນ shortcut ຂອງ Office ແບບ advertised) ໃຫ້ກວດຈາກຊື່ໄຟລ໌
+        /// </summary>
+        internal static string FindExistingOfficeShortcut(OfficeApp app, IEnumerable<string> desktopDirs)
+        {
+            foreach (string dir in desktopDirs)
+            {
+                string[] files;
+                try { files = Directory.GetFiles(dir, "*.lnk"); }
+                catch { continue; }
+
+                foreach (string file in files)
+                {
+                    // Office ແບບ MSI ສ້າງ shortcut ທີ່ປາຍທາງເປັນໄອຄອນໃນ C:\Windows\Installer ຈຶ່ງຕ້ອງກວດຊື່ນຳ
+                    string target = ReadShortcutTarget(file);
+                    if (!string.IsNullOrEmpty(target)
+                        && string.Equals(Path.GetFileName(target), app.Exe, StringComparison.OrdinalIgnoreCase)) return file;
+                    if (IsOfficeShortcutName(Path.GetFileNameWithoutExtension(file), app)) return file;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>ຊື່ shortcut ຂຶ້ນຕົ້ນດ້ວຍຊື່ໂປຣແກຣມ ("Word", "Word 2016", "Microsoft Word") ແຕ່ບໍ່ແມ່ນ "WordPad"</summary>
+        internal static bool IsOfficeShortcutName(string name, OfficeApp app)
+        {
+            string n = (name ?? string.Empty).Trim().ToLowerInvariant();
+            foreach (string prefix in app.NamePrefixes)
+            {
+                if (n == prefix) return true;
+                if (n.StartsWith(prefix) && !char.IsLetter(n[prefix.Length])) return true;
+            }
+            return false;
+        }
+
+        private static string ReadShortcutTarget(string lnkPath)
+        {
+            try
+            {
+                Type shellType = Type.GetTypeFromProgID("WScript.Shell");
+                if (shellType == null) return null;
+                object shell = Activator.CreateInstance(shellType);
+                object shortcut = shellType.InvokeMember("CreateShortcut", System.Reflection.BindingFlags.InvokeMethod, null, shell, new object[] { lnkPath });
+                return shortcut.GetType().InvokeMember("TargetPath", System.Reflection.BindingFlags.GetProperty, null, shortcut, null) as string;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// ກວດວ່າມີ Shortcut ຂອງ Word, Excel, PowerPoint ຢູ່ Desktop ແລ້ວ ຫຼື ບໍ່
+        /// (ໂປຣແກຣມທີ່ບໍ່ໄດ້ຕິດຕັ້ງ ຖືວ່າຜ່ານ)
         /// </summary>
         public static bool AreOfficeShortcutsPresent(out bool hasWord, out bool hasExcel, out bool hasPpt)
         {
-            hasWord = false;
-            hasExcel = false;
-            hasPpt = false;
-
-            var desktopDirs = new List<string>();
-            try
-            {
-                string pub = Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory);
-                if (Directory.Exists(pub)) desktopDirs.Add(pub);
-            }
-            catch { }
-            try
-            {
-                string usr = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                if (Directory.Exists(usr) && !desktopDirs.Contains(usr)) desktopDirs.Add(usr);
-            }
-            catch { }
-
-            foreach (var dir in desktopDirs)
-            {
-                try
-                {
-                    foreach (var file in Directory.GetFiles(dir, "*.lnk"))
-                    {
-                        string name = Path.GetFileNameWithoutExtension(file).ToLowerInvariant();
-                        if (name.Contains("word")) hasWord = true;
-                        if (name.Contains("excel")) hasExcel = true;
-                        if (name.Contains("powerpoint") || name.Contains("powerpnt")) hasPpt = true;
-                    }
-                }
-                catch { }
-            }
-
+            var dirs = GetDesktopDirectories();
+            hasWord = FindOfficeExe(OfficeApps[0].Exe) == null || FindExistingOfficeShortcut(OfficeApps[0], dirs) != null;
+            hasExcel = FindOfficeExe(OfficeApps[1].Exe) == null || FindExistingOfficeShortcut(OfficeApps[1], dirs) != null;
+            hasPpt = FindOfficeExe(OfficeApps[2].Exe) == null || FindExistingOfficeShortcut(OfficeApps[2], dirs) != null;
             return hasWord && hasExcel && hasPpt;
         }
 
@@ -249,14 +331,9 @@ namespace ClassroomChecker.Core
                 return false;
             }
 
-            var apps = new[]
-            {
-                new { Exe = "WINWORD.EXE", Lnk = "Word.lnk", Desc = "Microsoft Word" },
-                new { Exe = "EXCEL.EXE", Lnk = "Excel.lnk", Desc = "Microsoft Excel" },
-                new { Exe = "POWERPNT.EXE", Lnk = "PowerPoint.lnk", Desc = "Microsoft PowerPoint" }
-            };
+            var desktopDirs = GetDesktopDirectories();
 
-            foreach (var app in apps)
+            foreach (var app in OfficeApps)
             {
                 try
                 {
@@ -264,6 +341,14 @@ namespace ClassroomChecker.Core
                     if (string.IsNullOrEmpty(exePath))
                     {
                         logs.Add(string.Format("Skipped {0}: Executable not found on this machine", app.Desc));
+                        continue;
+                    }
+
+                    // ມີ shortcut ຢູ່ແລ້ວ (Public ຫຼື Desktop ຂອງ user) → ບໍ່ສ້າງຊ້ຳ
+                    string existing = FindExistingOfficeShortcut(app, desktopDirs);
+                    if (existing != null)
+                    {
+                        logs.Add(string.Format("Skipped {0}: shortcut already exists ({1})", app.Desc, existing));
                         continue;
                     }
 

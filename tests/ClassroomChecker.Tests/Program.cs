@@ -68,6 +68,7 @@ namespace ClassroomChecker.Tests
             Run("I18n: logon screen keys localized in lo and en", I18n_LogonScreen_Localized);
             Run("UserAccount: user name validation, account parsing and defaults", UserAccount_ValidationAndDefaults);
             Run("DateTime: date formats, 12/24-hour patterns and preview", DateTime_FormatsAndPreview);
+            Run("DesktopIcons: Office shortcut detection (no duplicates)", DesktopIcons_OfficeShortcutDetection);
 
             Cleanup();
 
@@ -641,7 +642,7 @@ namespace ClassroomChecker.Tests
         private static void DesktopIconService_ConstantsAndContract()
         {
             AreEqual("{20D04FE0-3AEA-1069-A2D8-08002B30309D}", DesktopIconService.GUID_THIS_PC, "This PC GUID");
-            AreEqual("{5399E694-6CE5-4D6C-AC35-41A4388A305A}", DesktopIconService.GUID_CONTROL_PANEL_1, "Control Panel GUID 1");
+            AreEqual("{5399E694-6CE5-4D6C-8FCE-1D8870FDCBA0}", DesktopIconService.GUID_CONTROL_PANEL, "Control Panel GUID (Desktop icon settings)");
 
             var mod = new DesktopIconsModule();
             AreEqual("desktop_icons", mod.Id, "DesktopIconsModule Id");
@@ -898,6 +899,37 @@ namespace ClassroomChecker.Tests
 
             Assert(DateTimeService.IsSupportedDateFormat("dd-MM-yyyy"), "dd-MM-yyyy supported");
             Assert(!DateTimeService.IsSupportedDateFormat("MM/dd/yyyy"), "US format not offered");
+        }
+
+        private static void DesktopIcons_OfficeShortcutDetection()
+        {
+            var word = DesktopIconService.OfficeApps[0];
+            var ppt = DesktopIconService.OfficeApps[2];
+            Assert(DesktopIconService.IsOfficeShortcutName("Word", word), "'Word' matches");
+            Assert(DesktopIconService.IsOfficeShortcutName("Word 2016", word), "'Word 2016' matches");
+            Assert(DesktopIconService.IsOfficeShortcutName("Microsoft Word", word), "'Microsoft Word' matches");
+            Assert(!DesktopIconService.IsOfficeShortcutName("WordPad", word), "'WordPad' does not match");
+            Assert(!DesktopIconService.IsOfficeShortcutName("Password Manager", word), "'Password' does not match");
+            Assert(DesktopIconService.IsOfficeShortcutName("PowerPoint", ppt), "'PowerPoint' matches");
+
+            string dir = Path.Combine(Path.GetTempPath(), "cc_office_test_" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(dir);
+            try
+            {
+                var dirs = new List<string> { dir };
+                Assert(DesktopIconService.FindExistingOfficeShortcut(word, dirs) == null, "Empty desktop -> no Word shortcut");
+
+                // shortcut ຊື່ອື່ນ ແຕ່ປາຍທາງເປັນ WINWORD.EXE → ຕ້ອງນັບວ່າມີແລ້ວ (ບໍ່ສ້າງຊ້ຳ)
+                string custom = Path.Combine(dir, "My Documents Tool.lnk");
+                Assert(DesktopIconService.CreateShortcutInternal(custom, @"C:\Program Files\Microsoft Office\root\Office16\WINWORD.EXE", "test"),
+                    "Test shortcut created");
+                Assert(DesktopIconService.FindExistingOfficeShortcut(word, dirs) == custom, "Detected by target exe");
+                Assert(DesktopIconService.FindExistingOfficeShortcut(ppt, dirs) == null, "Word shortcut is not PowerPoint");
+            }
+            finally
+            {
+                try { Directory.Delete(dir, true); } catch { }
+            }
         }
 
         private static void LogonScreen_LockScreenFiles()
