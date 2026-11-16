@@ -20,6 +20,7 @@ namespace ClassroomChecker.UI
         private TabPage tabInstall;
         private TabPage tabUsbAntivirus;
         private TabPage tabDateTimeIcons;
+        private TabPage tabPerformance;
         private TabPage tabStructure;
 
         private Panel pnlHeader;
@@ -67,7 +68,7 @@ namespace ClassroomChecker.UI
 
             lblHeaderTitle = new Label
             {
-                Text = Localizer.T("guide_header_title", "📖 ຄູ່ມືການນຳໃຊ້ Classroom Checker v1.0"),
+                Text = Localizer.T("guide_header_title", "📖 ຄູ່ມືການນຳໃຊ້ Classroom Checker v1.1"),
                 Font = UiFontManager.GetFont(12F, FontStyle.Bold),
                 ForeColor = Color.White,
                 Location = new Point(16, 10),
@@ -157,7 +158,8 @@ namespace ClassroomChecker.UI
             tabSecurity = CreateGuideTab("🛡️ ປ້ອງກັນ & ລັອກ", GetSecurityContent());
             tabInstall = CreateGuideTab("📦 ຕິດຕັ້ງຊອບແວ", GetInstallContent());
             tabUsbAntivirus = CreateGuideTab("🦠 Antivirus USB", GetUsbAntivirusContent());
-            tabDateTimeIcons = CreateGuideTab("⚙️ ວັນທີ່ & ໄອຄອນໜ້າຈໍ", GetDateTimeIconsContent());
+            tabDateTimeIcons = CreateGuideTab("⚙️ ວັນທີ & ໄອຄອນໜ້າຈໍ", GetDateTimeIconsContent());
+            tabPerformance = CreateGuideTab("⚡ ເຄື່ອງສະເປັກຕ່ຳ", GetPerformanceContent());
             tabStructure = CreateGuideTab("📁 ໂຄງສ້າງ USB", GetStructureContent());
 
             tabGuide.TabPages.AddRange(new TabPage[] {
@@ -168,6 +170,7 @@ namespace ClassroomChecker.UI
                 tabInstall,
                 tabUsbAntivirus,
                 tabDateTimeIcons,
+                tabPerformance,
                 tabStructure
             });
 
@@ -221,16 +224,23 @@ HOW TO USE QUICK SETUP:
    • The computer number automatically auto-increments (e.g. 01 -> 02 -> 03...)
      when moved from computer to computer!
 5. Click '⚡ Start Quick Setup'.
-6. In a few seconds, the tool automatically executes 6 core administrative actions:
-   ✔ Step 1: Render and apply high-resolution Desktop Wallpaper with Room & PC Number label.
+6. The tool then runs 11 steps automatically:
+   ✔ Step 1: Apply the desktop wallpaper with the Room & PC Number label
+             (plus the lock/sign-in screen image and logon notice, if enabled in Settings).
    ✔ Step 2: Set Power Scheme to 'Never Sleep' (prevents machines sleeping during class).
    ✔ Step 3: Check and register the national Lao font (Phetsarath OT).
    ✔ Step 4: Check and register Lao Keyboard Layout (0454).
-   ✔ Step 5: Clean safe temporary files, user temp, and system cache.
-   ✔ Step 6: Export full machine hardware & software specs to an Excel (.xlsx) file.
-7. Unplug the USB drive and plug it into the next PC — the computer number is already ready for the next machine!
+   ✔ Step 5: Set Timezone (+7), date format and 12/24-hour time (from Settings).
+   ✔ Step 6: Show This PC / Control Panel and create Office shortcuts (existing ones are not duplicated).
+   ✔ Step 7: Clean safe temporary files, user temp, and system cache.
+   ✔ Step 8: Export full machine hardware & software specs to an Excel (.xlsx) file.
+   ✔ Step 9: Disable Windows AutoRun & vaccinate against USB shortcut viruses.
+   ✔ Step 10: Low-spec mode (only on PCs with RAM <= 4 GB when mode is 'Auto').
+   ✔ Step 11: Rename the computer (e.g. COM1-01) and the signed-in user (e.g. USER-COM1-01).
+7. Restart the PC when asked so the new name takes effect.
+8. Unplug the USB drive and plug it into the next PC — the computer number is already ready for the next machine!
 
-💡 PRO-TIP: You can configure the starting number and room list in '⚙️ Settings'.";
+💡 PRO-TIP: Room list, starting number, user name prefix, date/time format and low-spec mode are all in '⚙️ Settings'.";
             }
 
             return @"================================================================================
@@ -249,18 +259,23 @@ HOW TO USE QUICK SETUP:
    • ລະບົບຈະ Auto-Increment ເລກເຄື່ອງໃຫ້ອັດຕະໂນມັດ (ເຊັ່ນ: 01 -> 02 -> 03...)
      ເມື່ອຍ້າຍ USB ໄປສຽບເຄື່ອງຖັດໄປ!
 5. ກົດປຸ່ມ '⚡ ເລີ່ມຕັ້ງຄ່າດ່ວນ'.
-6. ພາຍໃນບໍ່ເທົ່າໃດວິນາທີ ລະບົບຈະດຳເນີນການ 6 ຢ່າງໃຫ້ອັດຕະໂນມັດ:
-   ✔ ຂັ້ນຕອນ 1: Render ແລະ ຕັ້ງຮູບພື້ນຫຼັງ Wallpaper ພ້ອມປ້າຍຊື່ຫ້ອງ ແລະ ເລກເຄື່ອງ
+6. ລະບົບຈະດຳເນີນການ 11 ຂັ້ນຕອນໃຫ້ອັດຕະໂນມັດ:
+   ✔ ຂັ້ນຕອນ 1: ຕັ້ງຮູບພື້ນຫຼັງ Wallpaper ພ້ອມປ້າຍຊື່ຫ້ອງ ແລະ ເລກເຄື່ອງ
+                (ພ້ອມຮູບໜ້າ Lock/Login ແລະ ຂໍ້ຄວາມກ່ອນ Login ຖ້າເປີດໄວ້ໃນ ຕັ້ງຄ່າ)
    ✔ ຂັ້ນຕອນ 2: ຕັ້ງຄ່າ Power Scheme ເປັນ Never Sleep (ປ້ອງກັນຈໍດັບ/ເຄື່ອງຫຼັບຕອນຮຽນ)
    ✔ ຂັ້ນຕອນ 3: ກວດສອບ ແລະ ລົງທະບຽນ Font ພາສາລາວ (Phetsarath OT)
    ✔ ຂັ້ນຕອນ 4: ກວດສອບ ແລະ ລົງທະບຽນ ແປ້ນພິມພາສາລາວ (Lao Keyboard 0454)
-   ✔ ຂັ້ນຕອນ 5: ກຳນົດ Timezone (+7) ແລະ ຮູບແບບວັນທີ່ ວ/ດ/ປ (dd/MM/yyyy)
-   ✔ ຂັ້ນຕອນ 6: ສ້າງໄອຄອນໜ້າຈໍ This PC, Control Panel ແລະ MS Office
+   ✔ ຂັ້ນຕອນ 5: ກຳນົດ Timezone (+7), ຮູບແບບວັນທີ ແລະ ເວລາ 12/24 ຊົ່ວໂມງ (ຕາມທີ່ຕັ້ງໄວ້)
+   ✔ ຂັ້ນຕອນ 6: ສະແດງໄອຄອນ This PC, Control Panel ແລະ ສ້າງ Shortcut MS Office (ມີແລ້ວຈະບໍ່ສ້າງຊ້ຳ)
    ✔ ຂັ້ນຕອນ 7: ລ້າງໄຟລ໌ຂີ້ເຫຍື້ອ Temp/Cache ທີ່ປອດໄພ
    ✔ ຂັ້ນຕອນ 8: Export ຂໍ້ມູນສະເປັກເຄື່ອງລະອຽດເປັນໄຟລ໌ Excel (.xlsx) ເກັບໄວ້ໃນ USB
    ✔ ຂັ້ນຕອນ 9: ປິດ Windows AutoRun & ສ້າງວັກຊີນປ້ອງກັນ USB Shortcut
-   ✔ ຂັ້ນຕອນ 10: ປ່ຽນຊື່ເຄື່ອງຄອມພິວເຕີຕາມຮູບແບບຫ້ອງຮຽນ (ເຊັ່ນ COM1-01 ພ້ອມຊ່ອງໃຫ້ພິມແກ້ໄຂຊື່ໄດ້ຕາມໃຈ)
-7. ຖອດ USB ໄປສຽບເຄື່ອງຕໍ່ໄປໄດ້ເລີຍ — ເລກເຄື່ອງຈະເພີ່ມຂຶ້ນໃຫ້ພ້ອມສຳລັບເຄື່ອງຕໍ່ໄປ!";
+   ✔ ຂັ້ນຕອນ 10: ໂໝດເຄື່ອງສະເປັກຕ່ຳ (ໂໝດ 'ອັດຕະໂນມັດ' ຈະເຮັດສະເພາະເຄື່ອງ RAM ບໍ່ເກີນ 4 GB)
+   ✔ ຂັ້ນຕອນ 11: ປ່ຽນຊື່ເຄື່ອງ (ເຊັ່ນ COM1-01) ແລະ ຊື່ User ທີ່ Login ຢູ່ (ເຊັ່ນ USER-COM1-01)
+7. Restart ເຄື່ອງເມື່ອລະບົບຖາມ ເພື່ອໃຫ້ຊື່ໃໝ່ມີຜົນ.
+8. ຖອດ USB ໄປສຽບເຄື່ອງຕໍ່ໄປໄດ້ເລີຍ — ເລກເຄື່ອງຈະເພີ່ມຂຶ້ນໃຫ້ພ້ອມສຳລັບເຄື່ອງຕໍ່ໄປ!
+
+💡 ລາຍຊື່ຫ້ອງ, ເລກເລີ່ມຕົ້ນ, ຄຳນຳໜ້າຊື່ User, ຮູບແບບວັນທີ/ເວລາ ແລະ ໂໝດເຄື່ອງສະເປັກຕ່ຳ ຕັ້ງໄດ້ໃນ '⚙️ ຕັ້ງຄ່າ'.";
         }
 
         private string GetWallpaperContent()
@@ -298,7 +313,24 @@ ADVANCED SETTINGS IN ⚙️ SETTINGS DIALOG:
 • Label Template: Custom text format (e.g., '{room} - ເຄື່ອງ {num}').
 • Label Position: TopCenter, BottomCenter, TopRight, TopLeft, etc.
 • Font Size, Font Color (RGB Hex picker), and Text Shadow.
-• Apply to All Users: Applies the wallpaper registry keys across all user accounts on the machine.";
+• Apply to All Users: Applies the wallpaper registry keys across all user accounts on the machine.
+
+--------------------------------------------------------------------------------
+🔒 LOCK & SIGN-IN SCREEN (⚙️ Settings → Lock & Login tab):
+--------------------------------------------------------------------------------
+• Use the same image for the Lock screen and the Sign-in (Welcome) screen.
+• Turn off the blur on the sign-in screen so the room/PC label stays readable.
+• Prevent students from changing the wallpaper.
+• Show a notice (title + text) before sign-in, e.g. lab rules.
+• Turning an option off restores the Windows default.
+
+--------------------------------------------------------------------------------
+✏️ RENAME COMPUTER & USER:
+--------------------------------------------------------------------------------
+• The computer is renamed to the room format (e.g. COM1-01).
+• The signed-in local user is renamed too: prefix + computer name (default USER-COM1-01).
+  Change the prefix (e.g. LTVC → LTVC-COM1-01) or turn this off in ⚙️ Settings → General.
+• Both the login name and the display name change; restart to finish.";
             }
 
             return @"================================================================================
@@ -330,7 +362,24 @@ ADVANCED SETTINGS IN ⚙️ SETTINGS DIALOG:
 • ຮູບແບບປ້າຍຊື່ (Template): ປັບແຕ່ງຂໍ້ຄວາມໄດ້ຕາມໃຈ (ເຊັ່ນ: '{room} - ເຄື່ອງ {num}')
 • ຕຳແໜ່ງປ້າຍຊື່: ເທິງກາງ (TopCenter), ລຸ່ມກາງ, ຂວາເທິງ, ຊ້າຍເທິງ...
 • ຂະໜາດຕົວໜັງສື, ສີຕົວໜັງສື (Color Picker), ແລະ ເງົາຕົວໜັງສື (Text Shadow)
-• ຕັ້ງຄ່າໃຫ້ທຸກ User (Apply to All Users): ຕັ້ງຄ່າໃຫ້ທຸກ User Account ໃນ Windows";
+• ຕັ້ງຄ່າໃຫ້ທຸກ User (Apply to All Users): ຕັ້ງຄ່າໃຫ້ທຸກ User Account ໃນ Windows
+
+--------------------------------------------------------------------------------
+🔒 ໜ້າ LOCK & LOGIN (⚙️ ຕັ້ງຄ່າ → ແທັບ ໜ້າ Lock & Login):
+--------------------------------------------------------------------------------
+• ໃຊ້ຮູບດຽວກັນກັບໜ້າ Lock ແລະ ໜ້າ Login (Welcome)
+• ປິດການເບລີ (Blur) ໃນໜ້າ Login ເພື່ອໃຫ້ອ່ານປ້າຍຊື່ຫ້ອງ/ເລກເຄື່ອງໄດ້ຊັດ
+• ລັອກບໍ່ໃຫ້ນັກຮຽນປ່ຽນຮູບພື້ນຫຼັງ
+• ສະແດງຂໍ້ຄວາມ (ຫົວຂໍ້ + ເນື້ອໃນ) ກ່ອນ Login ເຊັ່ນ ລະບຽບການນຳໃຊ້ຫ້ອງຄອມ
+• ປິດຕົວເລືອກໃດ ລະບົບຈະກັບຄືນເປັນຄ່າເດີມຂອງ Windows
+
+--------------------------------------------------------------------------------
+✏️ ປ່ຽນຊື່ເຄື່ອງ ແລະ ຊື່ USER:
+--------------------------------------------------------------------------------
+• ປ່ຽນຊື່ເຄື່ອງຕາມຮູບແບບຫ້ອງຮຽນ (ເຊັ່ນ COM1-01)
+• ປ່ຽນຊື່ User ທີ່ Login ຢູ່ນຳ: ຄຳນຳໜ້າ + ຊື່ເຄື່ອງ (ຄ່າເລີ່ມຕົ້ນ USER-COM1-01)
+  ປ່ຽນຄຳນຳໜ້າ (ເຊັ່ນ LTVC → LTVC-COM1-01) ຫຼື ປິດໄດ້ໃນ ⚙️ ຕັ້ງຄ່າ → ທົ່ວໄປ
+• ປ່ຽນທັງຊື່ Login ແລະ ຊື່ທີ່ສະແດງ; Restart ເຄື່ອງເພື່ອໃຫ້ມີຜົນສົມບູນ";
         }
 
         private string GetScanContent()
@@ -342,31 +391,35 @@ ADVANCED SETTINGS IN ⚙️ SETTINGS DIALOG:
 🔍 3. SYSTEM INSPECTION & SPEC EXPORT TAB
 ================================================================================
 
-This tab runs 12 deep hardware and software inspection modules and provides one-click automatic fixing.
+This tab runs 17 hardware and software inspection modules and provides one-click automatic fixing.
 
 --------------------------------------------------------------------------------
-THE 12 INSPECTION MODULES:
+THE 17 INSPECTION MODULES:
 --------------------------------------------------------------------------------
 1. MS Office: Checks installation & activation for Word, Excel, PowerPoint.
 2. Windows License: Checks Windows genuine activation status via WMI/SoftwareLicensing.
-3. Essential Software: Checks presence of Web Browser, 7-Zip/WinRAR, and PDF reader.
+3. Essential Software: Checks PDF reader, LaoScript 8, VLC and 7-Zip.
+   Fix installs only the missing ones from the USB 'installers\' folder.
 4. Font Phetsarath OT: Verifies national Lao font installation (auto-fixes by registering embedded font).
 5. Lao Keyboard Layout: Checks Lao keyboard 00000454 (auto-fixes by registering layout).
-6. Power Scheme (Never sleep): Verifies AC & DC sleep timeouts are 0s (auto-fixes via powercfg).
-7. Temp Files Cleanup: Analyzes temporary files, cache, and Windows temp (auto-fixes safe deletion).
-8. Device Drivers: Scans for missing or malfunctioning hardware drivers with yellow exclamation marks.
-9. Disk Free Space: Evaluates system drive C: free space (<5% Fail, <10% Warn, >=10% Pass).
-10. Windows Defender: Checks antivirus protection and real-time scanning status.
-12. Security & App Lock: Checks whether student USB/Downloads/game restrictions are applied.
-13. USB Vaccine & AutoRun Protection: Checks AutoRun state and immunizes flash drives against shortcut malware.
-14. Computer Name (Hostname): Checks if computer hostname follows classroom standard (e.g. COM1-01) or is a generic default (DESKTOP-XXXX).
-15. Export Machine Spec: Generates a complete hardware/software audit report into a multi-sheet Excel (.xlsx) file.
+6. Date & Time: Checks timezone (+7), date format and 12/24-hour time from Settings.
+7. Desktop Icons: Checks This PC, Control Panel and Office shortcuts.
+8. Computer Name (Hostname): Checks if the hostname follows the classroom standard (e.g. COM1-01) or is a default (DESKTOP-XXXX).
+9. Power Scheme (Never sleep): Verifies AC & DC sleep timeouts are 0s (auto-fixes via powercfg).
+10. Temp Files Cleanup: Analyzes temporary files, cache, and Windows temp (auto-fixes safe deletion).
+11. Low-spec Mode: Speeds up PCs with little RAM (see the 'Low-spec PCs' tab).
+12. Device Drivers: Scans for missing or malfunctioning hardware drivers with yellow exclamation marks.
+13. Disk Free Space: Evaluates system drive C: free space (<5% Fail, <10% Warn, >=10% Pass).
+14. Windows Defender: Checks antivirus protection and real-time scanning status.
+15. Security & App Lock: Checks whether student USB/Downloads/game restrictions are applied.
+16. USB Vaccine & AutoRun Protection: Checks AutoRun state and immunizes flash drives against shortcut malware.
+17. Export Machine Spec: Generates a complete hardware/software audit report into a multi-sheet Excel (.xlsx) file.
 
 --------------------------------------------------------------------------------
 ACTION BUTTONS:
 --------------------------------------------------------------------------------
-• 'ສະແກນ (Scan)': Runs all 12 checks concurrently with live progress reporting.
-• 'ແກ້ໄຂທີ່ເລືອກ (Fix)': Automatically fixes all checked issues (Font, Keyboard, Power, Temp, Spec).
+• 'ສະແກນ (Scan)': Runs all checks with live progress reporting.
+• 'ແກ້ໄຂທີ່ເລືອກ (Fix)': Automatically fixes all checked issues.
 • 'ບັນທຶກລາຍງານ (.txt)': Saves a readable diagnostic text report into the reports/ folder.
 • '📊 ລວມສະເປັກ (Master Excel)': Merges all individual machine .xlsx specs collected in specs/
   into a single master classroom audit summary workbook!";
@@ -376,25 +429,29 @@ ACTION BUTTONS:
 🔍 3. ແທັບ 'ກວດສອບລະບົບ' (SYSTEM INSPECTION)
 ================================================================================
 
-ແທັບນີ້ໃຊ້ສຳລັບກວດສອບສະພາບຄວາມພ້ອມຂອງເຄື່ອງຄອມພິວເຕີທັງ Hardware ແລະ Software ຄົບທັງ 12 ໂມດູນ ພ້ອມປຸ່ມແກ້ໄຂອັດຕະໂນມັດໃນຄລິກດຽວ.
+ແທັບນີ້ໃຊ້ສຳລັບກວດສອບສະພາບຄວາມພ້ອມຂອງເຄື່ອງຄອມພິວເຕີທັງ Hardware ແລະ Software ຄົບທັງ 17 ໂມດູນ ພ້ອມປຸ່ມແກ້ໄຂອັດຕະໂນມັດໃນຄລິກດຽວ.
 
 --------------------------------------------------------------------------------
-ລາຍລະອຽດ 12 ໂມດູນທີ່ກວດສອບ:
+ລາຍລະອຽດ 17 ໂມດູນທີ່ກວດສອບ:
 --------------------------------------------------------------------------------
 1. MS Office: ກວດການຕິດຕັ້ງ ແລະ ສະຖານະ Activation ຂອງ Word, Excel, PowerPoint
 2. Windows License: ກວດສະຖານະ Windows Activation ວ່າເປັນ License ແທ້ ຫຼື ໝົດອາຍຸ
-3. Essential Software: ກວດຊອບແວພື້ນຖານ (Chrome/Brave, 7-Zip, ໂປຣແກຣມອ່ານ PDF)
+3. ຊອບແວພື້ນຖານ: ກວດ PDF, LaoScript 8, VLC ແລະ 7-Zip
+   (ກົດ Fix ຈະຕິດຕັ້ງສະເພາະຕົວທີ່ຂາດ ຈາກໂຟນເດີ 'installers\' ໃນ USB)
 4. Font Phetsarath OT: ກວດສອບຟອນລາວ (ກົດ Fix ເພື່ອຕິດຕັ້ງຟອນຈາກຕົວໂປຣແກຣມໄດ້ທັນທີ)
 5. Lao Keyboard Layout: ກວດແປ້ນພິມພາສາລາວ 0454 (ກົດ Fix ເພື່ອເພີ່ມແປ້ນພິມໃຫ້ທັນທີ)
-6. Power Scheme (Never sleep): ກວດການຕັ້ງຄ່າບໍ່ໃຫ້ເຄື່ອງຫຼັບ (ກົດ Fix ຕັ້ງ Never Sleep ທັນທີ)
-7. Temp Files Cleanup: ກວດຫາໄຟລ໌ຂີ້ເຫຍື້ອ Temp (ກົດ Fix ເພື່ອລ້າງໄຟລ໌ຂີ້ເຫຍື້ອປອດໄພ)
-8. Device Drivers: ກວດສອບໄດຣເວີອຸປະກອນທີ່ມີບັນຫາ (ໄດຣເວີຂາດ ຫຼື ເຄື່ອງໝາຍຕົກໃຈສີເຫຼືອງ)
-9. Disk Free Space: ກວດເນື້ອທີ່ວ່າງ Drive C: (<5% Fail, <10% Warn, >=10% Pass)
-10. Windows Defender: ກວດສະຖານະ Antivirus ແລະ ການປ້ອງກັນ Real-time
-11. Security & App Lock: ກວດເບິ່ງວ່ານະໂຍບາຍບລັອກ USB/Downloads/ເກມ ເປີດຢູ່ຫຼືບໍ່
-12. USB Vaccine & AutoRun: ກວດສະຖານະ Windows AutoRun ແລະ ວັກຊີນປ້ອງກັນ USB Shortcut
-13. Computer Name: ກວດຊື່ຄອມພິວເຕີວ່າເປັນຊື່ມາດຕະຖານຕາມຫ້ອງຮຽນ (COM1-01) ຫຼື ຍັງເປັນຊື່ເລີ່ມຕົ້ນ (DESKTOP-XXXX)
-14. Export Machine Spec: ກວດ ແລະ Export ສະເປັກເຄື່ອງ (CPU, RAM, Mainboard, Storage, GPU, IP, MAC) ເປັນ Excel (.xlsx)
+6. ວັນທີ & ເວລາ: ກວດ Timezone (+7), ຮູບແບບວັນທີ ແລະ ເວລາ 12/24 ຊົ່ວໂມງ ຕາມທີ່ຕັ້ງໄວ້
+7. ໄອຄອນໜ້າຈໍ: ກວດ This PC, Control Panel ແລະ Shortcut MS Office
+8. Computer Name: ກວດຊື່ຄອມພິວເຕີວ່າເປັນຊື່ມາດຕະຖານຕາມຫ້ອງຮຽນ (COM1-01) ຫຼື ຍັງເປັນຊື່ເລີ່ມຕົ້ນ (DESKTOP-XXXX)
+9. Power Scheme (Never sleep): ກວດການຕັ້ງຄ່າບໍ່ໃຫ້ເຄື່ອງຫຼັບ (ກົດ Fix ຕັ້ງ Never Sleep ທັນທີ)
+10. Temp Files Cleanup: ກວດຫາໄຟລ໌ຂີ້ເຫຍື້ອ Temp (ກົດ Fix ເພື່ອລ້າງໄຟລ໌ຂີ້ເຫຍື້ອປອດໄພ)
+11. ໂໝດເຄື່ອງສະເປັກຕ່ຳ: ເລັ່ງຄວາມໄວເຄື່ອງ RAM ນ້ອຍ (ເບິ່ງແທັບ 'ເຄື່ອງສະເປັກຕ່ຳ')
+12. Device Drivers: ກວດສອບໄດຣເວີອຸປະກອນທີ່ມີບັນຫາ (ໄດຣເວີຂາດ ຫຼື ເຄື່ອງໝາຍຕົກໃຈສີເຫຼືອງ)
+13. Disk Free Space: ກວດເນື້ອທີ່ວ່າງ Drive C: (<5% Fail, <10% Warn, >=10% Pass)
+14. Windows Defender: ກວດສະຖານະ Antivirus ແລະ ການປ້ອງກັນ Real-time
+15. Security & App Lock: ກວດເບິ່ງວ່ານະໂຍບາຍບລັອກ USB/Downloads/ເກມ ເປີດຢູ່ຫຼືບໍ່
+16. USB Vaccine & AutoRun: ກວດສະຖານະ Windows AutoRun ແລະ ວັກຊີນປ້ອງກັນ USB Shortcut
+17. Export Machine Spec: ກວດ ແລະ Export ສະເປັກເຄື່ອງ (CPU, RAM, Mainboard, Storage, GPU, IP, MAC) ເປັນ Excel (.xlsx)
 
 --------------------------------------------------------------------------------
 ປຸ່ມສັ່ງການ:
@@ -523,7 +580,10 @@ HOW TO USE:
 1. Copy installer files (.exe/.msi) into the 'installers\' folder on your USB drive.
 2. The table displays current local status ('✓ ຕິດຕັ້ງແລ້ວ' or '✗ ຍັງບໍ່ທັນຕິດຕັ້ງ') and whether the setup file is found in USB.
 3. Click '📥 ຕິດຕັ້ງ' on any individual software to install it silently.
-4. Or click '⚡ ຕິດຕັ້ງທີ່ຂາດທັງໝົດ' to install all missing programs sequentially.";
+4. Or click '⚡ ຕິດຕັ້ງທີ່ຂາດທັງໝົດ' to install all missing programs sequentially.
+
+💡 The 4 essential programs (PDF reader, LaoScript 8, VLC, 7-Zip) are also checked and installed
+   by the 'Essential Software' scan module. Everything else is installed manually from this tab.";
             }
 
             return @"================================================================================
@@ -556,7 +616,10 @@ HOW TO USE:
 1. ດາວໂຫຼດໄຟລ໌ Setup (.exe/.msi) ມາໄວ້ໃນໂຟນເດີ 'installers\' ໃນ USB Flash Drive.
 2. ຕາຕະລາງຈະບອກສະຖານະວ່າໂປຣແກຣມໃດຕິດຕັ້ງແລ້ວ ('✓ ຕິດຕັ້ງແລ້ວ') ຫຼື ຂາດ ('✗ ຍັງບໍ່ທັນຕິດຕັ້ງ') ແລະ ພົບໄຟລ໌ໃນ USB ຫຼື ບໍ່.
 3. ກົດປຸ່ມ '📥 ຕິດຕັ້ງ' ໃນແຕ່ລະແຖວເພື່ອເລືອກຕິດຕັ້ງສະເພາະໂປຣແກຣມທີ່ຕ້ອງການ (ບໍ່ບັງຄັບຕິດຕັ້ງທັງໝົດ).
-4. ຫຼື ກົດປຸ່ມ '⚡ ຕິດຕັ້ງທີ່ຂາດທັງໝົດ' ດ້ານເທິງ ເພື່ອໃຫ້ລະບົບຕິດຕັ້ງທຸກຕົວທີ່ຍັງຂາດໃຫ້ອັດຕະໂນມັດ.";
+4. ຫຼື ກົດປຸ່ມ '⚡ ຕິດຕັ້ງທີ່ຂາດທັງໝົດ' ດ້ານເທິງ ເພື່ອໃຫ້ລະບົບຕິດຕັ້ງທຸກຕົວທີ່ຍັງຂາດໃຫ້ອັດຕະໂນມັດ.
+
+💡 ຊອບແວພື້ນຖານ 4 ໂປຣແກຣມ (PDF, LaoScript 8, VLC, 7-Zip) ຈະຖືກກວດ ແລະ ຕິດຕັ້ງໂດຍໂມດູນ
+   'ຊອບແວພື້ນຖານ' ໃນແທັບກວດສອບລະບົບນຳ. ໂປຣແກຣມອື່ນໆ ໃຫ້ຕິດຕັ້ງດ້ວຍມືຈາກແທັບນີ້.";
         }
 
         private string GetUsbAntivirusContent()
@@ -648,7 +711,10 @@ This section explains how Classroom Checker automatically configures internation
 1. ⏱️ TIMEZONE & DATE FORMAT:
 --------------------------------------------------------------------------------
 • Timezone: Automatically set to UTC+07:00 (SE Asia Standard Time: Bangkok, Hanoi, Jakarta)
-• Date Format: Set to Day/Month/Year (dd/MM/yyyy, d/M/y), matching official Lao standard
+• Date Format: choose dd/MM/yyyy (default), d/M/yyyy, dd-MM-yyyy or yyyy-MM-dd
+• Time Format: 24-hour (14:30) or 12-hour (2:30 PM)
+• Choose both in ⚙️ Settings → Date & Time tab, with a live preview of the clock
+• Applied to the signed-in user and the sign-in screen
 • Live Refresh: Windows Taskbar, Clock and Explorer immediately reload without restart
 
 --------------------------------------------------------------------------------
@@ -666,6 +732,7 @@ This section explains how Classroom Checker automatically configures internation
   - Word.lnk
   - Excel.lnk
   - PowerPoint.lnk
+• If a Word/Excel/PowerPoint shortcut already exists on any desktop (any name), it is not created again
 
 --------------------------------------------------------------------------------
 4. 📦 MANUAL SOFTWARE INSTALLATION:
@@ -675,7 +742,7 @@ This section explains how Classroom Checker automatically configures internation
             }
 
             return @"================================================================================
-⚙️ 7. ກຳນົດຮູບແບບວັນທີ່ & ໄອຄອນໜ້າຈໍ (DATE/TIME & DESKTOP ICONS)
+⚙️ 7. ກຳນົດຮູບແບບວັນທີ & ໄອຄອນໜ້າຈໍ (DATE/TIME & DESKTOP ICONS)
 ================================================================================
 
 ສ່ວນນີ້ອະທິບາຍລະບົບຕັ້ງຄ່າເວລາ, ວັນທີ່ ແລະ ໄອຄອນໜ້າຈໍທີ່ຈຳເປັນສຳລັບຄອມພິວເຕີຫ້ອງຮຽນ.
@@ -684,8 +751,11 @@ This section explains how Classroom Checker automatically configures internation
 1. ⏱️ TIMEZONE ແລະ ຮູບແບບວັນທີ່ (DATE FORMAT):
 --------------------------------------------------------------------------------
 • Timezone: ຕັ້ງເປັນ UTC+07:00 (SE Asia Standard Time: ບາງກອກ, ຮ່າໂນ້ຍ, ຈາກາຕາ)
-• ຮູບແບບວັນທີ່: ຕັ້ງເປັນ ວັນທີ່/ເດືອນ/ປີ (dd/MM/yyyy) ຕາມມາດຕະຖານພາສາລາວ
-• ອັບເດດທັນທີ: Taskbar, ໂມງ ແລະ Windows Explorer ຈະປ່ຽນເປັນ ວ/ດ/ປ ທັນທີໂດຍບໍ່ຕ້ອງ Restart
+• ຮູບແບບວັນທີ: ເລືອກ dd/MM/yyyy (ຄ່າເລີ່ມຕົ້ນ), d/M/yyyy, dd-MM-yyyy ຫຼື yyyy-MM-dd
+• ຮູບແບບເວລາ: 24 ຊົ່ວໂມງ (14:30) ຫຼື 12 ຊົ່ວໂມງ (2:30 PM)
+• ເລືອກໄດ້ໃນ ⚙️ ຕັ້ງຄ່າ → ແທັບ ວັນທີ & ເວລາ ພ້ອມຕົວຢ່າງໂມງແບບ Real-Time
+• ມີຜົນກັບ User ທີ່ Login ຢູ່ ແລະ ໜ້າ Login
+• ອັບເດດທັນທີ: Taskbar, ໂມງ ແລະ Windows Explorer ຈະປ່ຽນທັນທີໂດຍບໍ່ຕ້ອງ Restart
 
 --------------------------------------------------------------------------------
 2. 🖥️ ໄອຄອນລະບົບເທິງໜ້າຈໍ (SYSTEM DESKTOP ICONS):
@@ -702,6 +772,7 @@ This section explains how Classroom Checker automatically configures internation
   - Word.lnk
   - Excel.lnk
   - PowerPoint.lnk
+• ຖ້າມີ Shortcut ຂອງ Word/Excel/PowerPoint ຢູ່ໜ້າຈໍແລ້ວ (ຊື່ໃດກໍໄດ້) ລະບົບຈະບໍ່ສ້າງຊ້ຳ
 
 --------------------------------------------------------------------------------
 4. 📦 ການຕິດຕັ້ງຊອບແວດ້ວຍຕົນເອງ (MANUAL INSTALLATION):
@@ -710,13 +781,88 @@ This section explains how Classroom Checker automatically configures internation
 • ຄູ ຫຼື ຜູ້ດູແລລະບົບສາມາດເປີດໂຟນເດີ installers/ ແລ້ວຕິດຕັ້ງໂປຣແກຣມທີ່ຕ້ອງການໄດ້ດ້ວຍຕົນເອງ.";
         }
 
+        private string GetPerformanceContent()
+        {
+            bool isLo = Localizer.CurrentLanguage == "lo";
+            if (!isLo)
+            {
+                return @"================================================================================
+⚡ 8. LOW-SPEC MODE (4 GB RAM / HDD PCs)
+================================================================================
+
+Turns off Windows features that a classroom PC does not need, so old PCs with little RAM
+or a hard disk (HDD) start and open programs faster. Works on Windows 10 and 11.
+
+--------------------------------------------------------------------------------
+WHAT IT CHANGES:
+--------------------------------------------------------------------------------
+1. Visual effects: set to 'best performance' (keeps smooth fonts).
+2. Background apps: Store apps may not run in the background.
+3. Widgets / News & Interests, Copilot, Windows tips and Edge startup boost: turned off.
+4. Delivery Optimization: no sharing of Windows updates with other PCs.
+5. Services not needed in a lab: Telemetry, Search indexing, Maps, Geolocation, Xbox,
+   Error Reporting, Mobile Hotspot, Fax, Retail Demo, WMP Network Sharing.
+   SysMain (Superfetch) is turned off only on HDD PCs; SSD PCs keep it.
+6. Startup apps: unneeded programs no longer start with Windows.
+
+--------------------------------------------------------------------------------
+HOW TO USE (⚙️ Settings → Disk Cleanup tab → Low-spec Mode):
+--------------------------------------------------------------------------------
+• Automatic (recommended): applied only on PCs with 4 GB RAM or less.
+• On for every PC / Off.
+• It runs as Quick Setup step 10 and as the 'Low-spec Mode' scan module.
+• Restart the PC after applying so the services stop.
+
+--------------------------------------------------------------------------------
+UNDO:
+--------------------------------------------------------------------------------
+• The original values are saved on the PC the first time they are changed
+  (C:\ProgramData\ClassroomChecker\performance_backup.json).
+• Click '↩ Restore this PC's original settings' to put everything back, then restart.";
+            }
+
+            return @"================================================================================
+⚡ 8. ໂໝດເຄື່ອງສະເປັກຕ່ຳ (ເຄື່ອງ RAM 4 GB / HDD)
+================================================================================
+
+ປິດສ່ວນຂອງ Windows ທີ່ຄອມຫ້ອງຮຽນບໍ່ຈຳເປັນໃຊ້ ເພື່ອໃຫ້ເຄື່ອງເກົ່າທີ່ RAM ນ້ອຍ ຫຼື ໃຊ້ HDD
+ເປີດເຄື່ອງ ແລະ ເປີດໂປຣແກຣມໄດ້ໄວຂຶ້ນ. ໃຊ້ໄດ້ທັງ Windows 10 ແລະ 11.
+
+--------------------------------------------------------------------------------
+ສິ່ງທີ່ລະບົບປັບ:
+--------------------------------------------------------------------------------
+1. Visual Effects: ຕັ້ງເປັນ 'ປະສິດທິພາບສູງສຸດ' (ຍັງເກັບຕົວໜັງສືໃຫ້ຄົມຊັດ)
+2. Background Apps: ບໍ່ໃຫ້ແອັບ Store ແລ່ນຢູ່ເບື້ອງຫຼັງ
+3. ປິດ Widgets / News & Interests, Copilot, ຄຳແນະນຳ Windows ແລະ Edge Startup Boost
+4. Delivery Optimization: ບໍ່ແບ່ງປັນ Windows Update ກັບເຄື່ອງອື່ນ
+5. ປິດ Service ທີ່ຫ້ອງຄອມບໍ່ໃຊ້: Telemetry, Search Indexing, Maps, Geolocation, Xbox,
+   Error Reporting, Mobile Hotspot, Fax, Retail Demo, WMP Network Sharing
+   SysMain (Superfetch) ປິດສະເພາະເຄື່ອງ HDD; ເຄື່ອງ SSD ຍັງເປີດໄວ້
+6. Startup Apps: ໂປຣແກຣມທີ່ບໍ່ຈຳເປັນຈະບໍ່ເປີດພ້ອມ Windows
+
+--------------------------------------------------------------------------------
+ວິທີໃຊ້ (⚙️ ຕັ້ງຄ່າ → ແທັບ ລ້າງໄຟລ໌ຂີ້ເຫຍື້ອ → ໂໝດເຄື່ອງສະເປັກຕ່ຳ):
+--------------------------------------------------------------------------------
+• ອັດຕະໂນມັດ (ແນະນຳ): ເຮັດສະເພາະເຄື່ອງ RAM 4 GB ລົງມາ
+• ເປີດທຸກເຄື່ອງ / ປິດ (ບໍ່ປັບ)
+• ເຮັດວຽກໃນ ຕັ້ງຄ່າດ່ວນ ຂັ້ນຕອນ 10 ແລະ ໂມດູນ 'ໂໝດເຄື່ອງສະເປັກຕ່ຳ' ໃນແທັບກວດສອບລະບົບ
+• Restart ເຄື່ອງຫຼັງປັບ ເພື່ອໃຫ້ Service ຢຸດເຮັດວຽກ
+
+--------------------------------------------------------------------------------
+ຍົກເລີກ / ຄືນຄ່າເດີມ:
+--------------------------------------------------------------------------------
+• ຄ່າເດີມຖືກບັນທຶກໄວ້ໃນເຄື່ອງຕັ້ງແຕ່ການປ່ຽນຄັ້ງທຳອິດ
+  (C:\ProgramData\ClassroomChecker\performance_backup.json)
+• ກົດ '↩ ຄືນຄ່າເດີມຂອງເຄື່ອງນີ້' ເພື່ອຄືນທຸກຢ່າງ ແລ້ວ Restart ເຄື່ອງ";
+        }
+
         private string GetStructureContent()
         {
             bool isLo = Localizer.CurrentLanguage == "lo";
             if (!isLo)
             {
                 return @"================================================================================
-📁 8. USB DIRECTORY STRUCTURE & PERSISTENCE
+📁 9. USB DIRECTORY STRUCTURE & PERSISTENCE
 ================================================================================
 
 Classroom Checker is engineered as a true zero-installation portable tool. Everything it needs or generates lives directly in its directory on the USB Flash Drive.
@@ -756,7 +902,7 @@ ROBUSTNESS & RESILIENCE:
             }
 
             return @"================================================================================
-📁 8. ໂຄງສ້າງໂຟນເດີ USB (DIRECTORY STRUCTURE & PERSISTENCE)
+📁 9. ໂຄງສ້າງໂຟນເດີ USB (DIRECTORY STRUCTURE & PERSISTENCE)
 ================================================================================
 
 ໂປຣແກຣມ Classroom Checker ເປັນ Portable 100% ບໍ່ຕ້ອງຕິດຕັ້ງ ທຸກຢ່າງທີ່ໂປຣແກຣມຕ້ອງການ ຫຼື ສ້າງຂຶ້ນຈະຖືກເກັບໄວ້ໃນ USB Flash Drive ຢ່າງເປັນລະບຽບຮຽບຮ້ອຍ.
