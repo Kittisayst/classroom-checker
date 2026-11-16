@@ -163,6 +163,12 @@ namespace ClassroomChecker.Config
         public SecurityConfig security { get; set; }
         public string specOutputDir { get; set; }
 
+        /// <summary>ເມື່ອປ່ຽນຊື່ຄອມ ໃຫ້ປ່ຽນຊື່ user ທີ່ login ຢູ່ (Local) ເປັນຊື່ດຽວກັນນຳ</summary>
+        public bool renameUserWithComputer { get; set; }
+
+        /// <summary>ຄຳນຳໜ້າຊື່ user: "USER" → USER-COM1-01. ປະວ່າງ = ໃຊ້ຊື່ດຽວກັບຄອມ</summary>
+        public string userNamePrefix { get; set; }
+
         public AppConfig()
         {
             version = 1;
@@ -186,6 +192,8 @@ namespace ClassroomChecker.Config
             cleanup = new CleanupConfig();
             security = new SecurityConfig();
             specOutputDir = "specs";
+            renameUserWithComputer = true;
+            userNamePrefix = "USER";
         }
     }
 }

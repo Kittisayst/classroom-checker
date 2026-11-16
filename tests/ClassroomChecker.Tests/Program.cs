@@ -66,6 +66,7 @@ namespace ClassroomChecker.Tests
             Run("LogonScreen: config defaults and notice text normalization", LogonScreen_ConfigAndNotice);
             Run("LogonScreen: lock screen file naming and cleanup of old files", LogonScreen_LockScreenFiles);
             Run("I18n: logon screen keys localized in lo and en", I18n_LogonScreen_Localized);
+            Run("UserAccount: user name validation, account parsing and defaults", UserAccount_ValidationAndDefaults);
 
             Cleanup();
 
@@ -843,6 +844,35 @@ namespace ClassroomChecker.Tests
             Assert(LogonScreenService.NormalizeNoticeText("a\nb\r\nc\rd") == "a\r\nb\r\nc\r\nd", "Line breaks normalized to CRLF");
             Assert(LogonScreenService.NormalizeNoticeText(null) == "", "Null text -> empty");
             Assert(LogonScreenService.NormalizeNoticeText("  ກົດລະບຽບ \n") == "ກົດລະບຽບ", "Lao text kept and trimmed");
+        }
+
+        private static void UserAccount_ValidationAndDefaults()
+        {
+            string err;
+            Assert(UserAccountService.ValidateUserName("COM1-01", out err), "COM1-01 is a valid user name");
+            Assert(!UserAccountService.ValidateUserName("", out err), "Empty rejected");
+            Assert(!UserAccountService.ValidateUserName("ABCDEFGHIJKLMNOPQRSTU", out err), "21 chars rejected");
+            Assert(!UserAccountService.ValidateUserName("a/b", out err), "Slash rejected");
+            Assert(!UserAccountService.ValidateUserName("a@b", out err), "@ rejected");
+            Assert(!UserAccountService.ValidateUserName("...", out err), "Dots only rejected");
+
+            string domain, user;
+            UserAccountService.SplitAccount(@"PC01\kitti", out domain, out user);
+            Assert(domain == "PC01" && user == "kitti", "Split DOMAIN\\user");
+            UserAccountService.SplitAccount("kitti", out domain, out user);
+            Assert(domain == "" && user == "kitti", "Split bare user");
+
+            Assert(new AppConfig().renameUserWithComputer, "Rename user with computer on by default");
+            Assert(new AppConfig().userNamePrefix == "USER", "Default user prefix is USER");
+            Assert(UserAccountService.BuildUserName("USER", "COM1-01") == "USER-COM1-01", "USER prefix");
+            Assert(UserAccountService.BuildUserName("LTVC", "COM1-01") == "LTVC-COM1-01", "Custom prefix LTVC");
+            Assert(UserAccountService.BuildUserName("LTVC-", "COM1-01") == "LTVC-COM1-01", "Trailing dash not doubled");
+            Assert(UserAccountService.BuildUserName("", "COM1-01") == "COM1-01", "Empty prefix -> same as PC name");
+            Assert(UserAccountService.BuildUserName(null, "COM1-01") == "COM1-01", "Null prefix -> same as PC name");
+            Localizer.SetLanguage("en");
+            Assert(Localizer.T("settings_rename_user_with_computer") != "settings_rename_user_with_computer", "en label exists");
+            Localizer.SetLanguage("lo");
+            Assert(Localizer.T("settings_rename_user_with_computer") != "settings_rename_user_with_computer", "lo label exists");
         }
 
         private static void LogonScreen_LockScreenFiles()

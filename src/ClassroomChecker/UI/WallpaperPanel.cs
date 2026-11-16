@@ -224,7 +224,18 @@ namespace ClassroomChecker.UI
             }
 
             string current = ComputerNameService.GetCurrentName();
-            if (current.Equals(target, StringComparison.OrdinalIgnoreCase))
+            string pending = ComputerNameService.GetPendingName();
+            bool computerDone = current.Equals(target, StringComparison.OrdinalIgnoreCase)
+                || (!string.IsNullOrEmpty(pending) && pending.Equals(target, StringComparison.OrdinalIgnoreCase));
+
+            // ປ່ຽນຊື່ user ທີ່ login ຢູ່ໃຫ້ກົງກັບຊື່ຄອມ (ປິດໄດ້ໃນ ຕັ້ງຄ່າ → ທົ່ວໄປ)
+            string currentUser = UserAccountService.GetInteractiveLocalUserName();
+            string targetUser = UserAccountService.BuildUserName(ConfigService.Instance.Current.userNamePrefix, target);
+            bool renameUser = ConfigService.Instance.Current.renameUserWithComputer
+                && currentUser != null
+                && !UserAccountService.IsInteractiveUserNamed(targetUser);
+
+            if (computerDone && !renameUser)
             {
                 MessageBox.Show(
                     string.Format("ຊື່ເຄື່ອງປັດຈຸບັນແມ່ນ {0} ຢູ່ແລ້ວ!", target),
@@ -234,39 +245,55 @@ namespace ClassroomChecker.UI
                 return;
             }
 
-            var dr = MessageBox.Show(
-                string.Format("ທ່ານຕ້ອງການປ່ຽນຊື່ເຄື່ອງຈາກ '{0}' ເປັນ '{1}' ແທ້ບໍ່?\n\n(ໝາຍເຫດ: ຈະມີຜົນສົມບູນເມື່ອ Restart ເຄື່ອງ)", current, target),
-                "ຢືນຢັນການປ່ຽນຊື່ເຄື່ອງ",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
+            var confirm = new System.Text.StringBuilder("ທ່ານຕ້ອງການປ່ຽນ:\n");
+            if (!computerDone) confirm.AppendFormat("\n• ຊື່ເຄື່ອງ: '{0}' → '{1}' (ມີຜົນເມື່ອ Restart)", current, target);
+            if (renameUser) confirm.AppendFormat("\n• ຊື່ user: '{0}' → '{1}' (ມີຜົນເມື່ອ Sign out)", currentUser, targetUser);
+            confirm.Append("\n\nແທ້ບໍ່?");
 
-            if (dr == DialogResult.Yes)
+            var dr = MessageBox.Show(confirm.ToString(), "ຢືນຢັນການປ່ຽນຊື່", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dr != DialogResult.Yes) return;
+
+            var result = new System.Text.StringBuilder();
+            bool allOk = true;
+
+            if (!computerDone)
             {
                 string msg;
                 bool ok = ComputerNameService.RenameComputer(target, out msg);
-                if (ok)
+                result.AppendLine((ok ? "✓ " : "✗ ") + msg);
+                allOk &= ok;
+                if (ok && ConfigService.Instance.Current.selected != null)
                 {
-                    if (ConfigService.Instance.Current.selected != null)
-                    {
-                        ConfigService.Instance.Current.selected.computerName = target;
-                        ConfigService.Instance.Save();
-                    }
-
-                    var askRestart = MessageBox.Show(
-                        msg + "\n\nທ່ານຕ້ອງການ Restart ເຄື່ອງດຽວນີ້ເລີຍບໍ່?",
-                        Localizer.T("app_title"),
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Information);
-
-                    if (askRestart == DialogResult.Yes)
-                    {
-                        ComputerNameService.RestartComputer(3);
-                    }
+                    ConfigService.Instance.Current.selected.computerName = target;
+                    ConfigService.Instance.Save();
                 }
-                else
+            }
+
+            if (renameUser && allOk)
+            {
+                string userMsg;
+                bool userOk = UserAccountService.RenameInteractiveUser(targetUser, out userMsg);
+                result.AppendLine((userOk ? "✓ " : "✗ ") + userMsg);
+                allOk &= userOk;
+            }
+
+            if (!computerDone && allOk)
+            {
+                var askRestart = MessageBox.Show(
+                    result + "\nທ່ານຕ້ອງການ Restart ເຄື່ອງດຽວນີ້ເລີຍບໍ່?",
+                    Localizer.T("app_title"),
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Information);
+
+                if (askRestart == DialogResult.Yes)
                 {
-                    MessageBox.Show(msg, Localizer.T("app_title"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ComputerNameService.RestartComputer(3);
                 }
+            }
+            else
+            {
+                MessageBox.Show(result.ToString(), Localizer.T("app_title"), MessageBoxButtons.OK,
+                    allOk ? MessageBoxIcon.Information : MessageBoxIcon.Error);
             }
         }
 

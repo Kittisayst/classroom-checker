@@ -269,6 +269,19 @@ namespace ClassroomChecker.Core
                     {
                         string renameMsg;
                         bool renameOk = ComputerNameService.RenameComputer(targetHost, out renameMsg);
+
+                        // ປ່ຽນຊື່ user ທີ່ login ຢູ່ໃຫ້ກົງກັບຊື່ຄອມ (config renameUserWithComputer)
+                        string targetUser = UserAccountService.BuildUserName(
+                            ConfigService.Instance.Current.userNamePrefix, targetHost);
+                        if (renameOk && ConfigService.Instance.Current.renameUserWithComputer
+                            && !UserAccountService.IsInteractiveUserNamed(targetUser))
+                        {
+                            string userMsg;
+                            bool userOk = UserAccountService.RenameInteractiveUser(targetUser, out userMsg);
+                            renameMsg += " | " + userMsg;
+                            renameOk = userOk;
+                        }
+
                         Notify(10, totalSteps, step10Name, true, renameOk, renameMsg);
                         if (!renameOk) allSuccessful = false;
                     }

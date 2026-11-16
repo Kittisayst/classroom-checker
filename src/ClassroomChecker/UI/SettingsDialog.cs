@@ -39,6 +39,10 @@ namespace ClassroomChecker.UI
         private NumericUpDown numMargin;
         private ComboBox cmbStyle;
         private CheckBox chkApplyAllUsers;
+        private CheckBox chkRenameUser;
+        private Label lblUserPrefix;
+        private TextBox txtUserPrefix;
+        private Label lblUserPreview;
 
         // Lock / Welcome screen
         private CheckBox chkSetLockScreen;
@@ -195,7 +199,35 @@ namespace ClassroomChecker.UI
 
             grpOutput.Controls.AddRange(new Control[] { lblSpecDir, txtSpecOutputDir });
 
-            tabGeneral.Controls.AddRange(new Control[] { grpRange, grpRooms, grpOutput });
+            chkRenameUser = new CheckBox
+            {
+                Text = Localizer.T("settings_rename_user_with_computer"),
+                Location = new Point(20, 392),
+                AutoSize = true
+            };
+
+            lblUserPrefix = new Label { Text = Localizer.T("settings_user_name_prefix"), Location = new Point(38, 425), AutoSize = true };
+            txtUserPrefix = new TextBox
+            {
+                Location = new Point(170, 422),
+                Size = new Size(110, 25),
+                CharacterCasing = CharacterCasing.Upper,
+                MaxLength = 12
+            };
+            lblUserPreview = new Label
+            {
+                Location = new Point(292, 425),
+                Size = new Size(360, 20),
+                ForeColor = Color.FromArgb(100, 116, 139)
+            };
+            txtUserPrefix.TextChanged += (s, e) => UpdateUserNamePreview();
+            chkRenameUser.CheckedChanged += (s, e) =>
+            {
+                txtUserPrefix.Enabled = chkRenameUser.Checked;
+                UpdateUserNamePreview();
+            };
+
+            tabGeneral.Controls.AddRange(new Control[] { grpRange, grpRooms, grpOutput, chkRenameUser, lblUserPrefix, txtUserPrefix, lblUserPreview });
 
             // -----------------------------------------------------------------
             // Tab 2: Wallpaper & Label
@@ -666,6 +698,10 @@ namespace ClassroomChecker.UI
 
             // Output dir
             txtSpecOutputDir.Text = !string.IsNullOrEmpty(cfg.specOutputDir) ? cfg.specOutputDir : "specs";
+            chkRenameUser.Checked = cfg.renameUserWithComputer;
+            txtUserPrefix.Text = cfg.userNamePrefix ?? string.Empty;
+            txtUserPrefix.Enabled = cfg.renameUserWithComputer;
+            UpdateUserNamePreview();
 
             // Label
             txtLabelTemplate.Text = cfg.label != null && !string.IsNullOrEmpty(cfg.label.template)
@@ -910,12 +946,45 @@ namespace ClassroomChecker.UI
             }
         }
 
+        /// <summary>ຕົວຢ່າງຊື່ user ຈາກຄຳນຳໜ້າ ໂດຍໃຊ້ຊື່ເຄື່ອງຢ່າງ COM1-01</summary>
+        private void UpdateUserNamePreview()
+        {
+            if (lblUserPreview == null) return;
+            string sample = UserAccountService.BuildUserName(txtUserPrefix.Text, "COM1-01");
+            lblUserPreview.Text = string.Format(Localizer.T("settings_user_name_preview"), sample);
+            lblUserPreview.Enabled = chkRenameUser.Checked;
+        }
+
+        /// <summary>ຄຳນຳໜ້າຕ້ອງເປັນຊື່ user ທີ່ຖືກຕ້ອງ ແລະ ລວມກັບຊື່ເຄື່ອງ 15 ຕົວແລ້ວບໍ່ເກີນ 20 ຕົວ</summary>
+        private static bool ValidateUserPrefix(string prefix, out string error)
+        {
+            error = string.Empty;
+            string p = (prefix ?? string.Empty).Trim().TrimEnd('-');
+            if (p.Length == 0) return true;
+
+            if (!UserAccountService.ValidateUserName(p, out error)) return false;
+
+            if (UserAccountService.BuildUserName(p, "COM1-01").Length > 20)
+            {
+                error = Localizer.T("settings_user_name_prefix_too_long");
+                return false;
+            }
+            return true;
+        }
+
         private void btnSave_Click(object sender, EventArgs e)
         {
             // Validation
             if (numMinNumber.Value > numMaxNumber.Value)
             {
                 MessageBox.Show(Localizer.T("settings_validation_range_error"), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string prefixError;
+            if (chkRenameUser.Checked && !ValidateUserPrefix(txtUserPrefix.Text, out prefixError))
+            {
+                MessageBox.Show(prefixError, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -945,6 +1014,8 @@ namespace ClassroomChecker.UI
             {
                 cfg.specOutputDir = txtSpecOutputDir.Text.Trim();
             }
+            cfg.renameUserWithComputer = chkRenameUser.Checked;
+            cfg.userNamePrefix = txtUserPrefix.Text.Trim().TrimEnd('-');
 
             cfg.label.template = !string.IsNullOrEmpty(txtLabelTemplate.Text.Trim())
                 ? txtLabelTemplate.Text.Trim()

@@ -39,6 +39,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -65,6 +66,7 @@
     <Compile Include="Core\DateTimeService.cs" />
     <Compile Include="Core\DesktopIconService.cs" />
     <Compile Include="Core\LogonScreenService.cs" />
+    <Compile Include="Core\UserAccountService.cs" />
     <Compile Include="Core\ComputerNameService.cs" />
     <Compile Include="Core\UsbVirusCleanerService.cs" />
     <Compile Include="Core\SoftwarePackage.cs" />
