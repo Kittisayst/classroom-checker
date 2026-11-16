@@ -17,7 +17,7 @@ namespace ClassroomChecker.UI
         private TabPage tabWallpaper;
         private TabPage tabScan;
         private TabPage tabSecurity;
-        private TabPage tabInstall;
+        private TabPage tabDateTimeIcons;
         private TabPage tabStructure;
 
         private Panel pnlHeader;
@@ -153,7 +153,7 @@ namespace ClassroomChecker.UI
             tabWallpaper = CreateGuideTab("🖼️ ພື້ນຫຼັງ & ເລກເຄື່ອງ", GetWallpaperContent());
             tabScan = CreateGuideTab("🔍 ກວດສອບລະບົບ", GetScanContent());
             tabSecurity = CreateGuideTab("🛡️ ປ້ອງກັນ & ລັອກ", GetSecurityContent());
-            tabInstall = CreateGuideTab("📦 ຕິດຕັ້ງຊອບແວ", GetInstallContent());
+            tabDateTimeIcons = CreateGuideTab("⚙️ ວັນທີ່ & ໄອຄອນໜ້າຈໍ", GetDateTimeIconsContent());
             tabStructure = CreateGuideTab("📁 ໂຄງສ້າງ USB", GetStructureContent());
 
             tabGuide.TabPages.AddRange(new TabPage[] {
@@ -161,7 +161,7 @@ namespace ClassroomChecker.UI
                 tabWallpaper,
                 tabScan,
                 tabSecurity,
-                tabInstall,
+                tabDateTimeIcons,
                 tabStructure
             });
 
@@ -459,84 +459,82 @@ ACTION BUTTONS:
 • '💾 ບັນທຶກ': ບັນທຶກລາຍຊື່ເກມ ແລະ ນະໂຍບາຍລົງໄຟລ໌ config.json";
         }
 
-        private string GetInstallContent()
+        private string GetDateTimeIconsContent()
         {
             bool isLo = Localizer.CurrentLanguage == "lo";
+
             if (!isLo)
             {
                 return @"================================================================================
-📦 5. OFFLINE SOFTWARE INSTALLER TAB
+⚙️ 5. DATE/TIME FORMAT & DESKTOP ICONS
 ================================================================================
 
-This tab allows administrators to install 11 essential, open-source, and free software packages silently in unattended mode from the USB drive without needing an internet connection.
+This section explains how Classroom Checker automatically configures international time/date standards and essential desktop icons for classroom computers.
 
 --------------------------------------------------------------------------------
-HOW TO USE:
+1. ⏱️ TIMEZONE & DATE FORMAT:
 --------------------------------------------------------------------------------
-1. Download installer files on any computer with internet.
-2. Place the setup files into the 'installers/' folder on your USB flash drive.
-3. Plug the USB into the classroom PC and open Classroom Checker -> 'ຕິດຕັ້ງຊອບແວ' tab.
-4. The table displays live detection status:
-   • '✓ ຕິດຕັ້ງແລ້ວ': Package is already installed on the computer.
-   • '✗ ຍັງບໍ່ທັນຕິດຕັ້ງ': Package is missing.
-   • '✓ ພົບ: <filename>': Installer file was found in the USB installers/ folder.
-5. Click '📥 ຕິດຕັ້ງ' on an individual row, or click '⚡ ຕິດຕັ້ງທີ່ຂາດທັງໝົດ'
-   to batch-install all missing packages unattended!
+• Timezone: Automatically set to UTC+07:00 (SE Asia Standard Time: Bangkok, Hanoi, Jakarta)
+• Date Format: Set to Day/Month/Year (dd/MM/yyyy, d/M/y), matching official Lao standard
+• Live Refresh: Windows Taskbar, Clock and Explorer immediately reload without restart
 
 --------------------------------------------------------------------------------
-THE 11 SUPPORTED PACKAGES:
+2. 🖥️ SYSTEM DESKTOP ICONS:
 --------------------------------------------------------------------------------
-1. 7-Zip (64-bit): File archiver (LGPL) -> Flags: /S
-2. SumatraPDF: Fast, lightweight PDF reader (GPLv3) -> Flags: /S
-3. VLC Media Player: Multi-format audio & video player (GPL) -> Flags: /S
-4. Brave Browser: Fast, ad-free secure web browser (MPL) -> Flags: /silent /install
-5. Google Chrome: Popular offline enterprise browser -> Flags: /silent /install
-6. Notepad++: Source code & text editor (GPL) -> Flags: /S
-7. LaoScript 8: Lao keyboard, word-wrapping & fonts -> Flags: /VERYSILENT
-8. Visual Studio Code: Code editor for IT classrooms -> Flags: /VERYSILENT /NORESTART
-9. GIMP: Photo editing & graphic design (GPL) -> Flags: /VERYSILENT /NORESTART
-10. ShareX: Screen capture, annotation & video recorder (GPLv3) -> Flags: /VERYSILENT
-11. RAMMap64: Sysinternals memory cleaner & standby list clearer (Freeware):
-    • PORTABLE DEPLOYMENT: Automatically creates C:\Program Files\RAMMap,
-      copies RAMMap64.exe, registers Windows App Paths, auto-accepts EULA,
-      and creates a Desktop Shortcut named 'RAMMap (Clear RAM).lnk'!";
+• 'This PC': Unhides the native Windows Computer icon on the Desktop
+• 'Control Panel': Unhides the native Control Panel icon on the Desktop
+• Refreshes Windows Shell so icons appear immediately for all students
+
+--------------------------------------------------------------------------------
+3. 📑 MICROSOFT OFFICE SHORTCUTS:
+--------------------------------------------------------------------------------
+• Automatically detects Word (WINWORD.EXE), Excel (EXCEL.EXE), and PowerPoint (POWERPNT.EXE)
+• Creates clean desktop shortcuts in Public Desktop so every student account has access:
+  - Word.lnk
+  - Excel.lnk
+  - PowerPoint.lnk
+
+--------------------------------------------------------------------------------
+4. 📦 MANUAL SOFTWARE INSTALLATION:
+--------------------------------------------------------------------------------
+• Place your desired installer setup files (.exe, .msi) in the 'installers/' folder on the USB.
+• Administrators can double-click and install them manually according to classroom needs.";
             }
 
             return @"================================================================================
-📦 5. ແທັບ 'ຕິດຕັ້ງຊອບແວ' (OFFLINE SOFTWARE INSTALLER)
+⚙️ 5. ກຳນົດຮູບແບບວັນທີ່ & ໄອຄອນໜ້າຈໍ (DATE/TIME & DESKTOP ICONS)
 ================================================================================
 
-ແທັບນີ້ຊ່ວຍໃຫ້ຜູ້ດູແລລະບົບສາມາດຕິດຕັ້ງຊອບແວພື້ນຖານ ແລະ Open Source ທີ່ຈຳເປັນລົງໃນເຄື່ອງຫ້ອງຮຽນແບບງຽບໆ (Silent Unattended) ຈາກ USB ໂດຍບໍ່ຕ້ອງເຊື່ອມຕໍ່ອິນເຕີເນັດ ແລະ ບໍ່ຕ້ອງກົດ Next, Next, Finish.
+ສ່ວນນີ້ອະທິບາຍລະບົບຕັ້ງຄ່າເວລາ, ວັນທີ່ ແລະ ໄອຄອນໜ້າຈໍທີ່ຈຳເປັນສຳລັບຄອມພິວເຕີຫ້ອງຮຽນ.
 
 --------------------------------------------------------------------------------
-ວິທີການນຳໃຊ້:
+1. ⏱️ TIMEZONE ແລະ ຮູບແບບວັນທີ່ (DATE FORMAT):
 --------------------------------------------------------------------------------
-1. ດາວໂຫຼດໄຟລ໌ Setup ຂອງໂປຣແກຣມຕ່າງໆ ມາໃສ່ໄວ້ໃນໂຟນເດີ 'installers/' ໃນ USB.
-2. ເປີດໂປຣແກຣມ Classroom Checker -> ເຂົ້າແທັບ 'ຕິດຕັ້ງຊອບແວ'.
-3. ຕາຕະລາງຈະກວດສອບສະຖານະອັດຕະໂນມັດ:
-   • '✓ ຕິດຕັ້ງແລ້ວ': ມີໂປຣແກຣມນີ້ໃນເຄື່ອງແລ້ວ
-   • '✗ ຍັງບໍ່ທັນຕິດຕັ້ງ': ເຄື່ອງຍັງຂາດໂປຣແກຣມນີ້
-   • '✓ ພົບ: <ຊື່ໄຟລ໌>': ພົບໄຟລ໌ Setup ໃນໂຟນເດີ installers/ ໃນ USB
-4. ກົດປຸ່ມ '📥 ຕິດຕັ້ງ' ໃນແຖວທີ່ຕ້ອງການ, ຫຼື ກົດປຸ່ມ '⚡ ຕິດຕັ້ງທີ່ຂາດທັງໝົດ'
-   ເພື່ອໃຫ້ລະບົບຕິດຕັ້ງທຸກໂປຣແກຣມທີ່ຍັງຂາດໃຫ້ອັດຕະໂນມັດໃນຄລິກດຽວ!
+• Timezone: ຕັ້ງເປັນ UTC+07:00 (SE Asia Standard Time: ບາງກອກ, ຮ່າໂນ້ຍ, ຈາກາຕາ)
+• ຮູບແບບວັນທີ່: ຕັ້ງເປັນ ວັນທີ່/ເດືອນ/ປີ (dd/MM/yyyy) ຕາມມາດຕະຖານພາສາລາວ
+• ອັບເດດທັນທີ: Taskbar, ໂມງ ແລະ Windows Explorer ຈະປ່ຽນເປັນ ວ/ດ/ປ ທັນທີໂດຍບໍ່ຕ້ອງ Restart
 
 --------------------------------------------------------------------------------
-ລາຍຊື່ 11 ໂປຣແກຣມທີ່ຮອງຮັບ:
+2. 🖥️ ໄອຄອນລະບົບເທິງໜ້າຈໍ (SYSTEM DESKTOP ICONS):
 --------------------------------------------------------------------------------
-1. 7-Zip (64-bit): ໂປຣແກຣມບີບອັດ/ແຕກໄຟລ໌ (LGPL) -> Flag: /S
-2. SumatraPDF: ໂປຣແກຣມເປີດອ່ານໄຟລ໌ PDF ໄວ ແລະ ເບົາ (GPLv3) -> Flag: /S
-3. VLC Media Player: ເຄື່ອງຫຼິ້ນສື່ວິດີໂອ/ສຽງ ຄົບທຸກ Format (GPL) -> Flag: /S
-4. Brave Browser: ເວັບບຣາວເຊີໄວ ແລະ ປອດໄພ ບລັອກໂຄສະນາ (MPL) -> Flag: /silent /install
-5. Google Chrome: ເວັບບຣາວເຊີຍອດນິຍົມ -> Flag: /silent /install
-6. Notepad++: ໂປຣແກຣມແກ້ໄຂໂຄ້ດ ແລະ ຂໍ້ຄວາມ (GPL) -> Flag: /S
-7. LaoScript 8: ໂປຣແກຣມແປ້ນພິມ ແລະ ຕັດຄຳພາສາລາວ -> Flag: /VERYSILENT
-8. Visual Studio Code: ເຄື່ອງມືຂຽນໂປຣແກຣມສຳລັບຫ້ອງຮຽນໄອທີ -> Flag: /VERYSILENT
-9. GIMP: ໂປຣແກຣມຕັດຕໍ່ຕົກແຕ່ງຮູບພາບແທນ Photoshop -> Flag: /VERYSILENT
-10. ShareX: ໂປຣແກຣມຖ່າຍພາບ/ອັດວິດີໂອໜ້າຈໍ ແລະ ໃສ່ລູກສອນ (GPLv3) -> Flag: /VERYSILENT
-11. RAMMap64: ໂປຣແກຣມວິເຄາະ ແລະ Clear RAM (Microsoft Sysinternals):
-    • ລະບົບ PORTABLE: ຄັດລອກລົງ C:\Program Files\RAMMap ອັດຕະໂນມັດ,
-      ສ້າງ Desktop Shortcut 'RAMMap (Clear RAM).lnk', ລົງທະບຽນ App Paths (Win+R)
-      ແລະ ຕັ້ງຄ່າ Auto-Accept EULA ໃຫ້ພ້ອມໃຊ້ງານທັນທີ!";
+• 'This PC': ເປີດສະແດງໄອຄອນ This PC ໄວ້ເທິງໜ້າຈໍ Desktop
+• 'Control Panel': ເປີດສະແດງໄອຄອນ Control Panel ໄວ້ເທິງໜ້າຈໍ Desktop
+• Refresh Desktop ອັດຕະໂນມັດເພື່ອໃຫ້ໄອຄອນປະກົດຂຶ້ນທັນທີ
+
+--------------------------------------------------------------------------------
+3. 📑 ໄອຄອນ MICROSOFT OFFICE:
+--------------------------------------------------------------------------------
+• ກວດຄົ້ນຫາໄຟລ໌ Word (WINWORD.EXE), Excel (EXCEL.EXE), ແລະ PowerPoint (POWERPNT.EXE)
+• ສ້າງ Shortcut ໄວ້ໜ້າຈໍ Public Desktop ເພື່ອໃຫ້ນັກຮຽນທຸກ User ເຫັນ ແລະ ເປີດໃຊ້ໄດ້ສະດວກ:
+  - Word.lnk
+  - Excel.lnk
+  - PowerPoint.lnk
+
+--------------------------------------------------------------------------------
+4. 📦 ການຕິດຕັ້ງຊອບແວດ້ວຍຕົນເອງ (MANUAL INSTALLATION):
+--------------------------------------------------------------------------------
+• ເກັບຮວບຮວມໄຟລ໌ Setup ຂອງໂປຣແກຣມຕ່າງໆ ໄວ້ໃນໂຟນເດີ 'installers/' ໃນ USB.
+• ຄູ ຫຼື ຜູ້ດູແລລະບົບສາມາດເປີດໂຟນເດີ installers/ ແລ້ວຕິດຕັ້ງໂປຣແກຣມທີ່ຕ້ອງການໄດ້ດ້ວຍຕົນເອງ.";
         }
 
         private string GetStructureContent()

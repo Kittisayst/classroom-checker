@@ -56,6 +56,8 @@ namespace ClassroomChecker.Tests
             Run("SoftwareInstaller: RAMMap64 is flagged as portable", SoftwareInstaller_RamMapIsPortable);
             Run("SecurityStatusInfo: lock state evaluation and config matching", SecurityStatusInfo_LockStateEvaluation);
             Run("I18n: security button states localized in lo and en", I18n_SecurityLockButtons_Localized);
+            Run("DateTimeService: timezone and date format contract", DateTimeService_ConstantsAndContract);
+            Run("DesktopIconService: system icons and office shortcuts contract", DesktopIconService_ConstantsAndContract);
 
             Cleanup();
 
@@ -608,6 +610,53 @@ namespace ClassroomChecker.Tests
             Localizer.SetLanguage("en");
             AreEqual("✓ Already Locked", Localizer.T("security_btn_locked"), "security_btn_locked in en");
             AreEqual("✓ Unlocked", Localizer.T("security_btn_unlocked"), "security_btn_unlocked in en");
+        }
+
+        private static void DateTimeService_ConstantsAndContract()
+        {
+            AreEqual("SE Asia Standard Time", DateTimeService.TARGET_TIMEZONE_ID, "target timezone is SE Asia (+7)");
+            AreEqual("dd/MM/yyyy", DateTimeService.TARGET_DATE_FORMAT, "target date format is dd/MM/yyyy");
+            AreEqual("1", DateTimeService.TARGET_DATE_ORDER, "target date order is 1 (d/M/y)");
+
+            var mod = new DateTimeCheckModule();
+            AreEqual("datetime_format", mod.Id, "DateTimeCheckModule Id");
+            AreEqual("module_datetime_format", mod.DisplayNameKey, "DateTimeCheckModule DisplayNameKey");
+            Assert(mod.CanFix, "DateTimeCheckModule CanFix is true");
+
+            var res = mod.Check();
+            Assert(res != null, "CheckResult non-null");
+            Assert(res.Status == CheckStatus.Pass || res.Status == CheckStatus.Warning || res.Status == CheckStatus.Unknown, "Valid CheckStatus");
+        }
+
+        private static void DesktopIconService_ConstantsAndContract()
+        {
+            AreEqual("{20D04FE0-3AEA-1069-A2D8-08002B30309D}", DesktopIconService.GUID_THIS_PC, "This PC GUID");
+            AreEqual("{5399E694-6CE5-4D6C-AC35-41A4388A305A}", DesktopIconService.GUID_CONTROL_PANEL_1, "Control Panel GUID 1");
+
+            var mod = new DesktopIconsModule();
+            AreEqual("desktop_icons", mod.Id, "DesktopIconsModule Id");
+            AreEqual("module_desktop_icons", mod.DisplayNameKey, "DesktopIconsModule DisplayNameKey");
+            Assert(mod.CanFix, "DesktopIconsModule CanFix is true");
+
+            var res = mod.Check();
+            Assert(res != null, "CheckResult non-null");
+            Assert(res.Status == CheckStatus.Pass || res.Status == CheckStatus.Warning || res.Status == CheckStatus.Unknown, "Valid CheckStatus");
+
+            // Test CreateShortcutInternal with a temporary file
+            string tmpDir = Path.Combine(Path.GetTempPath(), "cc_icon_test_" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(tmpDir);
+            try
+            {
+                string targetExe = @"C:\Windows\notepad.exe";
+                string lnkPath = Path.Combine(tmpDir, "TestIcon.lnk");
+                bool created = DesktopIconService.CreateShortcutInternal(lnkPath, targetExe, "Test Icon Description");
+                Assert(created, "CreateShortcutInternal succeeded");
+                Assert(File.Exists(lnkPath), "TestIcon.lnk exists on disk");
+            }
+            finally
+            {
+                try { Directory.Delete(tmpDir, true); } catch { }
+            }
         }
     }
 }

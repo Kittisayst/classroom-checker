@@ -51,7 +51,7 @@ namespace ClassroomChecker.Core
         {
             return await Task.Run(() =>
             {
-                int totalSteps = 6;
+                int totalSteps = 8;
                 bool allSuccessful = true;
 
                 // -----------------------------------------------------------------
@@ -157,41 +157,81 @@ namespace ClassroomChecker.Core
                 }
 
                 // -----------------------------------------------------------------
-                // ຂັ້ນຕອນທີ 5: ລ້າງໄຟລ໌ Temp/Cache ປອດໄພ
+                // ຂັ້ນຕອນທີ 5: ກຳນົດ Timezone (+7) ແລະ ຮູບແບບວັນທີ່ dd/MM/yyyy
                 // -----------------------------------------------------------------
-                string step5Name = Localizer.T("quick_setup_step_cleanup");
+                string step5Name = Localizer.T("quick_setup_step_datetime");
                 Notify(5, totalSteps, step5Name, false, false);
+
+                try
+                {
+                    var dtMod = new DateTimeCheckModule();
+                    var dtRes = dtMod.Fix();
+                    bool dtOk = dtRes != null && dtRes.Status == CheckStatus.Pass;
+                    Notify(5, totalSteps, step5Name, true, dtOk, dtRes != null ? dtRes.Summary : "");
+                    if (!dtOk) allSuccessful = false;
+                }
+                catch (Exception ex)
+                {
+                    allSuccessful = false;
+                    Notify(5, totalSteps, step5Name, true, false, ex.Message);
+                }
+
+                // -----------------------------------------------------------------
+                // ຂັ້ນຕອນທີ 6: ສ້າງໄອຄອນໜ້າຈໍ This PC, Control Panel ແລະ MS Office
+                // -----------------------------------------------------------------
+                string step6Name = Localizer.T("quick_setup_step_desktop_icons");
+                Notify(6, totalSteps, step6Name, false, false);
+
+                try
+                {
+                    var iconMod = new DesktopIconsModule();
+                    var iconRes = iconMod.Fix();
+                    bool iconOk = iconRes != null && iconRes.Status == CheckStatus.Pass;
+                    Notify(6, totalSteps, step6Name, true, iconOk, iconRes != null ? iconRes.Summary : "");
+                    if (!iconOk) allSuccessful = false;
+                }
+                catch (Exception ex)
+                {
+                    allSuccessful = false;
+                    Notify(6, totalSteps, step6Name, true, false, ex.Message);
+                }
+
+                // -----------------------------------------------------------------
+                // ຂັ້ນຕອນທີ 7: ລ້າງໄຟລ໌ Temp/Cache ປອດໄພ
+                // -----------------------------------------------------------------
+                string step7Name = Localizer.T("quick_setup_step_cleanup");
+                Notify(7, totalSteps, step7Name, false, false);
 
                 try
                 {
                     var cleanMod = new CleanupModule();
                     var cleanRes = cleanMod.Fix();
                     bool cleanOk = cleanRes != null && cleanRes.Status == CheckStatus.Pass;
-                    Notify(5, totalSteps, step5Name, true, cleanOk, cleanRes != null ? cleanRes.Summary : "");
+                    Notify(7, totalSteps, step7Name, true, cleanOk, cleanRes != null ? cleanRes.Summary : "");
                 }
                 catch (Exception ex)
                 {
-                    Notify(5, totalSteps, step5Name, true, false, ex.Message);
+                    Notify(7, totalSteps, step7Name, true, false, ex.Message);
                 }
 
                 // -----------------------------------------------------------------
-                // ຂັ້ນຕອນທີ 6: Export Machine Spec ເປັນ Excel (.xlsx)
+                // ຂັ້ນຕອນທີ 8: Export Machine Spec ເປັນ Excel (.xlsx)
                 // -----------------------------------------------------------------
-                string step6Name = Localizer.T("quick_setup_step_export", room, number.ToString("D2"));
-                Notify(6, totalSteps, step6Name, false, false);
+                string step8Name = Localizer.T("quick_setup_step_export", room, number.ToString("D2"));
+                Notify(8, totalSteps, step8Name, false, false);
 
                 try
                 {
                     var specMod = new SpecExportModule();
                     var specRes = specMod.Fix();
                     bool specOk = specRes != null && specRes.Status == CheckStatus.Pass;
-                    Notify(6, totalSteps, step6Name, true, specOk, specRes != null ? specRes.Summary : "");
+                    Notify(8, totalSteps, step8Name, true, specOk, specRes != null ? specRes.Summary : "");
                     if (!specOk) allSuccessful = false;
                 }
                 catch (Exception ex)
                 {
                     allSuccessful = false;
-                    Notify(6, totalSteps, step6Name, true, false, ex.Message);
+                    Notify(8, totalSteps, step8Name, true, false, ex.Message);
                 }
 
                 // -----------------------------------------------------------------

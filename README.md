@@ -36,11 +36,11 @@
 ## 1. ຈຸດເດັ່ນຫຼັກຂອງລະບົບ (Core Features)
 
 * **🚀 Portable 100%:** ໄຟລ໌ດຽວ `ClassroomChecker.exe` ສຽບ USB ແລ້ວ Run ໄດ້ທັນທີ, ບໍ່ມີຂັ້ນຕອນຕິດຕັ້ງ.
-* **⚡ Quick Setup (1-Click):** ຕັ້ງ Wallpaper + Never Sleep + Font ລາວ + ແປ້ນພິມລາວ + ລ້າງ Temp + Export Spec ໃນຄລິກດຽວ ພ້ອມລະບົບ Auto-increment ເລກເຄື່ອງ (01 -> 02 -> 03...).
+* **⚡ Quick Setup (1-Click):** ຕັ້ງ Wallpaper + Never Sleep + Font ລາວ + ແປ້ນພິມລາວ + Timezone +7 + ຮູບແບບວັນທີ່ ວ/ດ/ປ + ໄອຄອນໜ້າຈໍ (This PC, Control Panel, Office) + ລ້າງ Temp + Export Spec ໃນຄລິກດຽວ ພ້ອມລະບົບ Auto-increment ເລກເຄື່ອງ (01 -> 02 -> 03...).
 * **🖼️ Crisp Lao Typography:** ຝັງ Font ມາດຕະຖານ **Phetsarath OT** ໃນຕົວໂປຣແກຣມ Render ປ້າຍຊື່ຫ້ອງ ແລະ ເລກເຄື່ອງລົງ Wallpaper ຄົມຊັດສວຍງາມ.
-* **🔍 Deep 12-Point Inspection:** ກວດສອບ MS Office, Windows License, Font, ແປ້ນພິມ, Power, Temp, Driver, Disk, Defender, App Lock, Spec Export ພ້ອມປຸ່ມ Auto-Fix.
+* **🔍 Deep 14-Point Inspection:** ກວດສອບ MS Office, Windows License, Font, ແປ້ນພິມ, Timezone +7, ຮູບແບບວັນທີ່ dd/MM/yyyy, ໄອຄອນໜ້າຈໍ, Power, Temp, Driver, Disk, Defender, App Lock, Spec Export ພ້ອມປຸ່ມ Auto-Fix.
 * **🛡️ Smart Security Lock:** ບລັອກບໍ່ໃຫ້ນັກຮຽນ Run ເກມ ຫຼື ໂປຣແກຣມຈາກ USB ແລະ Downloads ໂດຍມີ **Smart Whitelist** ຍົກເວັ້ນໃຫ້ `ClassroomChecker.exe` ໃນ USB ໃຊ້ງານໄດ້ສະເໝີ.
-* **📦 Offline Software Installer:** ຕິດຕັ້ງ 11 ໂປຣແກຣມຍອດນິຍົມແບບ Silent ບໍ່ຕ້ອງຕໍ່ເນັດ, ພ້ອມຮອງຮັບ **Portable RAMMap64** (Auto Copy + Desktop Shortcut + Auto Accept EULA).
+* **🖥️ Desktop & International Standards:** ຕັ້ງ Timezone ເປັນ UTC+07:00 (SE Asia), ວັນທີ່ເປັນ ວັນທີ່/ເດືອນ/ປີ (`dd/MM/yyyy`), ພ້ອມສ້າງໄອຄອນໜ້າຈໍ **This PC**, **Control Panel**, ແລະ **MS Office (Word, Excel, PowerPoint)**.
 * **📊 Multi-Sheet Excel Spec Export:** Export ສະເປັກເຄື່ອງ (CPU, RAM, Mainboard, Storage, GPU, Network) ເປັນ `.xlsx` ໂດຍບໍ່ຕ້ອງລົງ Microsoft Excel ໄວ້ໃນເຄື່ອງ.
 * **🌐 Bilingual Support:** ຮອງຮັບ 2 ພາສາ (ພາສາລາວ ແລະ English) ປ່ຽນໄດ້ທັນທີ.
 
@@ -120,13 +120,15 @@ USB_FLASH_DRIVE:\
   3. `Essential Software`: ກວດ Chrome/Brave, 7-Zip, SumatraPDF
   4. `Font Phetsarath OT`: ກວດ ແລະ ຕິດຕັ້ງຟອນລາວ
   5. `Lao Keyboard`: ກວດ ແລະ ຕິດຕັ້ງແປ້ນພິມລາວ
-  6. `Power Scheme`: ກວດ ແລະ ຕັ້ງຄ່າ Never Sleep
-  7. `Temp Cleanup`: ກວດ ແລະ ລ້າງໄຟລ໌ຂີ້ເຫຍື້ອປອດໄພ
-  8. `Device Drivers`: ກວດຫາໄດຣເວີອຸປະກອນທີ່ມີບັນຫາ
-  9. `Disk Free Space`: ກວດເນື້ອທີ່ວ່າງ Drive C:
-  10. `Windows Defender`: ກວດສະຖານະ Antivirus Real-time
-  11. `App Lock`: ກວດສະຖານະການບລັອກ USB ແລະ ເກມ
-  12. `Export Machine Spec`: Export ສະເປັກເຄື່ອງລະອຽດເປັນ `.xlsx`
+  6. `Timezone & Date Format`: ກວດ Timezone +7 (SE Asia) ແລະ ຮູບແບບວັນທີ່ ວ/ດ/ປ (`dd/MM/yyyy`)
+  7. `Desktop Icons`: ກວດ ແລະ ສ້າງໄອຄອນໜ້າຈໍ This PC, Control Panel, Word, Excel, PowerPoint
+  8. `Power Scheme`: ກວດ ແລະ ຕັ້ງຄ່າ Never Sleep
+  9. `Temp Cleanup`: ກວດ ແລະ ລ້າງໄຟລ໌ຂີ້ເຫຍື້ອປອດໄພ
+  10. `Device Drivers`: ກວດຫາໄດຣເວີອຸປະກອນທີ່ມີບັນຫາ
+  11. `Disk Free Space`: ກວດເນື້ອທີ່ວ່າງ Drive C:
+  12. `Windows Defender`: ກວດສະຖານະ Antivirus Real-time
+  13. `App Lock`: ກວດສະຖານະການບລັອກ USB ແລະ ເກມ
+  14. `Export Machine Spec`: Export ສະເປັກເຄື່ອງລະອຽດເປັນ `.xlsx`
 * **ປຸ່ມ `ແກ້ໄຂທີ່ເລືອກ (Fix)`:** ແກ້ໄຂທຸກຂໍ້ຜິດພາດທີ່ເລືອກໄວ້ໃຫ້ອັດຕະໂນມັດໃນຄລິກດຽວ.
 * **ປຸ່ມ `ບັນທຶກລາຍງານ (.txt)`:** ບັນທຶກຜົນສະແກນເປັນ Text File ລົງໂຟນເດີ `reports/`.
 

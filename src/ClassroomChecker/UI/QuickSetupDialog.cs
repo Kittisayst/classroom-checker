@@ -45,7 +45,7 @@ namespace ClassroomChecker.UI
         private void InitializeComponent()
         {
             this.Text = Localizer.T("quick_setup_title");
-            this.Size = new Size(580, 520);
+            this.Size = new Size(580, 580);
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.StartPosition = FormStartPosition.CenterParent;
             this.MaximizeBox = false;
@@ -96,10 +96,10 @@ namespace ClassroomChecker.UI
             pnlSteps = new Panel
             {
                 Location = new Point(20, 100),
-                Size = new Size(525, 255),
+                Size = new Size(525, 305),
                 BackColor = Color.White,
                 BorderStyle = BorderStyle.FixedSingle,
-                Padding = new Padding(16, 12, 16, 12)
+                Padding = new Padding(16, 10, 16, 10)
             };
 
             string[] stepTitles = new string[]
@@ -108,16 +108,18 @@ namespace ClassroomChecker.UI
                 "2. ຕັ້ງຄ່າ Power Scheme ເປັນ Never Sleep (AC & DC = 0)",
                 "3. ກວດສອບ ແລະ ຕິດຕັ້ງ Font Phetsarath OT (ຖ້າຂາດ)",
                 "4. ກວດສອບ ແລະ ຕິດຕັ້ງ ແປ້ນພິມພາສາລາວ (0454:00000454)",
-                "5. ລ້າງໄຟລ໌ຂີ້ເຫຍື້ອ Temp/Cache ປອດໄພ",
-                string.Format("6. Export Spec ເຄື່ອງເປັນ Excel (.xlsx) ລົງໂຟນເດີ specs/")
+                "5. ກຳນົດ Timezone (+7) ແລະ ຮູບແບບວັນທີ່ ວ/ດ/ປ (dd/MM/yyyy)",
+                "6. ສ້າງໄອຄອນໜ້າຈໍ This PC, Control Panel ແລະ MS Office",
+                "7. ລ້າງໄຟລ໌ຂີ້ເຫຍື້ອ Temp/Cache ປອດໄພ",
+                string.Format("8. Export Spec ເຄື່ອງເປັນ Excel (.xlsx) ລົງໂຟນເດີ specs/")
             };
 
-            lblStepItems = new Label[6];
-            lblStepIcons = new Label[6];
+            lblStepItems = new Label[8];
+            lblStepIcons = new Label[8];
 
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 8; i++)
             {
-                int y = 14 + (i * 38);
+                int y = 10 + (i * 36);
 
                 lblStepIcons[i] = new Label
                 {
@@ -132,10 +134,10 @@ namespace ClassroomChecker.UI
                 lblStepItems[i] = new Label
                 {
                     Text = stepTitles[i],
-                    Font = UiFontManager.GetFont(9.5F, FontStyle.Regular),
+                    Font = UiFontManager.GetFont(9F, FontStyle.Regular),
                     ForeColor = Color.FromArgb(71, 85, 105), // Slate 600
                     Location = new Point(44, y),
-                    Size = new Size(460, 30)
+                    Size = new Size(460, 28)
                 };
 
                 pnlSteps.Controls.Add(lblStepIcons[i]);
@@ -145,10 +147,10 @@ namespace ClassroomChecker.UI
             // 3. Progress Bar & Status Message
             prgSetup = new ProgressBar
             {
-                Location = new Point(20, 368),
+                Location = new Point(20, 415),
                 Size = new Size(525, 20),
                 Minimum = 0,
-                Maximum = 6,
+                Maximum = 8,
                 Value = 0
             };
 
@@ -157,7 +159,7 @@ namespace ClassroomChecker.UI
                 Text = "ກົດ \"ເລີ່ມຕົ້ນຕັ້ງຄ່າ\" ເພື່ອດຳເນີນການທຸກຂັ້ນຕອນອັດຕະໂນມັດ",
                 Font = UiFontManager.GetFont(9F, FontStyle.Regular),
                 ForeColor = Color.FromArgb(100, 116, 139),
-                Location = new Point(20, 394),
+                Location = new Point(20, 442),
                 Size = new Size(525, 22),
                 TextAlign = ContentAlignment.MiddleLeft
             };
@@ -297,7 +299,7 @@ namespace ClassroomChecker.UI
             }
 
             int idx = e.StepIndex - 1;
-            if (idx >= 0 && idx < 6)
+            if (idx >= 0 && idx < 8)
             {
                 if (e.IsCompleted)
                 {
@@ -306,7 +308,7 @@ namespace ClassroomChecker.UI
                         lblStepIcons[idx].Text = "✓";
                         lblStepIcons[idx].ForeColor = Color.FromArgb(22, 163, 74); // Green
                         lblStepItems[idx].ForeColor = Color.FromArgb(15, 23, 42);
-                        lblStepItems[idx].Font = UiFontManager.GetFont(9.5F, FontStyle.Bold);
+                        lblStepItems[idx].Font = UiFontManager.GetFont(9F, FontStyle.Bold);
                     }
                     else
                     {
@@ -324,7 +326,7 @@ namespace ClassroomChecker.UI
                 }
             }
 
-            prgSetup.Value = Math.Min(e.StepIndex, 6);
+            prgSetup.Value = Math.Min(e.StepIndex, 8);
         }
     }
 }
