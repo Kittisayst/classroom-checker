@@ -77,6 +77,22 @@ namespace ClassroomChecker.Config
         }
     }
 
+    /// <summary>ຮູບແບບວັນທີ ແລະ ເວລາຂອງ Windows (Timezone ຄົງທີ່ UTC+7)</summary>
+    public class DateTimeConfig
+    {
+        /// <summary>ຮູບແບບວັນທີສັ້ນ ເຊັ່ນ dd/MM/yyyy, d/M/yyyy, dd-MM-yyyy, yyyy-MM-dd</summary>
+        public string dateFormat { get; set; }
+
+        /// <summary>true = 24 ຊົ່ວໂມງ (14:30), false = 12 ຊົ່ວໂມງ (2:30 PM)</summary>
+        public bool use24Hour { get; set; }
+
+        public DateTimeConfig()
+        {
+            dateFormat = "dd/MM/yyyy";
+            use24Hour = true;
+        }
+    }
+
     public class LabelConfig
     {
         public string template { get; set; }
@@ -157,6 +173,7 @@ namespace ClassroomChecker.Config
         public SelectedConfig selected { get; set; }
         public BackgroundConfig background { get; set; }
         public LogonScreenConfig logonScreen { get; set; }
+        public DateTimeConfig dateTime { get; set; }
         public LabelConfig label { get; set; }
         public List<string> requiredFonts { get; set; }
         public CleanupConfig cleanup { get; set; }
@@ -187,6 +204,7 @@ namespace ClassroomChecker.Config
             selected = new SelectedConfig();
             background = new BackgroundConfig();
             logonScreen = new LogonScreenConfig();
+            dateTime = new DateTimeConfig();
             label = new LabelConfig();
             requiredFonts = new List<string> { "Phetsarath OT" };
             cleanup = new CleanupConfig();

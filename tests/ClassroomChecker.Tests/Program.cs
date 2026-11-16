@@ -67,6 +67,7 @@ namespace ClassroomChecker.Tests
             Run("LogonScreen: lock screen file naming and cleanup of old files", LogonScreen_LockScreenFiles);
             Run("I18n: logon screen keys localized in lo and en", I18n_LogonScreen_Localized);
             Run("UserAccount: user name validation, account parsing and defaults", UserAccount_ValidationAndDefaults);
+            Run("DateTime: date formats, 12/24-hour patterns and preview", DateTime_FormatsAndPreview);
 
             Cleanup();
 
@@ -873,6 +874,30 @@ namespace ClassroomChecker.Tests
             Assert(Localizer.T("settings_rename_user_with_computer") != "settings_rename_user_with_computer", "en label exists");
             Localizer.SetLanguage("lo");
             Assert(Localizer.T("settings_rename_user_with_computer") != "settings_rename_user_with_computer", "lo label exists");
+        }
+
+        private static void DateTime_FormatsAndPreview()
+        {
+            var cfg = new AppConfig();
+            Assert(cfg.dateTime != null && cfg.dateTime.dateFormat == "dd/MM/yyyy" && cfg.dateTime.use24Hour,
+                "Default: dd/MM/yyyy and 24-hour");
+
+            AreEqual("HH:mm", DateTimeService.GetShortTimePattern(true), "24h short time");
+            AreEqual("h:mm tt", DateTimeService.GetShortTimePattern(false), "12h short time");
+
+            var t = new DateTime(2026, 11, 16, 14, 5, 9);
+            AreEqual("16/11/2026 14:05:09", DateTimeService.FormatPreview(t, "dd/MM/yyyy", true), "24h preview");
+            AreEqual("16/11/2026 2:05:09 PM", DateTimeService.FormatPreview(t, "dd/MM/yyyy", false), "12h preview");
+            AreEqual("2026-11-16 14:05:09", DateTimeService.FormatPreview(t, "yyyy-MM-dd", true), "ISO date preview");
+            AreEqual("16/11/2026 14:05:09", DateTimeService.FormatPreview(t, "bogus", true), "Unsupported format falls back");
+
+            AreEqual("/", DateTimeService.GetDateSeparator("dd/MM/yyyy"), "Separator /");
+            AreEqual("-", DateTimeService.GetDateSeparator("yyyy-MM-dd"), "Separator -");
+            AreEqual("1", DateTimeService.GetDateOrder("d/M/yyyy"), "Order d/M/y = 1");
+            AreEqual("2", DateTimeService.GetDateOrder("yyyy-MM-dd"), "Order y/M/d = 2");
+
+            Assert(DateTimeService.IsSupportedDateFormat("dd-MM-yyyy"), "dd-MM-yyyy supported");
+            Assert(!DateTimeService.IsSupportedDateFormat("MM/dd/yyyy"), "US format not offered");
         }
 
         private static void LogonScreen_LockScreenFiles()

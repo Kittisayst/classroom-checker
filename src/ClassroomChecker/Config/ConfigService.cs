@@ -246,6 +246,14 @@ namespace ClassroomChecker.Config
             {
                 cfg.logonScreen = new LogonScreenConfig();
             }
+            if (cfg.dateTime == null)
+            {
+                cfg.dateTime = new DateTimeConfig();
+            }
+            if (!Core.DateTimeService.IsSupportedDateFormat(cfg.dateTime.dateFormat))
+            {
+                cfg.dateTime.dateFormat = Core.DateTimeService.TARGET_DATE_FORMAT;
+            }
             if (cfg.cleanup == null)
             {
                 cfg.cleanup = new CleanupConfig();

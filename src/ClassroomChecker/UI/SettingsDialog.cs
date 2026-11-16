@@ -16,6 +16,7 @@ namespace ClassroomChecker.UI
         private TabPage tabGeneral;
         private TabPage tabWallpaper;
         private TabPage tabLogon;
+        private TabPage tabDateTime;
         private TabPage tabCleanup;
         private TabPage tabSecurity;
 
@@ -43,6 +44,14 @@ namespace ClassroomChecker.UI
         private Label lblUserPrefix;
         private TextBox txtUserPrefix;
         private Label lblUserPreview;
+
+        // Date & Time
+        private ComboBox cmbDateFormat;
+        private RadioButton rbTime24;
+        private RadioButton rbTime12;
+        private Label lblDtPreview;
+        private Label lblDtPreviewTaskbar;
+        private Timer _dtPreviewTimer;
 
         // Lock / Welcome screen
         private CheckBox chkSetLockScreen;
@@ -398,6 +407,97 @@ namespace ClassroomChecker.UI
             tabLogon.Controls.AddRange(new Control[] { grpScreen, grpNotice, lblLogonHint });
 
             // -----------------------------------------------------------------
+            // Tab 2c: Date & Time (Timezone UTC+7, ຮູບແບບວັນທີ, 12/24 ຊົ່ວໂມງ)
+            // -----------------------------------------------------------------
+            tabDateTime = new TabPage(Localizer.T("settings_tab_datetime"))
+            {
+                BackColor = Color.White,
+                Padding = new Padding(16)
+            };
+
+            GroupBox grpDtFormat = new GroupBox
+            {
+                Text = Localizer.T("settings_grp_datetime_format"),
+                Location = new Point(16, 12),
+                Size = new Size(640, 175)
+            };
+
+            Label lblTz = new Label
+            {
+                Text = Localizer.T("settings_timezone_fixed"),
+                Location = new Point(20, 30),
+                AutoSize = true
+            };
+
+            Label lblDateFmt = new Label { Text = Localizer.T("settings_date_format"), Location = new Point(20, 68), AutoSize = true };
+            cmbDateFormat = new ComboBox
+            {
+                Location = new Point(190, 65),
+                Size = new Size(160, 25),
+                DropDownStyle = ComboBoxStyle.DropDownList
+            };
+            cmbDateFormat.Items.AddRange(DateTimeService.SupportedDateFormats);
+            cmbDateFormat.SelectedIndexChanged += (s, e) => UpdateDateTimePreview();
+
+            Label lblTimeFmt = new Label { Text = Localizer.T("settings_time_format"), Location = new Point(20, 108), AutoSize = true };
+            rbTime24 = new RadioButton
+            {
+                Text = Localizer.T("settings_time_24h"),
+                Location = new Point(190, 105),
+                AutoSize = true,
+                Checked = true
+            };
+            rbTime12 = new RadioButton
+            {
+                Text = Localizer.T("settings_time_12h"),
+                Location = new Point(190, 135),
+                AutoSize = true
+            };
+            rbTime24.CheckedChanged += (s, e) => UpdateDateTimePreview();
+            rbTime12.CheckedChanged += (s, e) => UpdateDateTimePreview();
+
+            grpDtFormat.Controls.AddRange(new Control[] { lblTz, lblDateFmt, cmbDateFormat, lblTimeFmt, rbTime24, rbTime12 });
+
+            GroupBox grpDtPreview = new GroupBox
+            {
+                Text = Localizer.T("settings_grp_datetime_preview"),
+                Location = new Point(16, 197),
+                Size = new Size(640, 130)
+            };
+            lblDtPreview = new Label
+            {
+                Location = new Point(20, 28),
+                Size = new Size(600, 48),
+                Font = new Font("Segoe UI", 22F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(26, 115, 232),
+                TextAlign = ContentAlignment.MiddleLeft
+            };
+            lblDtPreviewTaskbar = new Label
+            {
+                Location = new Point(22, 84),
+                Size = new Size(600, 32),
+                ForeColor = Color.FromArgb(71, 85, 105)
+            };
+            grpDtPreview.Controls.AddRange(new Control[] { lblDtPreview, lblDtPreviewTaskbar });
+
+            Label lblDtHint = new Label
+            {
+                Text = Localizer.T("settings_datetime_hint"),
+                UseMnemonic = false, // ໃຫ້ "&" ສະແດງເປັນຕົວອັກສອນ
+                Location = new Point(16, 337),
+                Size = new Size(640, 40),
+                ForeColor = Color.FromArgb(100, 116, 139)
+            };
+
+            tabDateTime.Controls.AddRange(new Control[] { grpDtFormat, grpDtPreview, lblDtHint });
+
+            // ໂມງຕົວຢ່າງເດີນທຸກວິນາທີ
+            _dtPreviewTimer = new Timer { Interval = 1000 };
+            _dtPreviewTimer.Tick += (s, e) => UpdateDateTimePreview();
+            _dtPreviewTimer.Start();
+            this.FormClosed += (s, e) => _dtPreviewTimer.Dispose();
+
+            // -----------------------------------------------------------------
             // Tab 3: Cleanup & System
             // -----------------------------------------------------------------
             tabCleanup = new TabPage(Localizer.T("settings_tab_cleanup"))
@@ -614,7 +714,7 @@ namespace ClassroomChecker.UI
             tabSecurity.Controls.AddRange(new Control[] { grpSec, grpExes, grpPaths, grpActions });
 
             // Add Tabs
-            tabControl.TabPages.AddRange(new TabPage[] { tabGeneral, tabWallpaper, tabLogon, tabCleanup, tabSecurity });
+            tabControl.TabPages.AddRange(new TabPage[] { tabGeneral, tabWallpaper, tabLogon, tabDateTime, tabCleanup, tabSecurity });
 
             // -----------------------------------------------------------------
             // Bottom Panel: Save & Cancel
@@ -737,6 +837,14 @@ namespace ClassroomChecker.UI
             cmbStyle.SelectedIndex = styleIdx >= 0 ? styleIdx : 0;
 
             chkApplyAllUsers.Checked = cfg.background != null && cfg.background.applyToAllUsers;
+
+            // Date & Time
+            var dt = cfg.dateTime ?? new DateTimeConfig();
+            int dfIdx = cmbDateFormat.Items.IndexOf(dt.dateFormat);
+            cmbDateFormat.SelectedIndex = dfIdx >= 0 ? dfIdx : 0;
+            rbTime24.Checked = dt.use24Hour;
+            rbTime12.Checked = !dt.use24Hour;
+            UpdateDateTimePreview();
 
             // Lock / Welcome screen
             var logon = cfg.logonScreen ?? new LogonScreenConfig();
@@ -946,6 +1054,20 @@ namespace ClassroomChecker.UI
             }
         }
 
+        /// <summary>ສະແດງວັນທີ/ເວລາປັດຈຸບັນ ຕາມຮູບແບບທີ່ເລືອກ (ອັບເດດທຸກວິນາທີ)</summary>
+        private void UpdateDateTimePreview()
+        {
+            if (lblDtPreview == null || cmbDateFormat == null) return;
+            string fmt = cmbDateFormat.SelectedItem != null ? cmbDateFormat.SelectedItem.ToString() : DateTimeService.TARGET_DATE_FORMAT;
+            bool use24 = rbTime24.Checked;
+            DateTime now = DateTime.Now;
+
+            lblDtPreview.Text = DateTimeService.FormatPreview(now, fmt, use24);
+            lblDtPreviewTaskbar.Text = string.Format(Localizer.T("settings_datetime_taskbar_preview"),
+                now.ToString(DateTimeService.GetShortTimePattern(use24), System.Globalization.CultureInfo.InvariantCulture),
+                now.ToString(fmt, System.Globalization.CultureInfo.InvariantCulture));
+        }
+
         /// <summary>ຕົວຢ່າງຊື່ user ຈາກຄຳນຳໜ້າ ໂດຍໃຊ້ຊື່ເຄື່ອງຢ່າງ COM1-01</summary>
         private void UpdateUserNamePreview()
         {
@@ -1035,6 +1157,12 @@ namespace ClassroomChecker.UI
                 : "fill";
 
             cfg.background.applyToAllUsers = chkApplyAllUsers.Checked;
+
+            if (cfg.dateTime == null) cfg.dateTime = new DateTimeConfig();
+            cfg.dateTime.dateFormat = cmbDateFormat.SelectedItem != null
+                ? cmbDateFormat.SelectedItem.ToString()
+                : DateTimeService.TARGET_DATE_FORMAT;
+            cfg.dateTime.use24Hour = rbTime24.Checked;
 
             if (cfg.logonScreen == null) cfg.logonScreen = new LogonScreenConfig();
             cfg.logonScreen.setLockScreen = chkSetLockScreen.Checked;

@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Runtime.InteropServices;
+using ClassroomChecker.Config;
 using Microsoft.Win32;
 
 namespace ClassroomChecker.Core
@@ -55,49 +57,6 @@ namespace ClassroomChecker.Core
             {
                 currentTzId = ex.Message;
                 offsetHours = 0;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// ກວດສອບວ່າ ຮູບແບບວັນທີ່ເປັນ ວັນທີ່/ເດືອນ/ປີ (dd/MM/yyyy) ຫຼື ບໍ່
-        /// </summary>
-        public static bool IsDateFormatDmy(out string currentFormat, out string iDate)
-        {
-            currentFormat = string.Empty;
-            iDate = string.Empty;
-
-            try
-            {
-                using (var key = Registry.CurrentUser.OpenSubKey(@"Control Panel\International", false))
-                {
-                    if (key != null)
-                    {
-                        object fmt = key.GetValue("sShortDate");
-                        object idt = key.GetValue("iDate");
-
-                        currentFormat = fmt != null ? fmt.ToString() : string.Empty;
-                        iDate = idt != null ? idt.ToString() : string.Empty;
-
-                        if (string.Equals(currentFormat, "dd/MM/yyyy", StringComparison.OrdinalIgnoreCase) ||
-                            string.Equals(currentFormat, "d/M/yyyy", StringComparison.OrdinalIgnoreCase))
-                        {
-                            return true;
-                        }
-
-                        // ກວດຖ້າເລີ່ມດ້ວຍ d ແລະ ມີ M ແລະ yyyy
-                        string lower = currentFormat.ToLowerInvariant();
-                        if (lower.StartsWith("d") && lower.Contains("m") && lower.EndsWith("yyyy") && iDate == "1")
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                currentFormat = "Error: " + ex.Message;
             }
 
             return false;
@@ -160,44 +119,128 @@ namespace ClassroomChecker.Core
             return false;
         }
 
-        /// <summary>
-        /// ຕັ້ງຮູບແບບວັນທີ່ເປັນ dd/MM/yyyy (ວັນທີ່/ເດືອນ/ປີ) ແລະ ແຈ້ງເຕືອນ Windows ໃຫ້ອັບເດດທັນທີ
-        /// </summary>
-        public static bool SetDateFormatDmy(out string detail)
+        // =====================================================================
+        // ຮູບແບບວັນທີ ແລະ ເວລາ (ຕາມ config dateTime)
+        // =====================================================================
+
+        /// <summary>ຮູບແບບວັນທີທີ່ເລືອກໄດ້ໃນໜ້າຕັ້ງຄ່າ</summary>
+        public static readonly string[] SupportedDateFormats = { "dd/MM/yyyy", "d/M/yyyy", "dd-MM-yyyy", "yyyy-MM-dd" };
+
+        public const string TIME_24_SHORT = "HH:mm";
+        public const string TIME_24_LONG = "HH:mm:ss";
+        public const string TIME_12_SHORT = "h:mm tt";
+        public const string TIME_12_LONG = "h:mm:ss tt";
+
+        public static bool IsSupportedDateFormat(string format)
         {
-            bool ok = false;
+            return format != null && Array.IndexOf(SupportedDateFormats, format) >= 0;
+        }
+
+        public static string GetShortTimePattern(bool use24Hour)
+        {
+            return use24Hour ? TIME_24_SHORT : TIME_12_SHORT;
+        }
+
+        public static string GetLongTimePattern(bool use24Hour)
+        {
+            return use24Hour ? TIME_24_LONG : TIME_12_LONG;
+        }
+
+        /// <summary>ຕົວແຍກວັນທີ (ຕົວອັກສອນທຳອິດທີ່ບໍ່ແມ່ນ d/M/y), ເຊັ່ນ "/" ຫຼື "-"</summary>
+        internal static string GetDateSeparator(string dateFormat)
+        {
+            foreach (char c in dateFormat ?? string.Empty)
+            {
+                if (c != 'd' && c != 'M' && c != 'y') return c.ToString();
+            }
+            return TARGET_DATE_SEPARATOR;
+        }
+
+        /// <summary>ລຳດັບວັນທີຂອງ Windows (iDate): 0 = M/d/y, 1 = d/M/y, 2 = y/M/d</summary>
+        internal static string GetDateOrder(string dateFormat)
+        {
+            if (string.IsNullOrEmpty(dateFormat)) return TARGET_DATE_ORDER;
+            switch (dateFormat[0])
+            {
+                case 'M': return "0";
+                case 'y': return "2";
+                default: return "1";
+            }
+        }
+
+        /// <summary>ຕົວຢ່າງວັນທີ + ເວລາ ຕາມຮູບແບບທີ່ເລືອກ (ໃຊ້ສະແດງໃນໜ້າຕັ້ງຄ່າ)</summary>
+        public static string FormatPreview(DateTime value, string dateFormat, bool use24Hour)
+        {
+            string pattern = (IsSupportedDateFormat(dateFormat) ? dateFormat : TARGET_DATE_FORMAT)
+                + " " + GetLongTimePattern(use24Hour);
+            return value.ToString(pattern, CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// ກວດວ່າຮູບແບບວັນທີ ແລະ ເວລາຂອງ user ປັດຈຸບັນ ກົງກັບ config ຫຼື ບໍ່
+        /// </summary>
+        public static bool IsDateTimeFormatOk(DateTimeConfig cfg, out bool dateOk, out bool timeOk, out string currentDate, out string currentTime)
+        {
+            if (cfg == null) cfg = new DateTimeConfig();
+            dateOk = false;
+            timeOk = false;
+            currentDate = string.Empty;
+            currentTime = string.Empty;
+
             try
             {
-                // 1. ຂຽນໃສ່ HKCU Control Panel\International
+                using (var key = Registry.CurrentUser.OpenSubKey(@"Control Panel\International", false))
+                {
+                    if (key != null)
+                    {
+                        currentDate = (key.GetValue("sShortDate") ?? string.Empty).ToString();
+                        currentTime = (key.GetValue("sShortTime") ?? string.Empty).ToString();
+                        string iTime = (key.GetValue("iTime") ?? string.Empty).ToString();
+
+                        dateOk = string.Equals(currentDate, cfg.dateFormat, StringComparison.Ordinal);
+                        timeOk = string.Equals(currentTime, GetShortTimePattern(cfg.use24Hour), StringComparison.Ordinal)
+                            && iTime == (cfg.use24Hour ? "1" : "0");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                currentDate = "Error: " + ex.Message;
+            }
+
+            return dateOk && timeOk;
+        }
+
+        /// <summary>
+        /// ຕັ້ງຮູບແບບວັນທີ ແລະ ເວລາ (12/24 ຊົ່ວໂມງ) ຕາມ config ໃຫ້ user ປັດຈຸບັນ ແລະ ໜ້າ Login (.DEFAULT)
+        /// ແລ້ວແຈ້ງ Windows ໃຫ້ອັບເດດໂມງ Taskbar ທັນທີ
+        /// </summary>
+        public static bool SetDateTimeFormat(DateTimeConfig cfg, out string detail)
+        {
+            if (cfg == null) cfg = new DateTimeConfig();
+            string dateFormat = IsSupportedDateFormat(cfg.dateFormat) ? cfg.dateFormat : TARGET_DATE_FORMAT;
+
+            try
+            {
+                bool ok = false;
                 using (var key = Registry.CurrentUser.OpenSubKey(@"Control Panel\International", true))
                 {
                     if (key != null)
                     {
-                        key.SetValue("sShortDate", TARGET_DATE_FORMAT, RegistryValueKind.String);
-                        key.SetValue("sDate", TARGET_DATE_SEPARATOR, RegistryValueKind.String);
-                        key.SetValue("iDate", TARGET_DATE_ORDER, RegistryValueKind.String);
-                        key.SetValue("sTimeFormat", "HH:mm:ss", RegistryValueKind.String);
-                        key.SetValue("sShortTime", "HH:mm", RegistryValueKind.String);
+                        WriteInternational(key, dateFormat, cfg.use24Hour);
                         ok = true;
                     }
                 }
 
-                // 2. ລອງຂຽນໃສ່ .DEFAULT (ສຳລັບ User ໃໝ່ ແລະ ໜ້າຈໍ Login)
                 try
                 {
                     using (var defKey = Registry.Users.OpenSubKey(@".DEFAULT\Control Panel\International", true))
                     {
-                        if (defKey != null)
-                        {
-                            defKey.SetValue("sShortDate", TARGET_DATE_FORMAT, RegistryValueKind.String);
-                            defKey.SetValue("sDate", TARGET_DATE_SEPARATOR, RegistryValueKind.String);
-                            defKey.SetValue("iDate", TARGET_DATE_ORDER, RegistryValueKind.String);
-                        }
+                        if (defKey != null) WriteInternational(defKey, dateFormat, cfg.use24Hour);
                     }
                 }
                 catch { }
 
-                // 3. ແຈ້ງເຕືອນ Windows Shell (Taskbar, Clock, Explorer) ໃຫ້ Refresh ຮູບແບບວັນທີ່ທັນທີ
                 try
                 {
                     UIntPtr result;
@@ -205,20 +248,36 @@ namespace ClassroomChecker.Core
                 }
                 catch { }
 
-                detail = ok ? "Date format set to dd/MM/yyyy (d/M/y)" : "Failed to write International registry";
+                detail = ok
+                    ? string.Format("Date/time format set to {0} {1}", dateFormat, GetShortTimePattern(cfg.use24Hour))
+                    : "Failed to write International registry";
                 return ok;
             }
             catch (Exception ex)
             {
-                detail = "Error setting date format: " + ex.Message;
+                detail = "Error setting date/time format: " + ex.Message;
                 return false;
             }
         }
 
+        private static void WriteInternational(RegistryKey key, string dateFormat, bool use24Hour)
+        {
+            key.SetValue("sShortDate", dateFormat, RegistryValueKind.String);
+            key.SetValue("sDate", GetDateSeparator(dateFormat), RegistryValueKind.String);
+            key.SetValue("iDate", GetDateOrder(dateFormat), RegistryValueKind.String);
+
+            key.SetValue("sShortTime", GetShortTimePattern(use24Hour), RegistryValueKind.String);
+            key.SetValue("sTimeFormat", GetLongTimePattern(use24Hour), RegistryValueKind.String);
+            key.SetValue("iTime", use24Hour ? "1" : "0", RegistryValueKind.String);   // 1 = 24 ຊົ່ວໂມງ
+            key.SetValue("iTLZero", use24Hour ? "1" : "0", RegistryValueKind.String); // 24h ມີເລກ 0 ນຳໜ້າ (09:05)
+            key.SetValue("s1159", "AM", RegistryValueKind.String);
+            key.SetValue("s2359", "PM", RegistryValueKind.String);
+        }
+
         /// <summary>
-        /// ນຳໃຊ້ທັງ Timezone +7 ແລະ ຮູບແບບວັນທີ່ dd/MM/yyyy
+        /// ນຳໃຊ້ທັງ Timezone +7 ແລະ ຮູບແບບວັນທີ/ເວລາ ຕາມ config
         /// </summary>
-        public static bool ApplyAll(out List<string> logs)
+        public static bool ApplyAll(DateTimeConfig cfg, out List<string> logs)
         {
             logs = new List<string>();
 
@@ -226,11 +285,11 @@ namespace ClassroomChecker.Core
             bool tzOk = SetTimezoneUtc7(out tzMsg);
             logs.Add(tzMsg);
 
-            string dateMsg;
-            bool dateOk = SetDateFormatDmy(out dateMsg);
-            logs.Add(dateMsg);
+            string fmtMsg;
+            bool fmtOk = SetDateTimeFormat(cfg, out fmtMsg);
+            logs.Add(fmtMsg);
 
-            return tzOk && dateOk;
+            return tzOk && fmtOk;
         }
     }
 }
