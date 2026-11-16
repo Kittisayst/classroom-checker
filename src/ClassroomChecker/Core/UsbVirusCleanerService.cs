@@ -242,7 +242,7 @@ namespace ClassroomChecker.Core
                         }
                     }
                 }
-                catch { }
+                catch (Exception ex) { ReportService.LogError("UsbDriveItem.ImmunizeHostMachine", ex); }
 
                 if (logCallback != null)
                 {
@@ -325,7 +325,7 @@ namespace ClassroomChecker.Core
                         }
                     }
                 }
-                catch { }
+                catch (Exception ex) { ReportService.LogError("UsbDriveItem.CleanHostStartupPersistence", ex); }
             }
 
             // Check User Startup Folder
@@ -349,7 +349,7 @@ namespace ClassroomChecker.Core
                                     logCallback(string.Format("✓ ລຶບໄຟລ໌ໄວຣັສໃນ Startup Folder: {0}", Path.GetFileName(file)));
                                 }
                             }
-                            catch { }
+                            catch (Exception ex) { ReportService.LogError("UsbDriveItem.CleanHostStartupPersistence", ex); }
                         }
                         else if (ext == ".lnk")
                         {
@@ -364,7 +364,7 @@ namespace ClassroomChecker.Core
                                         logCallback(string.Format("✓ ລຶບ Shortcut ໄວຣັສໃນ Startup: {0} ({1})", Path.GetFileName(file), reason));
                                     }
                                 }
-                                catch { }
+                                catch (Exception ex) { ReportService.LogError("UsbDriveItem.CleanHostStartupPersistence", ex); }
                             }
                         }
                     }

@@ -101,6 +101,13 @@ namespace ClassroomChecker.Core
             catch { }
         }
 
+        /// <summary>ບັນທຶກຂໍ້ຜິດພາດທີ່ຖືກຈັບໄວ້ (ບໍ່ໃຫ້ໂປຣແກຣມລົ້ມ) ລົງ log ເພື່ອໃຊ້ຫາສາເຫດພາຍຫຼັງ</summary>
+        public static void LogError(string where, Exception ex)
+        {
+            if (ex == null) return;
+            Log(string.Format("ERROR {0}: {1}: {2}", where, ex.GetType().Name, ex.Message));
+        }
+
         /// <summary>ສ້າງຂໍ້ຄວາມລາຍງານຈາກຜົນສະແກນ</summary>
         public static string BuildReport(IDictionary<ICheckModule, CheckResult> results, string summaryLine)
         {

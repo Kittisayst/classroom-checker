@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Web.Script.Serialization;
+using ClassroomChecker.Core;
 
 namespace ClassroomChecker.Config
 {
@@ -112,7 +113,7 @@ namespace ClassroomChecker.Config
                             File.Copy(_activeFilePath, badPath, true);
                         }
                     }
-                    catch { }
+                    catch (Exception ex2) { ReportService.LogError("ConfigService.Load", ex2); }
 
                     _currentConfig = new AppConfig();
                     Save();
@@ -169,7 +170,7 @@ namespace ClassroomChecker.Config
                             File.WriteAllText(_activeFilePath, json, Encoding.UTF8);
                             return true;
                         }
-                        catch { }
+                        catch (Exception ex2) { ReportService.LogError("ConfigService.Save", ex2); }
                     }
                     return false;
                 }

@@ -118,7 +118,7 @@ namespace ClassroomChecker.Modules
                 }
 
                 // ໃຫ້ Windows ສະແກນອຸປະກອນໃໝ່ (ບໍ່ສຳຄັນຖ້າ Windows ເກົ່າບໍ່ຮອງຮັບ)
-                try { RunProcess(pnputil, "/scan-devices", details); } catch { }
+                try { RunProcess(pnputil, "/scan-devices", details); } catch (Exception ex) { ReportService.LogError("DriverCheckModule.Fix", ex); }
 
                 CheckResult after = Check();
                 foreach (string d in after.Details) details.Add("After: " + d);

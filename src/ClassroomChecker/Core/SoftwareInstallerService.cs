@@ -286,7 +286,7 @@ namespace ClassroomChecker.Core
             string dir = Path.Combine(baseDir, "installers");
             if (!Directory.Exists(dir))
             {
-                try { Directory.CreateDirectory(dir); } catch { }
+                try { Directory.CreateDirectory(dir); } catch (Exception ex) { ReportService.LogError("InstallResult.GetInstallersDirectory", ex); }
             }
             return dir;
         }
@@ -458,7 +458,7 @@ namespace ClassroomChecker.Core
                                 }
                             }
                         }
-                        catch { }
+                        catch (Exception ex) { ReportService.LogError("InstallResult.InstallAsync", ex); }
 
                         // ຕັ້ງຄ່າ Auto-Accept EULA ສຳລັບ Sysinternals RAMMap
                         try
@@ -468,7 +468,7 @@ namespace ClassroomChecker.Core
                                 if (k != null) k.SetValue("EulaAccepted", 1, RegistryValueKind.DWord);
                             }
                         }
-                        catch { }
+                        catch (Exception ex) { ReportService.LogError("InstallResult.InstallAsync", ex); }
 
                         // Create Desktop Shortcuts
                         string shortcutName = !string.IsNullOrEmpty(pkg.ShortcutName) ? pkg.ShortcutName : (pkg.Name + ".lnk");
@@ -482,7 +482,7 @@ namespace ClassroomChecker.Core
 
                         if (!string.IsNullOrEmpty(commonDesktop) && Directory.Exists(commonDesktop))
                         {
-                            try { CreateShortcut(Path.Combine(commonDesktop, shortcutName), destExePath, pkg.Description); } catch { }
+                            try { CreateShortcut(Path.Combine(commonDesktop, shortcutName), destExePath, pkg.Description); } catch (Exception ex) { ReportService.LogError("InstallResult.InstallAsync", ex); }
                         }
 
                         return new InstallResult(true,

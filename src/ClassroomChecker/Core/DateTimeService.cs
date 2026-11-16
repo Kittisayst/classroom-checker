@@ -113,7 +113,7 @@ namespace ClassroomChecker.Core
                     }
                 }
             }
-            catch { }
+            catch (Exception ex) { ReportService.LogError("DateTimeService.SetTimezoneUtc7", ex); }
 
             detail = "Could not set timezone";
             return false;
@@ -239,7 +239,7 @@ namespace ClassroomChecker.Core
                         if (defKey != null) WriteInternational(defKey, dateFormat, cfg.use24Hour);
                     }
                 }
-                catch { }
+                catch (Exception ex) { ReportService.LogError("DateTimeService.SetDateTimeFormat", ex); }
 
                 try
                 {

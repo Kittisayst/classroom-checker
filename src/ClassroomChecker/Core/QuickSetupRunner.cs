@@ -342,7 +342,7 @@ namespace ClassroomChecker.Core
                         ReportService.Log(string.Format("QuickSetup: ປັບເລກເຄື່ອງຕໍ່ໄປເປັນ {0:D2}", nextNum));
                     }
                 }
-                catch { }
+                catch (Exception ex) { ReportService.LogError("QuickSetupStepEventArgs.RunSetupAsync", ex); }
 
                 return allSuccessful;
             });

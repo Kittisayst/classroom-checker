@@ -161,7 +161,7 @@ namespace ClassroomChecker.Core
                             }
                         }
                     }
-                    catch { }
+                    catch (Exception ex) { ReportService.LogError("SecurityStatusInfo.SetUsbExecutionBlocked", ex); }
 
                     string sysDrive = Path.GetPathRoot(Environment.SystemDirectory);
                     if (!string.IsNullOrEmpty(sysDrive))
@@ -212,7 +212,7 @@ namespace ClassroomChecker.Core
                     if (key != null) key.DeleteValue("Deny_Execute", false);
                 }
             }
-            catch { }
+            catch (Exception ex) { ReportService.LogError("SecurityStatusInfo.ClearLegacyRemovableStorageDeny", ex); }
             try
             {
                 using (var key = Registry.LocalMachine.OpenSubKey(REG_PATH_REMOVABLE, true))
@@ -220,7 +220,7 @@ namespace ClassroomChecker.Core
                     if (key != null) key.DeleteValue("Deny_Execute", false);
                 }
             }
-            catch { }
+            catch (Exception ex) { ReportService.LogError("SecurityStatusInfo.ClearLegacyRemovableStorageDeny", ex); }
         }
 
         // -----------------------------------------------------------------
@@ -336,7 +336,7 @@ namespace ClassroomChecker.Core
                     try { root.DeleteSubKeyTree(REG_PATH_EXPLORER_POLICIES + @"\DisallowRun", false); } catch { }
                 }
             }
-            catch { }
+            catch (Exception ex) { ReportService.LogError("SecurityStatusInfo.WriteDisallowRunToRoot", ex); }
         }
 
         // -----------------------------------------------------------------
@@ -489,7 +489,7 @@ namespace ClassroomChecker.Core
                     }
                 }
             }
-            catch { }
+            catch (Exception ex) { ReportService.LogError("SecurityStatusInfo.EnsureSaferBaseInitialized", ex); }
         }
 
         private static void EnsureClassroomCheckerWhitelisted()
@@ -507,7 +507,7 @@ namespace ClassroomChecker.Core
                     CreateSaferWhitelistRule(SAFER_GUID_WHITELIST_APPNAME, @"*\" + currentExeName, "ClassroomChecker: Whitelisted Host Process");
                 }
             }
-            catch { }
+            catch (Exception ex) { ReportService.LogError("SecurityStatusInfo.EnsureClassroomCheckerWhitelisted", ex); }
         }
 
         private static void DeletePathFolderSaferRules()
@@ -528,7 +528,7 @@ namespace ClassroomChecker.Core
                     }
                 }
             }
-            catch { }
+            catch (Exception ex) { ReportService.LogError("SecurityStatusInfo.DeletePathFolderSaferRules", ex); }
         }
 
         private static void DeleteUsbSaferRules()
@@ -549,7 +549,7 @@ namespace ClassroomChecker.Core
                     }
                 }
             }
-            catch { }
+            catch (Exception ex) { ReportService.LogError("SecurityStatusInfo.DeleteUsbSaferRules", ex); }
         }
 
         private static void DeleteAllClassroomCheckerSaferRules()
@@ -570,7 +570,7 @@ namespace ClassroomChecker.Core
                     }
                 }
             }
-            catch { }
+            catch (Exception ex) { ReportService.LogError("SecurityStatusInfo.DeleteAllClassroomCheckerSaferRules", ex); }
 
             DeleteAllClassroomCheckerWhitelistRules();
         }
@@ -593,7 +593,7 @@ namespace ClassroomChecker.Core
                     }
                 }
             }
-            catch { }
+            catch (Exception ex) { ReportService.LogError("SecurityStatusInfo.DeleteAllClassroomCheckerWhitelistRules", ex); }
         }
 
         private static bool IsAnyOtherFolderRuleActive()
@@ -632,7 +632,7 @@ namespace ClassroomChecker.Core
                     }
                 }
             }
-            catch { }
+            catch (Exception ex) { ReportService.LogError("SecurityStatusInfo.CreateSaferPathRule", ex); }
         }
 
         private static void CreateSaferWhitelistRule(string guid, string itemData, string description)
@@ -649,7 +649,7 @@ namespace ClassroomChecker.Core
                     }
                 }
             }
-            catch { }
+            catch (Exception ex) { ReportService.LogError("SecurityStatusInfo.CreateSaferWhitelistRule", ex); }
         }
 
         // -----------------------------------------------------------------

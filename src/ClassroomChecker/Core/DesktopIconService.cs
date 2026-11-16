@@ -92,7 +92,7 @@ namespace ClassroomChecker.Core
                         }
                     }
                 }
-                catch { }
+                catch (Exception ex) { ReportService.LogError("DesktopIconService.EnableSystemIcons", ex); }
 
                 // 3. ແຈ້ງ Windows Shell ໃຫ້ Refresh Desktop ທັນທີ
                 try
@@ -318,7 +318,7 @@ namespace ClassroomChecker.Core
                     catch { }
                 }
             }
-            catch { }
+            catch (Exception ex) { ReportService.LogError("DesktopIconService.CreateOfficeShortcuts", ex); }
 
             if (string.IsNullOrEmpty(targetDir))
             {

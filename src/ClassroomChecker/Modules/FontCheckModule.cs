@@ -137,7 +137,7 @@ namespace ClassroomChecker.Modules
                         }
                     }
                 }
-                catch { }
+                catch (Exception ex) { ReportService.LogError("FontCheckModule.Fix", ex); }
 
                 try
                 {
@@ -150,7 +150,7 @@ namespace ClassroomChecker.Modules
                         }
                     }
                 }
-                catch { }
+                catch (Exception ex) { ReportService.LogError("FontCheckModule.Fix", ex); }
 
                 // 4. ເອີ້ນ P/Invoke AddFontResourceW
                 int added = NativeMethods.AddFontResourceW(destPath);

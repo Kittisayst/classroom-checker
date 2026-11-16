@@ -302,7 +302,7 @@ namespace ClassroomChecker.Modules
                     }
                 }
             }
-            catch { }
+            catch (Exception ex) { ReportService.LogError("CleanupModule.StopServiceSafely", ex); }
             return false;
         }
 
@@ -319,7 +319,7 @@ namespace ClassroomChecker.Modules
                     }
                 }
             }
-            catch { }
+            catch (Exception ex) { ReportService.LogError("CleanupModule.StartServiceSafely", ex); }
         }
 
         private string FormatBytes(long bytes)

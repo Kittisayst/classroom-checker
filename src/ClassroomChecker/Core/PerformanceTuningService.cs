@@ -577,7 +577,7 @@ namespace ClassroomChecker.Core
                     }
                 }
             }
-            catch { }
+            catch (Exception ex) { ReportService.LogError("TweakStatus.LoadBackup", ex); }
             return new PerfBackup();
         }
 
