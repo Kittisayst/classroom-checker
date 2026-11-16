@@ -56,6 +56,10 @@ USB_FLASH_DRIVE:\
   ├── bg.png                    <-- ຮູບພື້ນຫຼັງ Wallpaper (ສາມາດປ່ຽນເປັນຮູບໂຮງຮຽນໄດ້)
   ├── README.md                 <-- ຄູ່ມືການນຳໃຊ້ລະບົບ
   │
+  ├── fonts\                    <-- ໂຟນເດີ Font ພາສາລາວມາດຕະຖານ (Phetsarath OT)
+  │     ├── PhetsarathOT.ttf
+  │     └── README.txt
+  │
   ├── installers\               <-- ໂຟນເດີເກັບໄຟລ໌ Setup ຂອງໂປຣແກຣມຕ່າງໆ (.exe/.msi)
   │     ├── 7z2408-x64.exe
   │     ├── SumatraPDF-3.5.2-64-install.exe

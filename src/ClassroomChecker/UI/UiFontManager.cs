@@ -56,7 +56,24 @@ namespace ClassroomChecker.UI
             }
             catch { }
 
-            // 2. ຖ້າບໍ່ມີໃນ Windows, ລອງໂຫຼດ Font ຈາກ Embedded Resource ຜ່ານ AddFontMemResourceEx
+            // 2. ລອງກວດສອບໄຟລ໌ fonts\PhetsarathOT.ttf ຂ້າງ exe
+            try
+            {
+                string localFont = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "fonts", "PhetsarathOT.ttf");
+                if (File.Exists(localFont))
+                {
+                    _pfc = new PrivateFontCollection();
+                    _pfc.AddFontFile(localFont);
+                    if (_pfc.Families.Length > 0)
+                    {
+                        _preferredFontFamily = _pfc.Families[0].Name;
+                        return;
+                    }
+                }
+            }
+            catch { }
+
+            // 3. ຖ້າບໍ່ມີ, ລອງໂຫຼດ Font ຈາກ Embedded Resource ຜ່ານ AddFontMemResourceEx
             try
             {
                 Assembly asm = typeof(UiFontManager).Assembly;
