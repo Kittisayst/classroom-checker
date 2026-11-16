@@ -149,9 +149,9 @@ namespace ClassroomChecker
                 }
 
                 // -------------------------------------------------------------
-                // 5. CHECK MODULES (ALL 14 MODULES)
+                // 5. CHECK MODULES (ALL 15 MODULES)
                 // -------------------------------------------------------------
-                Console.WriteLine("\n[5] ກວດສອບໂມດູນສະແກນທັງ 14 ໂມດູນ (ICheckModule.Check()):");
+                Console.WriteLine("\n[5] ກວດສອບໂມດູນສະແກນທັງ 15 ໂມດູນ (ICheckModule.Check()):");
                 List<ICheckModule> modules = new List<ICheckModule>
                 {
                     new OfficeCheckModule(),
@@ -167,6 +167,7 @@ namespace ClassroomChecker
                     new DiskSpaceCheckModule(),
                     new DefenderCheckModule(),
                     new AppLockModule(),
+                    new UsbVaccineModule(),
                     new SpecExportModule()
                 };
 

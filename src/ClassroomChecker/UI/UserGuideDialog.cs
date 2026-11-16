@@ -419,12 +419,20 @@ SECURITY POLICIES EXPLAINED:
 4. Blocked .exe List & Blocked Folders:
    • Click '➕ ເພີ່ມ .exe' to add custom program names (e.g., game.exe).
    • Click '📁 ເລືອກໂຟນເດີ...' to block entire directories.
+5. 🛡️ USB Shortcut Virus Cleaner & Vaccine Tool:
+   • Click '🚀 Open USB Cleaner & Vaccine...' to rescue infected USB flash drives.
+   • Automatically terminates background wscript.exe/cscript.exe malware processes.
+   • Removes fake .lnk shortcuts, rogue .vbs/.js scripts, and fake <folder>.exe files.
+   • Unhides all legitimate files & directories (strips Hidden/System/ReadOnly flags).
+   • Creates protected autorun.inf dummy vaccine directory to prevent reinfection.
+   • Disables Windows AutoRun (NoDriveTypeAutoRun = 0xFF) to permanently protect lab PCs!
 
 --------------------------------------------------------------------------------
 ACTION BUTTONS:
 --------------------------------------------------------------------------------
 • '🔒 ເປີດການລັອກ (Enable Lock)': Applies all selected security restrictions immediately to the machine.
 • '🔓 ປິດການລັອກ (Disable Lock)': Removes all security restrictions and restores full default execution rights.
+• '🛡️ ກູ້ໄຟລ໌ USB (USB Rescue)': Opens the USB Virus Cleaner & Recovery dialog.
 • '🔄 ກວດສອບ (Refresh)': Re-checks the current system lock state.
 • '💾 ບັນທຶກ (Save)': Saves the security configuration to config.json.";
             }
@@ -449,12 +457,20 @@ ACTION BUTTONS:
 4. ລາຍຊື່ .exe ແລະ ໂຟນເດີທີ່ບລັອກເພີ່ມເຕີມ:
    • ກົດປຸ່ມ '➕ ເພີ່ມ .exe' ເພື່ອເພີ່ມຊື່ໄຟລ໌ໂປຣແກຣມທີ່ຕ້ອງການບລັອກ
    • ກົດປຸ່ມ '📁 ເລືອກໂຟນເດີ...' ເພື່ອບລັອກທຸກໂປຣແກຣມໃນໂຟນເດີນັ້ນໆ
+5. 🛡️ ເຄື່ອງມືກູ້ໄຟລ໌ & ຂ້າໄວຣັສ USB Shortcut (USB Virus Cleaner & Vaccine):
+   • ກົດປຸ່ມ '🚀 ເປີດເຄື່ອງມືກູ້ໄຟລ໌ USB...' ເພື່ອແກ້ໄຂ Flash Drive ຕິດໄວຣັສ Shortcut
+   • ປິດ Process ໄວຣັສ Script ທີ່ກຳລັງແລ່ນໃນ RAM (wscript.exe, cscript.exe) ບໍ່ໃຫ້ຕິດຊ້ຳ
+   • ລຶບໄຟລ໌ Shortcut ປອມ (.lnk), ໄຟລ໌ script ໄວຣັສ (.vbs, .js) ແລະ .exe ປອມທີ່ປອມເປັນໂຟນເດີ (<folder>.exe)
+   • ປົດລັອກ ແລະ ກູ້ຄືນທຸກໄຟລ໌/ໂຟນເດີທີ່ຖືກໄວຣັສເຊື່ອງ (Unhide Hidden/System attributes) ທັນທີ
+   • ສ້າງໂຟນເດີວັກຊີນປ້ອງກັນ autorun.inf ໃນ USB ປ້ອງກັນບໍ່ໃຫ້ໄວຣັສຂຽນ autorun.inf ໄດ້ອີກ
+   • ປິດ Windows AutoRun/AutoPlay (NoDriveTypeAutoRun = 0xFF) ປ້ອງກັນເຄື່ອງຄອມພິວເຕີຫ້ອງຮຽນຖາວອນ!
 
 --------------------------------------------------------------------------------
 ປຸ່ມສັ່ງການ:
 --------------------------------------------------------------------------------
 • '🔒 ເປີດການລັອກ': ເປີດໃຊ້ງານນະໂຍບາຍບລັອກທັນທີ ມີຜົນກັບທຸກ User ໃນເຄື່ອງ
 • '🔓 ປິດການລັອກ': ປົດລັອກນະໂຍບາຍທັງໝົດກັບຄືນເປັນປົກກະຕິ
+• '🛡️ ກູ້ໄຟລ໌ USB': ເປີດໜ້າຕ່າງກູ້ໄຟລ໌ ແລະ ຂ້າໄວຣັສ USB ທັນທີ
 • '🔄 ກວດສອບ': ກວດສອບສະຖານະການລັອກປັດຈຸບັນຂອງເຄື່ອງ
 • '💾 ບັນທຶກ': ບັນທຶກລາຍຊື່ເກມ ແລະ ນະໂຍບາຍລົງໄຟລ໌ config.json";
         }

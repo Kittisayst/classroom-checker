@@ -58,6 +58,8 @@ namespace ClassroomChecker.Tests
             Run("I18n: security button states localized in lo and en", I18n_SecurityLockButtons_Localized);
             Run("DateTimeService: timezone and date format contract", DateTimeService_ConstantsAndContract);
             Run("DesktopIconService: system icons and office shortcuts contract", DesktopIconService_ConstantsAndContract);
+            Run("UsbVirusCleanerService: clean, unhide, remove scripts and create vaccine", UsbVirusCleanerService_CleanAndRestore_Contract);
+            Run("I18n: UsbCleaner and Vaccine keys localized in lo and en", I18n_UsbCleaner_Localized);
 
             Cleanup();
 
@@ -657,6 +659,127 @@ namespace ClassroomChecker.Tests
             {
                 try { Directory.Delete(tmpDir, true); } catch { }
             }
+        }
+
+        private static void UsbVirusCleanerService_CleanAndRestore_Contract()
+        {
+            var mod = new UsbVaccineModule();
+            AreEqual("usb_vaccine", mod.Id, "UsbVaccineModule Id");
+            AreEqual("module_usb_vaccine", mod.DisplayNameKey, "UsbVaccineModule DisplayNameKey");
+            Assert(mod.CanFix, "UsbVaccineModule CanFix is true");
+
+            var checkRes = mod.Check();
+            Assert(checkRes != null, "UsbVaccineModule CheckResult non-null");
+
+            // Test CleanAndRestoreDrive in isolated temp directory
+            string testDir = Path.Combine(Path.GetTempPath(), "cc_usb_test_" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(testDir);
+
+            try
+            {
+                // 1. Legitimate directory and file (hidden by malware)
+                string realFolder = Path.Combine(testDir, "Documents");
+                Directory.CreateDirectory(realFolder);
+                new DirectoryInfo(realFolder).Attributes = FileAttributes.Directory | FileAttributes.Hidden | FileAttributes.System;
+
+                string realFile = Path.Combine(realFolder, "Assignment.docx");
+                File.WriteAllText(realFile, "Real user document");
+                File.SetAttributes(realFile, FileAttributes.Hidden | FileAttributes.System | FileAttributes.ReadOnly);
+
+                // 2. Rogue autorun.inf file
+                string badAutorun = Path.Combine(testDir, "autorun.inf");
+                File.WriteAllText(badAutorun, "[autorun]\r\nopen=wscript.exe helper.vbs");
+
+                // 3. Rogue script
+                string badScript = Path.Combine(testDir, "helper.vbs");
+                File.WriteAllText(badScript, "WScript.Echo \"malware\"");
+
+                // 4. Fake folder exe (Documents.exe matching folder Documents)
+                string fakeExe = Path.Combine(testDir, "Documents.exe");
+                File.WriteAllText(fakeExe, "fake pe header");
+
+                // Run cleaning
+                var options = new UsbCleanOptions
+                {
+                    TargetPath = testDir,
+                    KillMalwareProcesses = false, // Don't kill external processes in unit test
+                    CleanStartupPersistence = false,
+                    RemoveShortcuts = true,
+                    RemoveRogueScripts = true,
+                    DetectFakeFolderExes = true,
+                    UnhideLegitimateFiles = true,
+                    CreateUsbVaccine = true,
+                    ImmunizeHostAutoRun = false
+                };
+
+                var cleanResult = UsbVirusCleanerService.CleanAndRestoreDrive(options);
+
+                Assert(cleanResult.Success, "CleanAndRestoreDrive succeeded");
+                Assert(cleanResult.FilesUnhiddenCount >= 1, "Unhid at least 1 file");
+                Assert(cleanResult.DirectoriesUnhiddenCount >= 1, "Unhid at least 1 directory");
+                Assert(cleanResult.RogueScriptsRemovedCount >= 2, "Removed rogue autorun.inf and helper.vbs");
+                Assert(cleanResult.FakeExesRemovedCount >= 1, "Removed fake folder exe");
+                Assert(cleanResult.VaccineCreated, "Vaccine directory created");
+
+                // Check file states
+                Assert(!File.Exists(badScript), "helper.vbs deleted");
+                Assert(!File.Exists(fakeExe), "Documents.exe fake exe deleted");
+                Assert(Directory.Exists(realFolder), "Real folder preserved");
+                Assert(File.Exists(realFile), "Real file preserved");
+
+                // Verify attributes unhidden
+                var dirAttr = new DirectoryInfo(realFolder).Attributes;
+                Assert((dirAttr & (FileAttributes.Hidden | FileAttributes.System)) == 0, "Folder is unhidden");
+
+                var fileAttr = File.GetAttributes(realFile);
+                Assert((fileAttr & (FileAttributes.Hidden | FileAttributes.System | FileAttributes.ReadOnly)) == 0, "File is unhidden");
+
+                // Verify vaccine folder exists (as a directory, not a file)
+                string vaccineDir = Path.Combine(testDir, UsbVirusCleanerService.VACCINE_FOLDER_NAME);
+                Assert(Directory.Exists(vaccineDir), "autorun.inf is now a vaccine directory");
+                Assert(Directory.Exists(Path.Combine(vaccineDir, UsbVirusCleanerService.VACCINE_SUBFOLDER_NAME)), "Vaccine subfolder exists");
+            }
+            finally
+            {
+                try
+                {
+                    // Vaccine folder has ReadOnly/System attributes, strip them before delete
+                    string vaccineDir = Path.Combine(testDir, UsbVirusCleanerService.VACCINE_FOLDER_NAME);
+                    if (Directory.Exists(vaccineDir))
+                    {
+                        foreach (var f in Directory.GetFiles(vaccineDir, "*", SearchOption.AllDirectories))
+                        {
+                            try { File.SetAttributes(f, FileAttributes.Normal); } catch { }
+                        }
+                        foreach (var d in Directory.GetDirectories(vaccineDir, "*", SearchOption.AllDirectories))
+                        {
+                            try { new DirectoryInfo(d).Attributes = FileAttributes.Directory; } catch { }
+                        }
+                        new DirectoryInfo(vaccineDir).Attributes = FileAttributes.Directory;
+                    }
+                    Directory.Delete(testDir, true);
+                }
+                catch { }
+            }
+        }
+
+        private static void I18n_UsbCleaner_Localized()
+        {
+            Localizer.SetLanguage("lo");
+            Assert(!string.IsNullOrEmpty(Localizer.T("module_usb_vaccine")), "lo: module_usb_vaccine non-empty");
+            Assert(!string.IsNullOrEmpty(Localizer.T("quick_setup_step_usb_vaccine")), "lo: quick_setup_step_usb_vaccine non-empty");
+            Assert(!string.IsNullOrEmpty(Localizer.T("usb_rescue_title")), "lo: usb_rescue_title non-empty");
+            Assert(!string.IsNullOrEmpty(Localizer.T("usb_cleaner_dialog_title")), "lo: usb_cleaner_dialog_title non-empty");
+            Assert(!string.IsNullOrEmpty(Localizer.T("usb_cleaner_btn_start")), "lo: usb_cleaner_btn_start non-empty");
+
+            Localizer.SetLanguage("en");
+            Assert(!string.IsNullOrEmpty(Localizer.T("module_usb_vaccine")), "en: module_usb_vaccine non-empty");
+            Assert(!string.IsNullOrEmpty(Localizer.T("quick_setup_step_usb_vaccine")), "en: quick_setup_step_usb_vaccine non-empty");
+            Assert(!string.IsNullOrEmpty(Localizer.T("usb_rescue_title")), "en: usb_rescue_title non-empty");
+            Assert(!string.IsNullOrEmpty(Localizer.T("usb_cleaner_dialog_title")), "en: usb_cleaner_dialog_title non-empty");
+            Assert(!string.IsNullOrEmpty(Localizer.T("usb_cleaner_btn_start")), "en: usb_cleaner_btn_start non-empty");
+
+            Localizer.SetLanguage("lo"); // restore Lao
         }
     }
 }

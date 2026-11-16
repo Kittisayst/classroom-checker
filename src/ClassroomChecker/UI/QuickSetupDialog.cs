@@ -45,7 +45,7 @@ namespace ClassroomChecker.UI
         private void InitializeComponent()
         {
             this.Text = Localizer.T("quick_setup_title");
-            this.Size = new Size(580, 580);
+            this.Size = new Size(580, 610);
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.StartPosition = FormStartPosition.CenterParent;
             this.MaximizeBox = false;
@@ -95,11 +95,11 @@ namespace ClassroomChecker.UI
             // 2. Steps Panel
             pnlSteps = new Panel
             {
-                Location = new Point(20, 100),
-                Size = new Size(525, 305),
+                Location = new Point(20, 95),
+                Size = new Size(525, 330),
                 BackColor = Color.White,
                 BorderStyle = BorderStyle.FixedSingle,
-                Padding = new Padding(16, 10, 16, 10)
+                Padding = new Padding(16, 8, 16, 8)
             };
 
             string[] stepTitles = new string[]
@@ -111,15 +111,16 @@ namespace ClassroomChecker.UI
                 "5. ກຳນົດ Timezone (+7) ແລະ ຮູບແບບວັນທີ່ ວ/ດ/ປ (dd/MM/yyyy)",
                 "6. ສ້າງໄອຄອນໜ້າຈໍ This PC, Control Panel ແລະ MS Office",
                 "7. ລ້າງໄຟລ໌ຂີ້ເຫຍື້ອ Temp/Cache ປອດໄພ",
-                string.Format("8. Export Spec ເຄື່ອງເປັນ Excel (.xlsx) ລົງໂຟນເດີ specs/")
+                string.Format("8. Export Spec ເຄື່ອງເປັນ Excel (.xlsx) ລົງໂຟນເດີ specs/"),
+                "9. ປິດ AutoRun & ວັກຊີນປ້ອງກັນ USB Shortcut"
             };
 
-            lblStepItems = new Label[8];
-            lblStepIcons = new Label[8];
+            lblStepItems = new Label[9];
+            lblStepIcons = new Label[9];
 
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 9; i++)
             {
-                int y = 10 + (i * 36);
+                int y = 8 + (i * 35);
 
                 lblStepIcons[i] = new Label
                 {
@@ -147,10 +148,10 @@ namespace ClassroomChecker.UI
             // 3. Progress Bar & Status Message
             prgSetup = new ProgressBar
             {
-                Location = new Point(20, 415),
+                Location = new Point(20, 436),
                 Size = new Size(525, 20),
                 Minimum = 0,
-                Maximum = 8,
+                Maximum = 9,
                 Value = 0
             };
 
@@ -159,7 +160,7 @@ namespace ClassroomChecker.UI
                 Text = "ກົດ \"ເລີ່ມຕົ້ນຕັ້ງຄ່າ\" ເພື່ອດຳເນີນການທຸກຂັ້ນຕອນອັດຕະໂນມັດ",
                 Font = UiFontManager.GetFont(9F, FontStyle.Regular),
                 ForeColor = Color.FromArgb(100, 116, 139),
-                Location = new Point(20, 442),
+                Location = new Point(20, 464),
                 Size = new Size(525, 22),
                 TextAlign = ContentAlignment.MiddleLeft
             };
@@ -299,7 +300,7 @@ namespace ClassroomChecker.UI
             }
 
             int idx = e.StepIndex - 1;
-            if (idx >= 0 && idx < 8)
+            if (idx >= 0 && idx < lblStepItems.Length)
             {
                 if (e.IsCompleted)
                 {
@@ -326,7 +327,7 @@ namespace ClassroomChecker.UI
                 }
             }
 
-            prgSetup.Value = Math.Min(e.StepIndex, 8);
+            prgSetup.Value = Math.Min(e.StepIndex, prgSetup.Maximum);
         }
     }
 }

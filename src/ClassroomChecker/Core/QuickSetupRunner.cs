@@ -51,7 +51,7 @@ namespace ClassroomChecker.Core
         {
             return await Task.Run(() =>
             {
-                int totalSteps = 8;
+                int totalSteps = 9;
                 bool allSuccessful = true;
 
                 // -----------------------------------------------------------------
@@ -232,6 +232,24 @@ namespace ClassroomChecker.Core
                 {
                     allSuccessful = false;
                     Notify(8, totalSteps, step8Name, true, false, ex.Message);
+                }
+
+                // -----------------------------------------------------------------
+                // ຂັ້ນຕອນທີ 9: ປິດ Windows AutoRun & ວັກຊີນປ້ອງກັນ USB Shortcut
+                // -----------------------------------------------------------------
+                string step9Name = Localizer.T("quick_setup_step_usb_vaccine");
+                Notify(9, totalSteps, step9Name, false, false);
+
+                try
+                {
+                    var usbMod = new UsbVaccineModule();
+                    var usbRes = usbMod.Fix();
+                    bool usbOk = usbRes != null && usbRes.Status == CheckStatus.Pass;
+                    Notify(9, totalSteps, step9Name, true, usbOk, usbRes != null ? usbRes.Summary : "");
+                }
+                catch (Exception ex)
+                {
+                    Notify(9, totalSteps, step9Name, true, false, ex.Message);
                 }
 
                 // -----------------------------------------------------------------

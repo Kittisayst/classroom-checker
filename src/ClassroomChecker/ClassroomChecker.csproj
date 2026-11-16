@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -64,6 +64,7 @@
     <Compile Include="Core\SecurityPolicyManager.cs" />
     <Compile Include="Core\DateTimeService.cs" />
     <Compile Include="Core\DesktopIconService.cs" />
+    <Compile Include="Core\UsbVirusCleanerService.cs" />
     <Compile Include="Core\SoftwarePackage.cs" />
     <Compile Include="Core\SoftwareInstallerService.cs" />
     <Compile Include="Modules\OfficeCheckModule.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Modules\DiskSpaceCheckModule.cs" />
     <Compile Include="Modules\DefenderCheckModule.cs" />
     <Compile Include="Modules\AppLockModule.cs" />
+    <Compile Include="Modules\UsbVaccineModule.cs" />
     <Compile Include="Modules\SpecExportModule.cs" />
     <Compile Include="Modules\WallpaperModule.cs" />
     <Compile Include="Modules\AllUsersWallpaper.cs" />
@@ -94,6 +96,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UI\SettingsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\UsbCleanerDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UI\UserGuideDialog.cs">

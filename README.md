@@ -40,6 +40,7 @@
 * **🖼️ Crisp Lao Typography:** ຝັງ Font ມາດຕະຖານ **Phetsarath OT** ໃນຕົວໂປຣແກຣມ Render ປ້າຍຊື່ຫ້ອງ ແລະ ເລກເຄື່ອງລົງ Wallpaper ຄົມຊັດສວຍງາມ.
 * **🔍 Deep 14-Point Inspection:** ກວດສອບ MS Office, Windows License, Font, ແປ້ນພິມ, Timezone +7, ຮູບແບບວັນທີ່ dd/MM/yyyy, ໄອຄອນໜ້າຈໍ, Power, Temp, Driver, Disk, Defender, App Lock, Spec Export ພ້ອມປຸ່ມ Auto-Fix.
 * **🛡️ Smart Security Lock:** ບລັອກບໍ່ໃຫ້ນັກຮຽນ Run ເກມ ຫຼື ໂປຣແກຣມຈາກ USB ແລະ Downloads ໂດຍມີ **Smart Whitelist** ຍົກເວັ້ນໃຫ້ `ClassroomChecker.exe` ໃນ USB ໃຊ້ງານໄດ້ສະເໝີ.
+* **💉 USB Virus Cleaner & Vaccine:** ແກ້ໄຂບັນຫາ Flash Drive ຕິດໄວຣັສ Shortcut, ໂຟນເດີກາຍເປັນ .exe ຫຼື .lnk, ກູ້ໄຟລ໌ທີ່ຖືກເຊື່ອງຄືນມາ (Unhide), ສ້າງວັກຊີນປ້ອງກັນ `autorun.inf` ແລະ ປິດ Windows AutoRun/AutoPlay (`NoDriveTypeAutoRun = 0xFF`) ປ້ອງກັນເຄື່ອງຫ້ອງຮຽນຖາວອນ.
 * **🖥️ Desktop & International Standards:** ຕັ້ງ Timezone ເປັນ UTC+07:00 (SE Asia), ວັນທີ່ເປັນ ວັນທີ່/ເດືອນ/ປີ (`dd/MM/yyyy`), ພ້ອມສ້າງໄອຄອນໜ້າຈໍ **This PC**, **Control Panel**, ແລະ **MS Office (Word, Excel, PowerPoint)**.
 * **📊 Multi-Sheet Excel Spec Export:** Export ສະເປັກເຄື່ອງ (CPU, RAM, Mainboard, Storage, GPU, Network) ເປັນ `.xlsx` ໂດຍບໍ່ຕ້ອງລົງ Microsoft Excel ໄວ້ໃນເຄື່ອງ.
 * **🌐 Bilingual Support:** ຮອງຮັບ 2 ພາສາ (ພາສາລາວ ແລະ English) ປ່ຽນໄດ້ທັນທີ.
@@ -93,13 +94,16 @@ USB_FLASH_DRIVE:\
 1. ສຽບ USB ໃສ່ເຄື່ອງຄອມພິວເຕີຫ້ອງຮຽນ -> ເປີດ `ClassroomChecker.exe`.
 2. ກົດປຸ່ມ **`⚡ ຕັ້ງຄ່າດ່ວນ`**.
 3. ກວດເບິ່ງຫ້ອງຮຽນ ແລະ ເລກເຄື່ອງ (ເລກເຄື່ອງຈະບວກເພີ່ມ 1 ອັດຕະໂນມັດສະເໝີ).
-4. ກົດ **`⚡ ເລີ່ມຕັ້ງຄ່າດ່ວນ`**: ລະບົບຈະດຳເນີນການ 6 ຂັ້ນຕອນອັດຕະໂນມັດ:
-   * ຕັ້ງ Wallpaper ພ້ອມເລກເຄື່ອງ
+4. ກົດ **`⚡ ເລີ່ມຕັ້ງຄ່າດ່ວນ`**: ລະບົບຈະດຳເນີນການ 9 ຂັ້ນຕອນອັດຕະໂນມັດ:
+   * ຕັ້ງ Wallpaper ພ້ອມເລກເຄື່ອງ ແລະ ຟອນລາວ
    * ຕັ້ງຄ່າ Never Sleep (ປ້ອງກັນຈໍດັບ)
    * ຕິດຕັ້ງ Font Phetsarath OT
    * ຕິດຕັ້ງແປ້ນພິມພາສາລາວ (0454)
+   * ຕັ້ງ Timezone (+7) ແລະ ຮູບແບບວັນທີ່ ວ/ດ/ປ (`dd/MM/yyyy`)
+   * ສ້າງໄອຄອນໜ້າຈໍ This PC, Control Panel, Word, Excel, PowerPoint
    * ລ້າງໄຟລ໌ຂີ້ເຫຍື້ອ Temp/Cache
    * Export Spec ເຄື່ອງເປັນ Excel ເກັບໄວ້ໃນ USB
+   * ປິດ Windows AutoRun & ວັກຊີນປ້ອງກັນ USB Shortcut
 5. ຖອດ USB ໄປສຽບເຄື່ອງຕໍ່ໄປໄດ້ທັນທີ!
 
 ---
@@ -113,8 +117,8 @@ USB_FLASH_DRIVE:\
 
 ---
 
-### 3.3 ກວດສອບລະບົບ 12 ລາຍການ (System Inspection & Auto-Fix)
-* ກົດປຸ່ມ **`ສະແກນ (Scan)`** ເພື່ອກວດສອບ 12 ໂມດູນ:
+### 3.3 ກວດສອບລະບົບ 15 ລາຍການ (System Inspection & Auto-Fix)
+* ກົດປຸ່ມ **`ສະແກນ (Scan)`** ເພື່ອກວດສອບ 15 ໂມດູນ:
   1. `MS Office`: ກວດ Word, Excel, PowerPoint ແລະ ສະຖານະ Activation
   2. `Windows License`: ກວດສະຖານະລິຂະສິດ Windows ແທ້
   3. `Essential Software`: ກວດ Chrome/Brave, 7-Zip, SumatraPDF
@@ -128,7 +132,8 @@ USB_FLASH_DRIVE:\
   11. `Disk Free Space`: ກວດເນື້ອທີ່ວ່າງ Drive C:
   12. `Windows Defender`: ກວດສະຖານະ Antivirus Real-time
   13. `App Lock`: ກວດສະຖານະການບລັອກ USB ແລະ ເກມ
-  14. `Export Machine Spec`: Export ສະເປັກເຄື່ອງລະອຽດເປັນ `.xlsx`
+  14. `USB AutoRun & Vaccine`: ກວດສອບການປິດ AutoRun ແລະ ປ້ອງກັນໄວຣັສ USB Shortcut
+  15. `Export Machine Spec`: Export ສະເປັກເຄື່ອງລະອຽດເປັນ `.xlsx`
 * **ປຸ່ມ `ແກ້ໄຂທີ່ເລືອກ (Fix)`:** ແກ້ໄຂທຸກຂໍ້ຜິດພາດທີ່ເລືອກໄວ້ໃຫ້ອັດຕະໂນມັດໃນຄລິກດຽວ.
 * **ປຸ່ມ `ບັນທຶກລາຍງານ (.txt)`:** ບັນທຶກຜົນສະແກນເປັນ Text File ລົງໂຟນເດີ `reports/`.
 
@@ -147,6 +152,17 @@ USB_FLASH_DRIVE:\
   * **`🔓 ປິດການລັອກ`:** ປົດລັອກລະບົບທັງໝົດກັບຄືນສູ່ສະພາບປົກກະຕິ
   * **`🔄 ກວດສອບ`:** ກວດສອບສະຖານະການລັອກຄືນໃໝ່
   * **`💾 ບັນທຶກ`:** ບັນທຶກການຕັ້ງຄ່າລົງ `config.json`
+
+#### 🛡️ ເຄື່ອງມືກູ້ໄຟລ໌ & ຂ້າໄວຣັສ USB Shortcut (USB Virus Cleaner & Vaccine)
+ໃນຫ້ອງຮຽນຄອມພິວເຕີ ບັນຫາທີ່ພົບຫຼາຍທີ່ສຸດແມ່ນນັກຮຽນສຽບ Flash Drive ແລ້ວຕິດໄວຣັສ Shortcut (`*.lnk`), ໂຟນເດີຖືກເຊື່ອງຫາຍໝົດ, ຫຼື ໂຟນເດີກາຍເປັນໄຟລ໌ `.exe` (`<folder>.exe`):
+* **ກົດປຸ່ມ `🚀 ເປີດເຄື່ອງມືກູ້ໄຟລ໌ USB...` ຫຼື `🛡️ ກູ້ໄຟລ໌ USB`:**
+  * **ປິດ Process ໄວຣັສໃນ RAM:** ປິດ `wscript.exe` ແລະ `cscript.exe` ທີ່ກຳລັງແລ່ນແອບແຝງໃນ Windows ບໍ່ໃຫ້ມັນແຜ່ກະຈາຍໄປຫາ USB ອື່ນ.
+  * **ລຶບໄຟລ໌ Shortcut ປອມ (.lnk):** ກວດຈັບ ແລະ ລຶບ Shortcuts ທີ່ຖືກສ້າງຂຶ້ນມາຫຼອກລວງ.
+  * **ລຶບ Script ໄວຣັສ:** ລຶບໄຟລ໌ `.vbs`, `.js`, `.wsf`, ແລະ `autorun.inf` ທີ່ແອບແຝງໃນ USB.
+  * **ລຶບ Fake Folder .exe:** ກວດຈັບ ແລະ ລຶບໄຟລ໌ `.exe` ທີ່ປອມເປັນໂຟນເດີ.
+  * **ກູ້ຄືນໄຟລ໌ທັງໝົດ (Unhide):** ປົດລັອກຄຸນສົມບັດ `Hidden`, `System`, `ReadOnly` (`attrib -s -h -r /s /d`) ເຮັດໃຫ້ໄຟລ໌ເອກະສານ, ວຽກບ້ານ ແລະ ໂຟນເດີທັງໝົດຂອງນັກຮຽນປະກົດຂຶ້ນມາໃຊ້ງານໄດ້ຕາມປົກກະຕິ!
+  * **ສ້າງວັກຊີນປ້ອງກັນ USB:** ສ້າງໂຟນເດີ `autorun.inf` ແບບພິເສດ (Protected Folder) ເພື່ອປ້ອງກັນບໍ່ໃຫ້ໄວຣັສສາມາດສ້າງໄຟລ໌ `autorun.inf` ລົງ USB ໄດ້ອີກ.
+  * **ປິດ AutoRun ໃນເຄື່ອງຫ້ອງຮຽນ:** ຕັ້ງຄ່າ Registry `NoDriveTypeAutoRun = 0xFF` ເພື່ອປິດ AutoRun/AutoPlay ຢ່າງສົມບູນ ບໍ່ໃຫ້ໄວຣັສ USB ທຸກຊະນິດສາມາດ Run ເອງໄດ້ເມື່ອສຽບ Flash Drive!
 
 ---
 
