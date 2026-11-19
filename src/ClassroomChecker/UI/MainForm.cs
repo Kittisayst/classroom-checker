@@ -11,11 +11,31 @@ namespace ClassroomChecker.UI
         private bool _isChangingLanguage = false;
         private FlowLayoutPanel _headerActions;
         private Button _btnAbout;
+        private TabPage _tabMachineInfo;
+        private MachineInfoPanel _machineInfoPanel;
+
+        /// <summary>ແທັບ "ຂໍ້ມູນຄອມ" (Machine Spec) ຕໍ່ຈາກແທັບ Antivirus USB</summary>
+        private void BuildMachineInfoTab()
+        {
+            _machineInfoPanel = new MachineInfoPanel { Dock = DockStyle.Fill };
+            _tabMachineInfo = new TabPage
+            {
+                Name = "tabMachineInfo",
+                Padding = new Padding(3),
+                UseVisualStyleBackColor = true
+            };
+            _tabMachineInfo.Controls.Add(_machineInfoPanel);
+            // TabPages.Insert ບໍ່ມີຜົນ ຖ້າ TabControl ຍັງບໍ່ທັນສ້າງ handle (bug ຂອງ WinForms) ຈຶ່ງສ້າງກ່ອນ
+            IntPtr ensureHandle = tabMain.Handle;
+            int after = tabMain.TabPages.IndexOf(tabUsbAntivirus);
+            tabMain.TabPages.Insert(after >= 0 ? after + 1 : tabMain.TabPages.Count, _tabMachineInfo);
+        }
         private readonly ToolTip _headerToolTip = new ToolTip();
 
         public MainForm()
         {
             InitializeComponent();
+            BuildMachineInfoTab();
             BuildHeaderLayout();
             try
             {
@@ -66,6 +86,10 @@ namespace ClassroomChecker.UI
                 else if (tabMain.SelectedTab == tabUsbAntivirus && usbAntivirusPanel != null)
                 {
                     usbAntivirusPanel.OnTabActivated();
+                }
+                else if (tabMain.SelectedTab == _tabMachineInfo && _machineInfoPanel != null)
+                {
+                    _machineInfoPanel.OnTabActivated();
                 }
             };
         }
@@ -142,8 +166,9 @@ namespace ClassroomChecker.UI
             pnlHeader.ResumeLayout(true);
             LayoutHeaderText();
 
-            // ແທັບກວ້າງ 140px ບໍ່ພໍສຳລັບຊື່ພາສາອັງກິດ (ເຊັ່ນ "Protection & Lock")
-            tabMain.ItemSize = new Size(170, tabMain.ItemSize.Height);
+            // ແທັບກວ້າງ 140px ບໍ່ພໍສຳລັບຊື່ພາສາອັງກິດ (ເຊັ່ນ "Software Installer");
+            // 6 ແທັບ x 158px ຍັງພໍດີໜ້າຕ່າງ 984px ໂດຍບໍ່ມີລູກສອນເລື່ອນ
+            tabMain.ItemSize = new Size(158, tabMain.ItemSize.Height);
         }
 
         private void LayoutHeaderText()
@@ -167,6 +192,8 @@ namespace ClassroomChecker.UI
             tabSecurity.Text = Localizer.T("tab_security");
             tabInstall.Text = Localizer.T("tab_install");
             tabUsbAntivirus.Text = Localizer.T("tab_usb_antivirus", "Antivirus USB");
+            if (_tabMachineInfo != null) _tabMachineInfo.Text = Localizer.T("tab_machine_info");
+            if (_machineInfoPanel != null) _machineInfoPanel.ApplyLocalization();
             // header ໃຊ້ຂໍ້ຄວາມສັ້ນ ເພື່ອບໍ່ໃຫ້ກິນພື້ນທີ່ subtitle
             btnQuickSetup.Text = Localizer.T("btn_quick_setup_short");
             btnSettings.Text = Localizer.T("btn_settings");

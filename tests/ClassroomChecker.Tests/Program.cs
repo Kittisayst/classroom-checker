@@ -76,6 +76,8 @@ namespace ClassroomChecker.Tests
             Run("Update: downloaded exe verification (MZ + SHA-256)", Update_VerifyDownloadedExe);
             Run("Update: exe swap keeps old copy and rolls back on failure", Update_SwapExecutable);
             Run("I18n: about and update keys localized in lo and en", I18n_About_Localized);
+            Run("MachineInfo: summary cards and exported file path", MachineInfo_SummaryAndSavedPath);
+            Run("I18n: machine info tab keys localized in lo and en", I18n_MachineInfo_Localized);
 
             Cleanup();
 
@@ -1162,6 +1164,51 @@ namespace ClassroomChecker.Tests
             {
                 Localizer.SetLanguage(lang);
                 foreach (string k in keys) Assert(Localizer.T(k, "1.2.0", "x") != k, lang + " has " + k);
+            }
+            Localizer.SetLanguage("lo");
+        }
+    
+        private static void MachineInfo_SummaryAndSavedPath()
+        {
+            var rows = new List<SpecRow>
+            {
+                new SpecRow(SpecRow.Cpu, "CPU Model", "Intel(R) Core(TM) i5-6500"),
+                new SpecRow(SpecRow.Cpu, "Cores / Threads", "4 Cores / 4 Threads"),
+                new SpecRow(SpecRow.Ram, "Total Capacity (ຂະໜາດລວມ)", "4.0 GB"),
+                new SpecRow(SpecRow.Ram, "RAM Slot 1", "4 GB DDR4"),
+                new SpecRow(SpecRow.Disk, "Physical Drive 1", "WDC 500 GB (HDD)"),
+                new SpecRow(SpecRow.Os, "OS Name", "Windows 10 Pro"),
+                new SpecRow(SpecRow.Os, "Build Number", "19045"),
+                new SpecRow(SpecRow.Gpu, "Display Adapter 1", "Intel HD 530"),
+            };
+            var s = ClassroomChecker.UI.SpecSummary.From(rows);
+            AreEqual("Intel(R) Core(TM) i5-6500  ·  4 Cores / 4 Threads", s.Cpu, "cpu card");
+            AreEqual("4.0 GB  ·  1 slot", s.Ram, "ram card");
+            AreEqual("WDC 500 GB (HDD)", s.Disk, "disk card");
+            AreEqual("Windows 10 Pro (19045)", s.Os, "os card");
+
+            var empty = ClassroomChecker.UI.SpecSummary.From(new List<SpecRow>());
+            Assert(empty.Cpu == null && empty.Ram == null && empty.Disk == null && empty.Os == null, "no rows -> empty cards");
+
+            AreEqual("", new SpecRow("c", "i", null).Value, "null value becomes empty");
+
+            var ok = new CheckResult(CheckStatus.Pass, "done");
+            ok.Details.Add("Target Path: x");
+            ok.Details.Add("Saved to: D:\\usb\\specs\\COM1-01.xlsx");
+            AreEqual("D:\\usb\\specs\\COM1-01.xlsx", ClassroomChecker.UI.SpecSummary.FindSavedPath(ok), "saved path parsed");
+            Assert(ClassroomChecker.UI.SpecSummary.FindSavedPath(new CheckResult(CheckStatus.Fail, "x")) == null, "no saved path -> null");
+            Assert(ClassroomChecker.UI.SpecSummary.FindSavedPath(null) == null, "null result -> null");
+        }
+
+        private static void I18n_MachineInfo_Localized()
+        {
+            string[] keys = { "tab_machine_info", "machine_title", "machine_btn_check", "machine_btn_export",
+                "machine_btn_open_folder", "machine_card_cpu", "machine_col_value", "machine_status_loaded",
+                "machine_status_export_failed" };
+            foreach (string lang in new[] { "lo", "en" })
+            {
+                Localizer.SetLanguage(lang);
+                foreach (string k in keys) Assert(Localizer.T(k, "12:00", 5) != k, lang + " has " + k);
             }
             Localizer.SetLanguage("lo");
         }

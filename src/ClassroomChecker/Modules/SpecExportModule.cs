@@ -83,7 +83,6 @@ namespace ClassroomChecker.Modules
                 }
 
                 AppConfig cfg = ConfigService.Instance.Current;
-                string room = cfg.selected != null ? cfg.selected.room : "ຫ້ອງຄອມພິວເຕີ 1";
                 int number = cfg.selected != null ? cfg.selected.number : 1;
 
                 SimpleXlsxWriter writer = new SimpleXlsxWriter();
@@ -94,16 +93,8 @@ namespace ClassroomChecker.Modules
                 XlsxSheet specSheet = new XlsxSheet("Machine Spec");
                 specSheet.AddHeader("Category (ໝວດໝູ່)", "Item (ລາຍການ)", "Value (ຄ່າ / ລາຍລະອຽດ)");
 
-                // General Info
-                specSheet.AddRow("General (ທົ່ວໄປ)", "Room (ຫ້ອງຮຽນ)", room);
-                specSheet.AddRow("General (ທົ່ວໄປ)", "Computer Number (ເລກເຄື່ອງ)", number.ToString("D2"));
-                specSheet.AddRow("General (ທົ່ວໄປ)", "Hostname (ຊື່ເຄື່ອງ)", Environment.MachineName);
-                specSheet.AddRow("General (ທົ່ວໄປ)", "Current User (ບັນຊີ)", Environment.UserName);
-                specSheet.AddRow("General (ທົ່ວໄປ)", "Export Date (ວັນທີ)", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-
-                // System & BIOS
-                string manufacturer, model, serial, board;
-                GetSystemAndBiosInfo(out manufacturer, out model, out serial, out board);
+                string serial;
+                List<SpecRow> rows = CollectSpec(out serial);
 
                 // ກວດເລກເຄື່ອງຊ້ຳ: ຖ້າໄຟລ໌ເດີມເປັນຂອງເຄື່ອງອື່ນ ຫ້າມຂຽນທັບ → ບັນທຶກເປັນໄຟລ໌ໃໝ່ ແລ້ວເຕືອນ
                 string duplicateOf = null;
@@ -117,70 +108,10 @@ namespace ClassroomChecker.Modules
                             SanitizeFileName(Environment.MachineName), DateTime.Now));
                     }
                 }
-                specSheet.AddRow("System & BIOS", "Manufacturer (ຍີ່ຫໍ້)", manufacturer);
-                specSheet.AddRow("System & BIOS", "Model (ລຸ້ນ)", model);
-                specSheet.AddRow("System & BIOS", "Serial Number", serial);
-                specSheet.AddRow("System & BIOS", "Mainboard", board);
 
-                // OS
-                string osCaption, osVersion, osBuild, osArch;
-                GetOsInfo(out osCaption, out osVersion, out osBuild, out osArch);
-                specSheet.AddRow("Operating System", "OS Name", osCaption);
-                specSheet.AddRow("Operating System", "Version", osVersion);
-                specSheet.AddRow("Operating System", "Build Number", osBuild);
-                specSheet.AddRow("Operating System", "Architecture", osArch);
-
-                // CPU
-                string cpuName;
-                int cores, threads;
-                GetCpuInfo(out cpuName, out cores, out threads);
-                specSheet.AddRow("Processor (CPU)", "CPU Model", cpuName);
-                specSheet.AddRow("Processor (CPU)", "Cores / Threads", string.Format("{0} Cores / {1} Threads", cores, threads));
-
-                // RAM
-                string totalRam;
-                List<string> ramSlots;
-                GetRamInfo(out totalRam, out ramSlots);
-                specSheet.AddRow("Memory (RAM)", "Total Capacity (ຂະໜາດລວມ)", totalRam);
-                for (int i = 0; i < ramSlots.Count; i++)
+                foreach (SpecRow row in rows)
                 {
-                    specSheet.AddRow("Memory (RAM)", string.Format("RAM Slot {0}", i + 1), ramSlots[i]);
-                }
-
-                // Storage (Disks)
-                List<string> physicalDisks;
-                GetPhysicalDisks(out physicalDisks);
-                for (int i = 0; i < physicalDisks.Count; i++)
-                {
-                    specSheet.AddRow("Storage (Disk)", string.Format("Physical Drive {0}", i + 1), physicalDisks[i]);
-                }
-
-                // Logical Drives
-                foreach (DriveInfo drive in DriveInfo.GetDrives())
-                {
-                    if (drive.IsReady && drive.DriveType == DriveType.Fixed)
-                    {
-                        double totalGb = drive.TotalSize / (1024.0 * 1024.0 * 1024.0);
-                        double freeGb = drive.AvailableFreeSpace / (1024.0 * 1024.0 * 1024.0);
-                        string val = string.Format("Total: {0:F1} GB, Free: {1:F1} GB ({2})", totalGb, freeGb, drive.VolumeLabel);
-                        specSheet.AddRow("Storage (Partitions)", string.Format("Drive {0}", drive.Name), val);
-                    }
-                }
-
-                // GPU
-                List<string> gpus;
-                GetGpuInfo(out gpus);
-                for (int i = 0; i < gpus.Count; i++)
-                {
-                    specSheet.AddRow("Graphics (GPU)", string.Format("Display Adapter {0}", i + 1), gpus[i]);
-                }
-
-                // Network
-                List<string> nets;
-                GetNetworkInfo(out nets);
-                for (int i = 0; i < nets.Count; i++)
-                {
-                    specSheet.AddRow("Network", string.Format("Interface {0}", i + 1), nets[i]);
+                    specSheet.AddRow(row.Category, row.Item, row.Value);
                 }
 
                 writer.AddSheet(specSheet);
@@ -244,6 +175,96 @@ namespace ClassroomChecker.Modules
                 details.Add("Error: " + ex.Message);
                 return new CheckResult(CheckStatus.Fail, "ເກີດຂໍ້ຜິດພາດໃນການ Export Spec: " + ex.Message, details);
             }
+        }
+
+        /// <summary>
+        /// ດຶງຂໍ້ມູນ Spec ທັງໝົດຂອງເຄື່ອງ (ໃຊ້ທັງ Export Excel ແລະ ແທັບ "ຂໍ້ມູນຄອມ").
+        /// ໃຊ້ WMI ຈຶ່ງຊ້າໄດ້ຫຼາຍວິນາທີ: ເອີ້ນຈາກ background thread
+        /// </summary>
+        public List<SpecRow> CollectSpec(out string serial)
+        {
+            var rows = new List<SpecRow>();
+            AppConfig cfg = ConfigService.Instance.Current;
+            string room = cfg.selected != null ? cfg.selected.room : "ຫ້ອງຄອມພິວເຕີ 1";
+            int number = cfg.selected != null ? cfg.selected.number : 1;
+
+            // General Info
+            rows.Add(new SpecRow(SpecRow.General, "Room (ຫ້ອງຮຽນ)", room));
+            rows.Add(new SpecRow(SpecRow.General, "Computer Number (ເລກເຄື່ອງ)", number.ToString("D2")));
+            rows.Add(new SpecRow(SpecRow.General, "Hostname (ຊື່ເຄື່ອງ)", Environment.MachineName));
+            rows.Add(new SpecRow(SpecRow.General, "Current User (ບັນຊີ)", Environment.UserName));
+            rows.Add(new SpecRow(SpecRow.General, "Export Date (ວັນທີ)", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
+
+            // System & BIOS
+            string manufacturer, model, board;
+            GetSystemAndBiosInfo(out manufacturer, out model, out serial, out board);
+            rows.Add(new SpecRow(SpecRow.System, "Manufacturer (ຍີ່ຫໍ້)", manufacturer));
+            rows.Add(new SpecRow(SpecRow.System, "Model (ລຸ້ນ)", model));
+            rows.Add(new SpecRow(SpecRow.System, "Serial Number", serial));
+            rows.Add(new SpecRow(SpecRow.System, "Mainboard", board));
+
+            // OS
+            string osCaption, osVersion, osBuild, osArch;
+            GetOsInfo(out osCaption, out osVersion, out osBuild, out osArch);
+            rows.Add(new SpecRow(SpecRow.Os, "OS Name", osCaption));
+            rows.Add(new SpecRow(SpecRow.Os, "Version", osVersion));
+            rows.Add(new SpecRow(SpecRow.Os, "Build Number", osBuild));
+            rows.Add(new SpecRow(SpecRow.Os, "Architecture", osArch));
+
+            // CPU
+            string cpuName;
+            int cores, threads;
+            GetCpuInfo(out cpuName, out cores, out threads);
+            rows.Add(new SpecRow(SpecRow.Cpu, "CPU Model", cpuName));
+            rows.Add(new SpecRow(SpecRow.Cpu, "Cores / Threads", string.Format("{0} Cores / {1} Threads", cores, threads)));
+
+            // RAM
+            string totalRam;
+            List<string> ramSlots;
+            GetRamInfo(out totalRam, out ramSlots);
+            rows.Add(new SpecRow(SpecRow.Ram, "Total Capacity (ຂະໜາດລວມ)", totalRam));
+            for (int i = 0; i < ramSlots.Count; i++)
+            {
+                rows.Add(new SpecRow(SpecRow.Ram, string.Format("RAM Slot {0}", i + 1), ramSlots[i]));
+            }
+
+            // Storage (Disks)
+            List<string> physicalDisks;
+            GetPhysicalDisks(out physicalDisks);
+            for (int i = 0; i < physicalDisks.Count; i++)
+            {
+                rows.Add(new SpecRow(SpecRow.Disk, string.Format("Physical Drive {0}", i + 1), physicalDisks[i]));
+            }
+
+            // Logical Drives
+            foreach (DriveInfo drive in DriveInfo.GetDrives())
+            {
+                if (drive.IsReady && drive.DriveType == DriveType.Fixed)
+                {
+                    double totalGb = drive.TotalSize / (1024.0 * 1024.0 * 1024.0);
+                    double freeGb = drive.AvailableFreeSpace / (1024.0 * 1024.0 * 1024.0);
+                    string val = string.Format("Total: {0:F1} GB, Free: {1:F1} GB ({2})", totalGb, freeGb, drive.VolumeLabel);
+                    rows.Add(new SpecRow(SpecRow.Partition, string.Format("Drive {0}", drive.Name), val));
+                }
+            }
+
+            // GPU
+            List<string> gpus;
+            GetGpuInfo(out gpus);
+            for (int i = 0; i < gpus.Count; i++)
+            {
+                rows.Add(new SpecRow(SpecRow.Gpu, string.Format("Display Adapter {0}", i + 1), gpus[i]));
+            }
+
+            // Network
+            List<string> nets;
+            GetNetworkInfo(out nets);
+            for (int i = 0; i < nets.Count; i++)
+            {
+                rows.Add(new SpecRow(SpecRow.Network, string.Format("Interface {0}", i + 1), nets[i]));
+            }
+
+            return rows;
         }
 
         public string GetTargetExcelPath()
@@ -504,11 +525,12 @@ namespace ClassroomChecker.Modules
             disks = new List<string>();
 
             // 1. ລອງ MSFT_PhysicalDisk ໃນ root\Microsoft\Windows\Storage (ອ່ານ SSD / HDD)
+            var usbDisks = new List<string>();
             try
             {
                 ManagementScope scope = new ManagementScope(@"root\Microsoft\Windows\Storage");
                 scope.Connect();
-                ObjectQuery query = new ObjectQuery("SELECT FriendlyName, MediaType, Size FROM MSFT_PhysicalDisk");
+                ObjectQuery query = new ObjectQuery("SELECT FriendlyName, MediaType, Size, BusType FROM MSFT_PhysicalDisk");
                 using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query))
                 {
                     foreach (ManagementObject mo in searcher.Get())
@@ -527,11 +549,15 @@ namespace ClassroomChecker.Modules
                             else if (type == 4) mediaType = "SSD";
                             else if (type == 5) mediaType = "SCM";
                         }
-                        disks.Add(string.Format("{0} ({1:F0} GB, {2})", name, gb, mediaType));
+                        // BusType 7 = USB: ໝາຍໄວ້ ເພື່ອບໍ່ໃຫ້ສັບສົນ Flash Drive ກັບດິສກ໌ໃນເຄື່ອງ (ຈັດໄວ້ທ້າຍລາຍການ)
+                        bool usb = mo["BusType"] != null && Convert.ToInt32(mo["BusType"]) == 7;
+                        if (usb) usbDisks.Add(string.Format("{0} ({1:F0} GB, {2}, USB)", name, gb, mediaType));
+                        else disks.Add(string.Format("{0} ({1:F0} GB, {2})", name, gb, mediaType));
                     }
                 }
             }
             catch { }
+            disks.AddRange(usbDisks);
 
             // 2. Fallback: Win32_DiskDrive
             if (disks.Count == 0)
@@ -589,6 +615,32 @@ namespace ClassroomChecker.Modules
                 }
             }
             catch { }
+        }
+    }
+
+    /// <summary>ໜຶ່ງແຖວຂອງຂໍ້ມູນ Spec ເຄື່ອງ: ໝວດໝູ່ / ລາຍການ / ຄ່າ (ຄືກັບແຖວໃນ Sheet "Machine Spec")</summary>
+    public class SpecRow
+    {
+        // ຊື່ໝວດໝູ່ຄືເກົ່າກັບໄຟລ໌ Excel ທີ່ Export ໄປແລ້ວ (Master Summary ອ່ານຊື່ເຫຼົ່ານີ້)
+        public const string General = "General (ທົ່ວໄປ)";
+        public const string System = "System & BIOS";
+        public const string Os = "Operating System";
+        public const string Cpu = "Processor (CPU)";
+        public const string Ram = "Memory (RAM)";
+        public const string Disk = "Storage (Disk)";
+        public const string Partition = "Storage (Partitions)";
+        public const string Gpu = "Graphics (GPU)";
+        public const string Network = "Network";
+
+        public string Category { get; private set; }
+        public string Item { get; private set; }
+        public string Value { get; private set; }
+
+        public SpecRow(string category, string item, string value)
+        {
+            Category = category;
+            Item = item;
+            Value = value ?? "";
         }
     }
 }
