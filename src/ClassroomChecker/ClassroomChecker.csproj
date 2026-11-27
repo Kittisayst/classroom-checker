@@ -68,6 +68,7 @@
     <Compile Include="Core\DesktopIconService.cs" />
     <Compile Include="Core\LogonScreenService.cs" />
     <Compile Include="Core\UserAccountService.cs" />
+    <Compile Include="Core\WindowsLanguageService.cs" />
     <Compile Include="Core\UpdateService.cs" />
     <Compile Include="Core\PerformanceTuningService.cs" />
     <Compile Include="Core\ComputerNameService.cs" />

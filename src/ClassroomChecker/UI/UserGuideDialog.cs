@@ -505,7 +505,16 @@ ACTION BUTTONS:
 • '🔓 ປິດການລັອກ (Disable Lock)': Removes all security restrictions and restores full default execution rights.
 • '🛡️ ກູ້ໄຟລ໌ USB (USB Rescue)': Opens the USB Virus Cleaner & Recovery dialog.
 • '🔄 ກວດສອບ (Refresh)': Re-checks the current system lock state.
-• '💾 ບັນທຶກ (Save)': Saves the security configuration to config.json.";
+• '💾 ບັນທຶກ (Save)': Saves the security configuration to config.json.
+
+--------------------------------------------------------------------------------
+🌐 WINDOWS DISPLAY LANGUAGE:
+--------------------------------------------------------------------------------
+• 'Set to English': sets Windows menus back to English (e.g. after a student switched to Chinese).
+• Tick '🔒 Lock' first to also prevent changing it and hide the Language pages in Settings.
+• Untick '🔒 Lock' and press the button to unlock.
+• Takes effect after signing out and in. Keyboard layouts (Lao input) are not changed.
+• The PC must already have English installed.";
             }
 
             return @"================================================================================
@@ -542,7 +551,16 @@ ACTION BUTTONS:
 • '🔒 ເປີດການລັອກ': ເປີດໃຊ້ງານນະໂຍບາຍບລັອກທັນທີ ມີຜົນກັບທຸກ User ໃນເຄື່ອງ
 • '🔓 ປິດການລັອກ': ປົດລັອກນະໂຍບາຍທັງໝົດກັບຄືນເປັນປົກກະຕິ
 • '🔄 ກວດສອບ': ກວດສອບສະຖານະການລັອກປັດຈຸບັນຂອງເຄື່ອງ
-• '💾 ບັນທຶກ': ບັນທຶກລາຍຊື່ເກມ ແລະ ນະໂຍບາຍລົງໄຟລ໌ config.json";
+• '💾 ບັນທຶກ': ບັນທຶກລາຍຊື່ເກມ ແລະ ນະໂຍບາຍລົງໄຟລ໌ config.json
+
+--------------------------------------------------------------------------------
+🌐 ພາສາສະແດງຜົນຂອງ Windows:
+--------------------------------------------------------------------------------
+• ປຸ່ມ 'ຕັ້ງເປັນພາສາອັງກິດ': ປ່ຽນເມນູ Windows ກັບເປັນອັງກິດ (ເຊັ່ນ ເມື່ອນັກຮຽນປ່ຽນເປັນພາສາຈີນ)
+• ໝາຍຊ່ອງ '🔒 ລັອກ' ກ່ອນກົດ ເພື່ອຫ້າມປ່ຽນພາສາ ແລະ ຊ່ອນໜ້າ Language ໃນ Settings
+• ເອົາໝາຍຊ່ອງ '🔒 ລັອກ' ອອກ ແລ້ວກົດປຸ່ມ ເພື່ອປົດລັອກ
+• ມີຜົນຫຼັງ Sign out ແລ້ວ Sign in ໃໝ່. ແປ້ນພິມພາສາລາວບໍ່ປ່ຽນ
+• ເຄື່ອງຕ້ອງມີພາສາອັງກິດຕິດຕັ້ງຢູ່ແລ້ວ";
         }
 
         private string GetInstallContent()

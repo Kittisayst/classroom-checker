@@ -78,6 +78,9 @@ namespace ClassroomChecker.Tests
             Run("I18n: about and update keys localized in lo and en", I18n_About_Localized);
             Run("MachineInfo: summary cards and exported file path", MachineInfo_SummaryAndSavedPath);
             Run("I18n: machine info tab keys localized in lo and en", I18n_MachineInfo_Localized);
+            Run("WindowsLanguage: pick installed English and merge hidden settings pages", WindowsLanguage_PureRules);
+            Run("WindowsLanguage: lock and unlock write the expected registry values", WindowsLanguage_LockUnlockRegistry);
+            Run("I18n: Windows language keys localized in lo and en", I18n_WindowsLanguage_Localized);
 
             Cleanup();
 
@@ -1209,6 +1212,76 @@ namespace ClassroomChecker.Tests
             {
                 Localizer.SetLanguage(lang);
                 foreach (string k in keys) Assert(Localizer.T(k, "12:00", 5) != k, lang + " has " + k);
+            }
+            Localizer.SetLanguage("lo");
+        }
+    
+        private static void WindowsLanguage_PureRules()
+        {
+            AreEqual("en-US", WindowsLanguageService.FindInstalledEnglish(new[] { "lo-LA", "en-GB", "en-US" }), "en-US preferred");
+            AreEqual("en-GB", WindowsLanguageService.FindInstalledEnglish(new[] { "zh-CN", "en-AU", "en-GB" }), "en-GB next");
+            Assert(WindowsLanguageService.FindInstalledEnglish(new[] { "zh-CN", "lo-LA" }) == null, "no English -> null");
+
+            string all = string.Join(";", WindowsLanguageService.LanguagePages);
+            AreEqual("hide:" + all, WindowsLanguageService.MergeHiddenPages(null, true), "hide from empty");
+            AreEqual("hide:windowsupdate;" + all, WindowsLanguageService.MergeHiddenPages("hide:windowsupdate", true), "keeps other hidden pages");
+            AreEqual("hide:" + all, WindowsLanguageService.MergeHiddenPages("hide:" + all, true), "no duplicates");
+            AreEqual("hide:windowsupdate", WindowsLanguageService.MergeHiddenPages("hide:windowsupdate;" + all, false), "unhide keeps others");
+            Assert(WindowsLanguageService.MergeHiddenPages("hide:" + all, false) == null, "nothing left -> delete value");
+            Assert(WindowsLanguageService.MergeHiddenPages(null, false) == null, "unhide from empty -> delete value");
+            AreEqual("showonly:display", WindowsLanguageService.MergeHiddenPages("showonly:display;regionlanguage", true), "showonly: drop ours");
+            AreEqual("showonly:display", WindowsLanguageService.MergeHiddenPages("showonly:display", false), "showonly: unlock leaves it");
+        }
+
+        private static void WindowsLanguage_LockUnlockRegistry()
+        {
+            string basePath = @"Software\ClassroomCheckerTests\" + Guid.NewGuid().ToString("N");
+            try
+            {
+                using (var machine = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(basePath + @"\machine"))
+                using (var user = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(basePath + @"\user"))
+                {
+                    using (var d = user.CreateSubKey(WindowsLanguageService.UserDesktopPath))
+                    {
+                        d.SetValue("PreferredUILanguages", new[] { "zh-CN" }, Microsoft.Win32.RegistryValueKind.MultiString);
+                        d.SetValue("PreferredUILanguagesPending", new[] { "zh-CN" }, Microsoft.Win32.RegistryValueKind.MultiString);
+                    }
+                    AreEqual("zh-CN", WindowsLanguageService.ReadUserLanguage(user), "reads current language");
+                    Assert(!WindowsLanguageService.IsLocked(machine), "not locked at start");
+
+                    WindowsLanguageService.ApplyTo(machine, user, "en-US", true);
+                    Assert(WindowsLanguageService.IsLocked(machine), "locked");
+                    AreEqual("en-US", WindowsLanguageService.ReadUserLanguage(user), "user set to English");
+                    using (var d = user.OpenSubKey(WindowsLanguageService.UserDesktopPath))
+                        Assert(d.GetValue("PreferredUILanguagesPending") == null, "pending change removed");
+                    using (var e = machine.OpenSubKey(WindowsLanguageService.ExplorerPolicyPath))
+                        Assert(((string)e.GetValue("SettingsPageVisibility")).Contains("regionlanguage"), "language page hidden");
+
+                    WindowsLanguageService.ApplyTo(machine, user, "en-US", false);
+                    Assert(!WindowsLanguageService.IsLocked(machine), "unlocked");
+                    using (var e = machine.OpenSubKey(WindowsLanguageService.ExplorerPolicyPath))
+                        Assert(e.GetValue("SettingsPageVisibility") == null, "page visibility restored");
+                    AreEqual("en-US", WindowsLanguageService.ReadUserLanguage(user), "stays English after unlock");
+                }
+            }
+            finally
+            {
+                Microsoft.Win32.Registry.CurrentUser.DeleteSubKeyTree(basePath, false);
+                using (var parent = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\ClassroomCheckerTests"))
+                {
+                    if (parent != null && parent.SubKeyCount == 0) Microsoft.Win32.Registry.CurrentUser.DeleteSubKey(@"Software\ClassroomCheckerTests", false);
+                }
+            }
+        }
+
+        private static void I18n_WindowsLanguage_Localized()
+        {
+            string[] keys = { "winlang_group", "winlang_btn_set_english", "winlang_chk_lock", "winlang_state_locked",
+                "winlang_state_unlocked", "winlang_no_english", "winlang_done_locked", "winlang_done_unlocked", "winlang_error" };
+            foreach (string lang in new[] { "lo", "en" })
+            {
+                Localizer.SetLanguage(lang);
+                foreach (string k in keys) Assert(Localizer.T(k, "x") != k, lang + " has " + k);
             }
             Localizer.SetLanguage("lo");
         }

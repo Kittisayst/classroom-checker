@@ -29,6 +29,11 @@ namespace ClassroomChecker.UI
         private CheckBox chkBlockDownloads;
         private CheckBox chkBlockPopularGames;
 
+        private GroupBox grpLanguage;
+        private Button btnSetEnglish;
+        private CheckBox chkLockLanguage;
+        private Label lblLanguageState;
+
         private TableLayoutPanel tblLists;
         private GroupBox grpBlockedExes;
         private ListBox lstBlockedExes;
@@ -126,7 +131,7 @@ namespace ClassroomChecker.UI
                 Cursor = Cursors.Hand
             };
             btnRefresh.FlatAppearance.BorderColor = Color.FromArgb(203, 213, 225);
-            btnRefresh.Click += (s, e) => RefreshPolicyStatus();
+            btnRefresh.Click += (s, e) => { RefreshPolicyStatus(); RefreshLanguageState(); };
 
             flpStatusActions.Controls.Add(btnUnlockNow);
             flpStatusActions.Controls.Add(btnLockNow);
@@ -227,6 +232,73 @@ namespace ClassroomChecker.UI
             grpPolicies.Controls.AddRange(new Control[] {
                 chkBlockUsb, chkBlockDownloads, chkBlockPopularGames
             });
+
+            // -------------------------------------------------------------
+            // 2b. Windows display language
+            // -------------------------------------------------------------
+            grpLanguage = new GroupBox
+            {
+                Dock = DockStyle.Fill,
+                Margin = new Padding(8, 0, 0, 0),
+                Font = new Font("Phetsarath OT", 9.5F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(30, 41, 59),
+                Padding = new Padding(10, 4, 10, 6)
+            };
+            var flpLanguage = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                FlowDirection = FlowDirection.TopDown,
+                WrapContents = false
+            };
+            btnSetEnglish = new Button
+            {
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                MinimumSize = new Size(190, 30),
+                Padding = new Padding(8, 0, 8, 0),
+                BackColor = Color.FromArgb(26, 115, 232),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Phetsarath OT", 9F, FontStyle.Bold),
+                Cursor = Cursors.Hand
+            };
+            btnSetEnglish.FlatAppearance.BorderSize = 0;
+            btnSetEnglish.Click += btnSetEnglish_Click;
+            chkLockLanguage = new CheckBox
+            {
+                AutoSize = true,
+                Font = new Font("Phetsarath OT", 9F, FontStyle.Regular),
+                ForeColor = Color.FromArgb(15, 23, 42),
+                Margin = new Padding(3, 4, 0, 0),
+                Cursor = Cursors.Hand
+            };
+            lblLanguageState = new Label
+            {
+                AutoSize = true,
+                Font = new Font("Phetsarath OT", 8.5F, FontStyle.Regular),
+                ForeColor = Color.FromArgb(100, 116, 139),
+                Margin = new Padding(3, 1, 0, 0),
+                UseMnemonic = false
+            };
+            flpLanguage.Controls.AddRange(new Control[] { btnSetEnglish, chkLockLanguage, lblLanguageState });
+            grpLanguage.Controls.Add(flpLanguage);
+
+            // ວາງກ່ອງພາສາໄວ້ຂ້າງກ່ອງນະໂຍບາຍ ເພື່ອບໍ່ໃຫ້ກິນຄວາມສູງຂອງລາຍຊື່ດ້ານລຸ່ມ
+            var tblTop = new TableLayoutPanel
+            {
+                Dock = DockStyle.Top,
+                Height = 118,
+                ColumnCount = 2,
+                RowCount = 1,
+                Padding = new Padding(0, 6, 0, 0)
+            };
+            tblTop.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tblTop.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 270F));
+            tblTop.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            grpPolicies.Dock = DockStyle.Fill;
+            grpPolicies.Margin = new Padding(0);
+            tblTop.Controls.Add(grpPolicies, 0, 0);
+            tblTop.Controls.Add(grpLanguage, 1, 0);
 
             // -------------------------------------------------------------
             // 3. Side-by-Side Lists (Exes & Folders)
@@ -383,7 +455,7 @@ namespace ClassroomChecker.UI
             // -------------------------------------------------------------
             this.Controls.Add(tblLists);
             this.Controls.Add(pnlBottom);
-            this.Controls.Add(grpPolicies);
+            this.Controls.Add(tblTop);
             this.Controls.Add(pnlStatus);
 
             this.Load += SecurityPanel_Load;
@@ -397,12 +469,53 @@ namespace ClassroomChecker.UI
             LoadFromConfig();
             ApplyLocalization();
             RefreshPolicyStatus();
+            RefreshLanguageState();
         }
 
         private void OnLanguageChanged()
         {
             ApplyLocalization();
             RefreshPolicyStatus();
+            RefreshLanguageState();
+        }
+
+        /// <summary>ອ່ານສະຖານະພາສາ Windows ຂອງເຄື່ອງ ແລ້ວຕັ້ງຊ່ອງ "ລັອກ" ໃຫ້ກົງກັບຄວາມຈິງ</summary>
+        private void RefreshLanguageState()
+        {
+            WindowsLanguageStatus st = WindowsLanguageService.GetStatus();
+            chkLockLanguage.Checked = st.IsLocked;
+
+            if (st.InstalledEnglish == null)
+            {
+                lblLanguageState.Text = Localizer.T("winlang_no_english");
+                lblLanguageState.ForeColor = Color.FromArgb(220, 38, 38);
+                btnSetEnglish.Enabled = false;
+                return;
+            }
+
+            btnSetEnglish.Enabled = true;
+            lblLanguageState.Text = Localizer.T(st.IsLocked ? "winlang_state_locked" : "winlang_state_unlocked",
+                st.CurrentLanguage ?? "?");
+            lblLanguageState.ForeColor = st.IsLocked ? Color.FromArgb(4, 120, 87) : Color.FromArgb(100, 116, 139);
+        }
+
+        private void btnSetEnglish_Click(object sender, EventArgs e)
+        {
+            bool lockIt = chkLockLanguage.Checked;
+            try
+            {
+                WindowsLanguageService.Apply(lockIt);
+                RefreshLanguageState();
+                MessageBox.Show(Localizer.T(lockIt ? "winlang_done_locked" : "winlang_done_unlocked"),
+                    Localizer.T("winlang_group"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                ReportService.LogError("SecurityPanel.btnSetEnglish_Click", ex);
+                RefreshLanguageState();
+                MessageBox.Show(Localizer.T("winlang_error", ex.Message),
+                    Localizer.T("winlang_group"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         public void ApplyLocalization()
@@ -424,6 +537,10 @@ namespace ClassroomChecker.UI
             grpBlockedPaths.Text = Localizer.T("settings_grp_blocked_paths");
             btnBrowseFolder.Text = Localizer.T("settings_btn_browse_folder");
             btnDeletePath.Text = Localizer.T("settings_btn_delete_folder");
+
+            grpLanguage.Text = Localizer.T("winlang_group");
+            btnSetEnglish.Text = Localizer.T("winlang_btn_set_english");
+            chkLockLanguage.Text = Localizer.T("winlang_chk_lock");
 
             btnSaveConfig.Text = Localizer.T("btn_save");
             lblNote.Text = Localizer.T("security_panel_note", "💡 ໝາຍເຫດ: ການລັອກຈະມີຜົນທັນທີກັບທຸກ User ໃນເຄື່ອງ. ສາມາດປິດການລັອກຄືນໄດ້ທຸກເວລາດ້ວຍປຸ່ມ 'ປິດການລັອກ'.");

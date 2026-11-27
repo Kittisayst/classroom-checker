@@ -282,5 +282,14 @@
   "machine_status_loaded": "✔ Read at {0} — {1} items. Select rows and press Ctrl+C to copy.",
   "machine_status_exporting": "Exporting to Excel...",
   "machine_status_export_failed": "Export failed: {0}",
-  "machine_status_error": "Error: {0}"
+  "machine_status_error": "Error: {0}",
+  "winlang_group": "🌐 Windows display language",
+  "winlang_btn_set_english": "Set to English",
+  "winlang_chk_lock": "🔒 Lock (prevent changes)",
+  "winlang_state_locked": "Language: {0} · locked",
+  "winlang_state_unlocked": "Language: {0} · not locked",
+  "winlang_no_english": "English is not installed on this PC",
+  "winlang_done_locked": "Set to English and locked.\n\nSign out and sign in again (or restart) for it to take effect.",
+  "winlang_done_unlocked": "Set to English and unlocked.\n\nSign out and sign in again (or restart) for it to take effect.",
+  "winlang_error": "Could not set the language: {0}"
 }

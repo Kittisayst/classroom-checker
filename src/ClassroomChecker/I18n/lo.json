@@ -282,5 +282,14 @@
   "machine_status_loaded": "✔ ອ່ານຂໍ້ມູນສຳເລັດ {0} — {1} ລາຍການ. ເລືອກແຖວແລ້ວກົດ Ctrl+C ເພື່ອສຳເນົາ.",
   "machine_status_exporting": "ກຳລັງ Export ເປັນ Excel...",
   "machine_status_export_failed": "Export ບໍ່ສຳເລັດ: {0}",
-  "machine_status_error": "ເກີດຂໍ້ຜິດພາດ: {0}"
+  "machine_status_error": "ເກີດຂໍ້ຜິດພາດ: {0}",
+  "winlang_group": "🌐 ພາສາສະແດງຜົນຂອງ Windows",
+  "winlang_btn_set_english": "ຕັ້ງເປັນພາສາອັງກິດ",
+  "winlang_chk_lock": "🔒 ລັອກ (ຫ້າມປ່ຽນພາສາ)",
+  "winlang_state_locked": "ພາສາ: {0} · ລັອກຢູ່",
+  "winlang_state_unlocked": "ພາສາ: {0} · ບໍ່ໄດ້ລັອກ",
+  "winlang_no_english": "ເຄື່ອງນີ້ບໍ່ມີພາສາອັງກິດຕິດຕັ້ງ",
+  "winlang_done_locked": "ຕັ້ງເປັນພາສາອັງກິດ ແລະ ລັອກແລ້ວ.\n\nກະລຸນາ Sign out ແລ້ວ Sign in ໃໝ່ (ຫຼື Restart) ເພື່ອໃຫ້ມີຜົນ.",
+  "winlang_done_unlocked": "ຕັ້ງເປັນພາສາອັງກິດ ແລະ ປົດລັອກແລ້ວ.\n\nກະລຸນາ Sign out ແລ້ວ Sign in ໃໝ່ (ຫຼື Restart) ເພື່ອໃຫ້ມີຜົນ.",
+  "winlang_error": "ຕັ້ງພາສາບໍ່ສຳເລັດ: {0}"
 }
